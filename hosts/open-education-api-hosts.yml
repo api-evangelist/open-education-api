@@ -1,0 +1,82 @@
+generated: '2026-10-09'
+method: derived
+source: the pre-flight dossier, apis.yml pointers, spec servers, well-known, vendors -- nothing fetched here
+generator: derive-hosts.py
+summary:
+  hosts: 5
+  own: 2
+  other_domain: 2
+  platform: 1
+  roles:
+  - api
+  - other
+  - source
+  - website
+hosts:
+- host: api.oeapi.eu
+  found_by:
+  - contract-discovery
+  types: []
+  serves: []
+  registrable_domain: oeapi.eu
+  role: api
+  relation: own
+- host: api.surf.nl
+  found_by:
+  - contract-discovery
+  types: []
+  serves: []
+  registrable_domain: surf.nl
+  role: api
+  relation: other-domain
+- host: github.com
+  found_by:
+  - pointer
+  - apis[]
+  types:
+  - GitHubOrganization
+  - GitHubRepository
+  - SpectralRules
+  serves:
+  - docs
+  registrable_domain: github.com
+  role: source
+  relation: platform
+- host: list.surf.nl
+  found_by:
+  - pointer
+  - probed
+  - contract-discovery
+  - well-known
+  types:
+  - MailingList
+  serves: []
+  registrable_domain: surf.nl
+  role: other
+  relation: other-domain
+- host: oeapi.eu
+  found_by:
+  - pointer
+  - apis[]
+  - probed
+  - docs-index
+  - spec-found
+  - contract-discovery
+  - well-known
+  - vendor-detect
+  types:
+  - Website
+  - Documentation
+  - APIReference
+  - GettingStarted
+  - ChangeLog
+  - Support
+  serves:
+  - docs
+  - spec
+  - cdn
+  - hosting
+  vendor: fastly
+  registrable_domain: oeapi.eu
+  role: website
+  relation: own

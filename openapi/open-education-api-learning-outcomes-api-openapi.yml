@@ -1,0 +1,1099 @@
+openapi: 3.2.0
+info:
+  version: 6.0-rc.3
+  title: Open Education learning outcomes API
+  description: OpenAPI (fka Swagger) specification for the Open Education API.
+  license:
+    name: EUPL-1.2
+    url: https://github.com/open-education-api/specification/blob/release/6.0/LICENSE.md
+  contact:
+    name: OEAPI Working Group / SURF
+    url: https://oeapi.eu
+    email: info@oeapi.eu
+  x-logo:
+    url: ./logo.png
+    href: ./docs.html
+servers:
+- url: https://demo01.eduapi.nl/v6
+  description: SURF demo implementation
+security: []
+tags:
+- name: learning outcomes
+  description: 'The learning outcomes API provides information about the statements regarding
+
+    what a learner knows, understands and is able to do on completion of a learning
+
+    process, which are defined in terms of knowledge, skills and responsibility and
+
+    autonomy.'
+paths:
+  /learning-outcomes:
+    get:
+      summary: GET /learning-outcomes
+      operationId: listLearningOutcomes
+      description: Get a list of all learning outcomes, ordered chronologically.
+      tags:
+      - learning outcomes
+      parameters:
+      - $ref: '#/components/parameters/pageSize'
+      - $ref: '#/components/parameters/pageNumber'
+      - $ref: '#/components/parameters/consumer'
+      - $ref: '#/components/parameters/filterQuery'
+      - $ref: '#/components/parameters/fields'
+      - $ref: '#/components/parameters/search'
+      - name: since
+        in: query
+        description: Filter all offerings by providing a minimum start moment for the corresponding academic session, RFC3339 (full-date). By default only future offerings are shown (equal to `?since=<today>`).
+        required: false
+        schema:
+          type: string
+          format: date-time
+      - name: until
+        in: query
+        description: Filter all offerings by providing a maximum end moment for the corresponding academic session, RFC3339 (full-date).
+        required: false
+        schema:
+          type: string
+          format: date-time
+      responses:
+        '200':
+          description: OK
+          content:
+            application/vnd.oeapi+json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Pagination'
+                - type: object
+                  required:
+                  - items
+                  properties:
+                    items:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/LearningOutcome'
+                    ext:
+                      $ref: '#/components/schemas/Ext'
+        '400':
+          $ref: '#/components/responses/ErrorBadRequest'
+        '401':
+          $ref: '#/components/responses/ErrorUnauthorized'
+        '403':
+          $ref: '#/components/responses/ErrorForbidden'
+        '404':
+          $ref: '#/components/responses/ErrorNotFound'
+        '405':
+          $ref: '#/components/responses/ErrorMethodNotAllowed'
+        '406':
+          $ref: '#/components/responses/ErrorNotAcceptable'
+        '429':
+          $ref: '#/components/responses/ErrorTooManyRequests'
+        '500':
+          $ref: '#/components/responses/ErrorInternalServerError'
+  /learning-outcomes/{learningOutcomeId}:
+    get:
+      summary: GET /learning-outcomes/{learningOutcomeId}
+      operationId: listLearningOutcomeById
+      description: Get a single learnig outcome.
+      tags:
+      - learning outcomes
+      parameters:
+      - name: learningOutcomeId
+        in: path
+        description: learning outcome component ID
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: expand
+        in: query
+        explode: false
+        description: Optional properties to expand, separated by a comma
+        required: false
+        style: form
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - parents
+            - children
+      - $ref: '#/components/parameters/fields'
+      - $ref: '#/components/parameters/consumer'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/vnd.oeapi+json:
+              schema:
+                $ref: '#/components/schemas/LearningOutcome'
+        '400':
+          $ref: '#/components/responses/ErrorBadRequest'
+        '401':
+          $ref: '#/components/responses/ErrorUnauthorized'
+        '403':
+          $ref: '#/components/responses/ErrorForbidden'
+        '404':
+          $ref: '#/components/responses/ErrorNotFound'
+        '405':
+          $ref: '#/components/responses/ErrorMethodNotAllowed'
+        '406':
+          $ref: '#/components/responses/ErrorNotAcceptable'
+        '429':
+          $ref: '#/components/responses/ErrorTooManyRequests'
+        '500':
+          $ref: '#/components/responses/ErrorInternalServerError'
+components:
+  parameters:
+    consumer:
+      name: consumer
+      in: query
+      description: Request entities intended for a specific consumer. The `consumer` profile allows for adding additional data, or specific rules concerning the presentation of the data. A consumer can be selected based on the key of the consumer profile. An implementation of the OEAPI SHOULD always return the consumer information inside the consumer property of the object(s) that are requested. Further information regarding the use of consumers can be found in the [documentation](https://oeapi.eu/v6.0/#/technical/consumers-and-profiles/)
+      required: false
+      schema:
+        type: string
+    pageSize:
+      name: pageSize
+      in: query
+      description: The number of items per page
+      required: false
+      schema:
+        type: integer
+        format: int32
+        default: 10
+        enum:
+        - 10
+        - 20
+        - 50
+        - 100
+        - 250
+    search:
+      name: q
+      in: query
+      description: Filter by items having a name, abbreviation or description containing the given search term (exact partial match, case insensitive)
+      required: false
+      schema:
+        type: string
+    pageNumber:
+      name: pageNumber
+      in: query
+      description: The page number to get. Page numbers start at 1.
+      required: false
+      schema:
+        type: integer
+        format: int32
+        example: 1
+        minimum: 1
+    filterQuery:
+      name: filter_query
+      in: query
+      required: false
+      x-lint-ignore:
+      - camel-case-properties
+      style: deepObject
+      explode: true
+      description: "Filter object serialised as `filter_query[field][operation]=value`.\nMultiple top-level fields are combined with AND. CSV is accepted where noted.\n\nOR blocks. Provide an array of single-field filter objects, each combined with OR.\nSerialises as `filter_query[__or][][field][operation]=value`.\n\nInspired by Storyblok (https://www.storyblok.com/docs/api/content-delivery/v2/filter-queries)\n\nWildcards:\n- Prefer using only the asterisk `*` as a wildcard for partial matches (e.g., like and not_like).\n\nImplementation note:\n- The availability and behaviour of this query functionality are entirely determined by the organisation hosting\n  the API implementation. It is not mandatory for implementers to support this functionality, and it cannot be enforced \n  upon organisations that provide or consume OEAPI endpoints.\n- It is up to each implementer to decide whether to support this feature. It is **not** a requirement of the OEAPI \n  standard itself.\n- Consumers or working groups that wish to apply specific filtering mechanisms are encouraged to do so using \n  this approach for the sake of consistency across implementations.\n\nExamples:  \n- **Filter course offerings by programme, delivery, language and start date**  \n  `filter_query[programme.code][in]=B-IT-2025&filter_query[organisation.code][in]=RuG&filter_query[mode_of_delivery][in]=on_campus,hybrid&filter_query[language_of_instruction][in]=en-GB&filter_query[start_date][gt_date]=2025-09-01T00:00:00Z`  \n  \n- **Only offerings with email contact present**  \n  `filter_query[contacts.email][is]=not_empty`\n\n- **Provider is Org A or Org B, OR campus city contains “Utrecht”**  \n  `?filter_query[__or][][organisation.id][in]=org-uu,org-hku&filter_query[__or][][campus.city][like]=*Utrecht*`  \n    \n- **Start date after 1 Sept 2025 OR has evening/block_week tag**  \n  `?filter_query[__or][][start_date][gt_date]=2025-09-01T00:00:00Z&filter_query[__or][][tags][any_in_array]=evening,block_week`  \n"
+      schema:
+        type: object
+        properties:
+          __or:
+            type: array
+            items:
+              type: object
+              additionalProperties:
+                type: object
+                properties:
+                  in:
+                    type: string
+                    description: Exact match; multiple values allowed as CSV.
+                    example: org-uu,org-hku
+                  like:
+                    type: string
+                    description: 'Partial match using wildcards. Prefer `*` as the wildcard.
+
+                      # Quotes are required here because YAML interprets unquoted * as an alias reference.
+
+                      '
+                    example: '*Utrecht*'
+                  any_in_array:
+                    type: string
+                    description: Match if any of the CSV values occur.
+                    example: evening,block_week
+                  gt_date:
+                    type: string
+                    format: date-time
+                    description: ISO 8601 / RFC 3339 date-time.
+                    example: '2025-09-01T00:00:00Z'
+                  lt_date:
+                    type: string
+                    format: date-time
+                    description: ISO 8601 / RFC 3339 date-time.
+                    example: '2025-12-31T23:59:59Z'
+        additionalProperties:
+          type: object
+          properties:
+            is:
+              $ref: '#/components/schemas/filterPresence'
+            in:
+              type: string
+              description: Exact match; multiple values allowed as CSV.
+              example: RuG
+            not_in:
+              type: string
+              description: Negated inclusion; multiple values as CSV.
+              example: UvA,VU
+            like:
+              type: string
+              description: 'Partial match using wildcards. Prefer `*` as the wildcard.
+
+                '
+              example: '*Amsterdam*'
+            not_like:
+              type: string
+              description: 'Negated partial match using wildcards. Prefer `*` as the wildcard.
+
+                '
+              example: '*deprecated*'
+            any_in_array:
+              type: string
+              description: Match if any of the CSV values occur.
+              example: evening,block_week
+            all_in_array:
+              type: string
+              description: Match if all CSV values occur.
+              example: evening,block_week
+            gt_int:
+              type: integer
+              description: Greater than (integer).
+              example: 5
+            lt_int:
+              type: integer
+              description: Less than (integer).
+              example: 30
+            gt_float:
+              type: number
+              description: Greater than (float).
+              example: 5.5
+            lt_float:
+              type: number
+              description: Less than (float).
+              example: 12
+            gt_date:
+              type: string
+              format: date-time
+              description: ISO 8601 date-time.
+              example: '2025-09-01T00:00:00Z'
+            lt_date:
+              type: string
+              format: date-time
+              description: ISO 8601 date-time.
+              example: '2025-12-31T23:59:59Z'
+    fields:
+      name: fields
+      in: query
+      required: false
+      style: form
+      explode: false
+      description: "Allows clients to indicate which fields should be included in the response.  \nThis parameter supports the principle of data minimisation and helps to optimise \ndata usage and performance by reducing unnecessary data transmission.\n\nThe `fields` parameter uses *nested field selection syntax* with parentheses for subfields, \nfor example: `programme(code)` or `campus(city)`.  \nMultiple fields can be grouped within parentheses, for example:  \n`fields=(id,title,ectsCredits,programme(code),campus(city))`.\n\nWhen omitted, the server returns all fields the client has access to.  \nUnknown field names SHOULD be ignored.  \nThe server MUST always include *mandatory fields* (e.g., identifiers such as `id`) \nthat are required for a valid or minimal response, even if not explicitly requested.\n\n*Important:* This is a **request hint**, not a **security feature**.  \nThe server MAY disregard the request for a restricted set of fields, and the final response \nstructure MAY depend on server logic and the client’s access rights.\n\n\nIf a client requests unauthorised fields, these MUST be silently omitted or redacted.\n"
+      schema:
+        type: string
+        example: (id,title,ectsCredits,programme(code),campus(city))
+      examples:
+        minimal:
+          summary: Return a minimal fieldset for course offerings
+          value: (id,title,ectsCredits,languageOfInstruction)
+        nested:
+          summary: Include nested programme code and campus city
+          value: (id,title,programme(code),campus(city))
+        combined:
+          summary: Example using multiple nested fields
+          value: (id,title,ectsCredits,programme(code,name),campus(city,country))
+  schemas:
+    ProblemVersionNotAcceptable:
+      allOf:
+      - $ref: '#/components/schemas/Problem'
+      - type: object
+        required:
+        - requestedVersion
+        - supportedVersions
+        properties:
+          type:
+            $ref: '#/components/schemas/type'
+          title:
+            $ref: '#/components/schemas/title'
+          consumer:
+            description: 'Indicates which party caused the version mismatch. When null, the 406 was
+
+              triggered by an unsupported OEAPI version. If populated with a Consumer
+
+              object, the 406 was caused by a consumer-specific version that did not match
+
+              any supported version. This field MAY contain a full Consumer object or be
+
+              null.
+
+              '
+            oneOf:
+            - $ref: '#/components/schemas/Consumer'
+            - type: 'null'
+          requestedVersion:
+            type: string
+            description: The version requested by the client.
+            example: '5.0'
+          supportedVersions:
+            type: array
+            description: Versions the server can serve, typically in descending order.
+            items:
+              type: string
+            example:
+            - '4.2'
+            - '4.1'
+    Language:
+      description: 'The language used in the described entity. The value **must be a language tag that conforms to RFC 5646** (Tags for Identifying Languages, BCP 47):
+
+        https://www.rfc-editor.org/rfc/rfc5646.html
+
+
+        A tag consists of the following components, in this exact order:
+
+        1. **language** – two‑ to three‑letter codes (ISO 639‑1/‑2) **or** four‑letter codes (ISO 639‑5) **or** five‑ to eight‑letter registered language subtags.
+
+        2. **script** – optional, four letters in Title‑Case (e.g. `Latn`, `Hant`).
+
+        3. **region** – optional, either two uppercase letters (ISO 3166‑1) **or** three digits (UN M.49).
+
+        4. **variant** – zero or more subtags, each either five‑ to eight‑alphanumerics or a digit followed by three alphanumerics (e.g. `1901`, `oxendict`).
+
+        5. **extension** – zero or more extensions. Each extension starts with a *singleton* (a single alphanumeric character except `x`) followed by one or more subtags of two‑ to eight‑alphanumerics (e.g. `u‑co‑phonebk`).
+
+        6. **private‑use** – optional, the letter `x` followed by one or more subtags of one‑ to eight‑alphanumerics (e.g. `x‑private`).
+
+
+        The most common form is a two‑letter language code (ISO 639‑1) optionally followed by a hyphen and a two‑letter country code (ISO 3166‑1), for example `en` or `en‑GB`.
+
+
+        More specific tags are also valid, for instance `zh‑Hant‑TW` (Traditional Chinese as used in Taiwan).
+
+
+        For sign languages two conventions are recognised:
+
+        * `sgn` – e.g. `nl‑sgn‑NL` (Dutch Sign Language)
+
+        * `s`   – e.g. `nl‑s‑NL` (Dutch Sign Language)
+
+        '
+      type: string
+      minLength: 2
+      pattern: ^(?:(?:[A-Za-z]{2,3}(?:-[A-Za-z]{3}){0,2}|[A-Za-z]{4}|[A-Za-z]{5,8})(?:-[A-Za-z]{4})?(?:-(?:[A-Z]{2}|[0-9]{3}))?(?:-(?:[A-Za-z0-9]{5,8}|[0-9][A-Za-z0-9]{3}))*?(?:-(?:[A-WY-Za-wy-z0-9](?:-[A-Za-z0-9]{2,8})+))*?(?:-x(?:-[A-Za-z0-9]{1,8})+)?|x(?:-[A-Za-z0-9]{1,8})+)$
+      example: en-GB
+    Consumer:
+      type: object
+      description: The additional elements of a consumer that may be provided, see the [documentation on support for specific consumers](https://oeapi.eu/v6.0/#/technical/consumers-and-profiles/) for further information about this mechanism.
+      required:
+      - consumerKey
+      properties:
+        consumerKey:
+          description: The key of the consumer (destination) for which this information is intended. See the [consumer registry](https://oeapi.eu/v6.0/#/technical/consumers-and-profiles/). This key is used to select the additional data to be presented in the request.
+          type: string
+          example: test-consumer
+        exampleProperty:
+          description: An example of an additional property
+          type:
+          - string
+          - 'null'
+          example: value-of-example-property
+      additionalProperties: true
+    filterPresence:
+      type: string
+      description: "Presence check or special value for filter operations.\n\nInspired by Storyblok (https://www.storyblok.com/docs/api/content-delivery/v2/filter-queries)\n\nImplementation note:\n- The availability and behaviour of this query functionality are entirely determined by the organisation hosting\n  the API implementation. It is not mandatory for implementers to support this functionality, and it cannot be enforced \n  upon organisations that provide or consume OEAPI endpoints.\n- It is up to each implementer to decide whether to support this feature. It is **not** a requirement of the OEAPI \n  standard itself.\n- Consumers or working groups that wish to apply specific filtering mechanisms are encouraged to do so using \n  this approach for the sake of consistency across implementations.\n"
+      enum:
+      - empty
+      - not_empty
+      - empty_array
+      - not_empty_array
+      - 'true'
+      - 'false'
+      - 'null'
+      - not_null
+      example: not_empty
+    codeType:
+      type: string
+      description: 'The type of code or identifier.
+
+
+        The predefined values are:
+
+
+        | Code                      | Description                                                       |
+
+        |---------------------------|-------------------------------------------------------------------|
+
+        | `account_id`              | Identifier for an account.                                        |
+
+        | `bag_id`                  | Identifier for a building in the Dutch Building and Address       |
+
+        |                           | Registry (BAG).                                                   |
+
+        | `building_id`             | Identifier for a building.                                        |
+
+        | `component_code`          | Identifier for a component (part of a course).                    |
+
+        | `eckid`                   | Identifier assigned within the Dutch *Educatieve ContentKeten iD* |
+
+        |                           | framework. It enables persistent identification and exchange of   |
+
+        |                           | digital learning resources within the Dutch educational sector for|
+
+        |                           | EQF levels 1, 2, 3 and 4. Comparable international approaches     |
+
+        |                           | include LRMI, DOI and Handle                                      |
+
+        |                           | identifiers for learning resources.                               |
+
+        | `email_address`           | An email address.                                                 |
+
+        | `esi`                     | European Student Identifier.                                      |
+
+        | `group_code`              | Identifier for a group of people.                                 |
+
+        | `group_type_code`         | Identifier for the type of group.                                 |
+
+        | `identifier`              | Generic identifier.                                               |
+
+        | `institution_code`        | Registration number of an educational institution. In the         |
+
+        |                           | Netherlands, the former BRIN code has been replaced by the        |
+
+        |                           | institution code, issued by the Ministry of Education, Culture    |
+
+        |                           | and Science (OCW).                                                |
+
+        | `isbn`                    | International Standard Book Number (for books).                   |
+
+        | `issn`                    | International Standard Serial Number (for periodicals).           |
+
+        | `kvk_organisation_id`     | Identifier for a KvK (Dutch Chamber of Commerce) registered       |
+
+        |                           | organisation.                                                     |
+
+        | `kvk_establishment_id`    | Identifier for a specific establishment of a KvK                  |
+
+        |                           | (Dutch Chamber of Commerce) registered organisation.              |
+
+        | `leerbedrijf_id`          | Dutch registration/accreditation id for organisations offering    |
+
+        |                           | internships for vocational education students.                    |
+
+        | `national_identity_number`| Government-assigned personal identifier (e.g. NI number in the UK,|
+
+        |                           | or *personnummer* in Sweden).                                     |
+
+        | `offering_code`           | Identifier for a specific offering (programme, course or          |
+
+        |                           | component).                                                       |
+
+        | `organisation_id`         | Identifier for an organisation.                                   |
+
+        | `orcid`                   | Open Researcher and Contributor ID.                               |
+
+        | `product_id`              | Identifier for a product.                                         |
+
+        | `programme_code`          | Identifier of a programme (a recognised collection of courses).   |
+
+        |                           | In the Netherlands, the former CREBO and CROHO codes have been    |
+
+        |                           | replaced by the programme code as registered in RIO, under the    |
+
+        |                           | authority of OCW.                                                 |
+
+        | `room_code`               | Identifier for a room.                                            |
+
+        | `schac_home`              | Home organisation represented by its domain name.                 |
+
+        | `student_number`          | Identifier for a student.                                         |
+
+        | `studielink_number`       | Identifier assigned to a student by Studielink (Dutch central     |
+
+        |                           | enrolment system).                                                |
+
+        | `system_id`               | Identifier used within a specific system.                         |
+
+        | `username`                | User login name.                                                  |
+
+        | `uuid`                    | Universally unique identifier.                                    |
+
+
+        This is an *extensible enumeration*. Use the prefix `x-` for custom values.
+
+        '
+      x-ooapi-extensible-enum:
+      - account_id
+      - bag_id
+      - building_id
+      - component_code
+      - eckid
+      - email_address
+      - esi
+      - group_code
+      - group_type_code
+      - identifier
+      - institution_code
+      - isbn
+      - issn
+      - kvk_organisation_id
+      - kvk_establishment_id
+      - leerbedrijf_id
+      - offering_code
+      - organisation_id
+      - orcid
+      - product_id
+      - programme_code
+      - room_code
+      - schac_home
+      - student_number
+      - studielink_number
+      - system_id
+      - username
+      - uuid
+      - national_identity_number
+      example: identifier
+    type:
+      type: string
+      format: uri
+      maxLength: 2048
+      description: "An absolute URI that identifies the problem type. When dereferenced, \nit should provide human-readable documentation.\n"
+      example: https://example.org/problems/bad-request
+    Problem:
+      type: object
+      description: 'A problem details object, conforming to RFC 7807 (Problem Details for HTTP
+
+        APIs). See https://datatracker.ietf.org/doc/html/rfc7807. It provides a
+
+        machine-readable format for error conditions, including a type URI, title,
+
+        status code, and optional detail and instance fields. This ensures
+
+        consistent handling of error responses across the API.
+
+        '
+      required:
+      - type
+      - status
+      - title
+      properties:
+        type:
+          type: string
+          format: uri
+          maxLength: 2048
+          description: "An absolute URI that identifies the problem type. When dereferenced, \nit should provide human-readable documentation.\n"
+          example: https://example.org/problems/bad-request
+        title:
+          type: string
+          description: A short, human-readable summary of the problem type
+          example: Resource not found
+        status:
+          type: integer
+          format: int32
+          description: "The HTTP status code generated by the origin server for this occurrence \nof the problem.\n"
+          example: 404
+        detail:
+          type:
+          - string
+          - 'null'
+          description: 'A human-readable explanation specific to this occurrence of the problem
+
+            '
+          example: The course with id 'abc123' could not be found in the catalogue.
+        instance:
+          type:
+          - string
+          - 'null'
+          format: uri
+          maxLength: 2048
+          description: 'An absolute URI that identifies the specific occurrence of the problem.
+
+            '
+          example: https://api.example.org/courses/abc123
+    learningOutcomeLevel:
+      type: string
+      description: "The level of the learning outcome. This field supports multiple frameworks for\ndescribing cognitive complexity. Two common frameworks are provided below: **Bloom’s**\nand **SOLO**. These are intended as examples — additional levels or entirely\ndifferent frameworks MAY be added as needed.\n\n**Bloom’s taxonomy** ([https://en.wikipedia.org/wiki/Bloom's_taxonomy](https://en.wikipedia.org/wiki/Bloom's_taxonomy)):\n\n| Level   | Label      | Description                                                         |\n|---------|------------|---------------------------------------------------------------------|\n| bloom_1 | Remember   | Recall facts and basic concepts (define, list, state).              |\n| bloom_2 | Understand | Explain ideas or concepts (describe, discuss, explain).             |\n| bloom_3 | Apply      | Use knowledge in new situations (implement, solve, use).            |\n| bloom_4 | Analyse    | Draw connections among ideas (differentiate, compare, examine).     |\n| bloom_5 | Evaluate   | Justify a decision or course of action (critique, assess, argue).   |\n| bloom_6 | Create     | Produce new or original work (design, construct, develop).          |\n\n**SOLO taxonomy** ([https://en.wikipedia.org/wiki/Structure_of_observed_learning_outcome](https://en.wikipedia.org/wiki/Structure_of_observed_learning_outcome)):\n\n| Level   | Label             | Description                                                     |\n|---------|-------------------|-----------------------------------------------------------------|\n| solo_0  | Prestructural     | No understanding; the student misses the point.                 |\n| solo_1  | Unistructural     | Identifies or carries out simple procedures; limited to one     |\n|         |                   | relevant aspect.                                                |\n| solo_2  | Multistructural   | Addresses several relevant aspects, but sees them as unrelated; |\n|         |                   | knowledge is additive.                                          |\n| solo_3  | Relational        | Integrates aspects into a coherent whole, showing deeper        |\n|         |                   | understanding of relationships.                                 |\n| solo_4  | Extended abstract | Generalises and applies learning to new domains, showing        |\n|         |                   | theoretical and abstract thinking.                              |\n\nThis is an *extensible enumeration*. Implementers MAY introduce other recognised\ntaxonomies, institutional or national frameworks.  \n"
+      x-ooapi-extensible-enum:
+      - bloom_1
+      - bloom_2
+      - bloom_3
+      - bloom_4
+      - bloom_5
+      - bloom_6
+      - solo_0
+      - solo_1
+      - solo_2
+      - solo_3
+      - solo_4
+      example: bloom_1
+    Ext:
+      type: object
+      description: Object for additional non-standard attributes
+    LanguageTypedString:
+      type: object
+      description: A String with an associated language code. IF this object is used both fields are mandatory.
+      required:
+      - language
+      - value
+      properties:
+        language:
+          $ref: '#/components/schemas/Language'
+        value:
+          description: String to describe the entity.
+          type: string
+          example: programme that is a place holder for all courses that are made available for student mobility
+      example:
+        language: en-GB
+        value: programme that is a place holder for all courses that are made available for student mobility
+    LearningOutcome:
+      type: object
+      description: statements regarding what a learner knows, understands and is able to do on completion of a learning process, which are defined in terms of knowledge, skills and responsibility and autonomy (https://eur-lex.europa.eu/legal-content/EN/TXT/PDF/?uri=CELEX:32017H0615(01)&from=EN)
+      required:
+      - learningOutcomeId
+      - primaryCode
+      - name
+      properties:
+        learningOutcomeId:
+          type: string
+          description: Unique id of this learning outcome
+          format: uuid
+          example: 123e4567-e89b-12d3-a456-426614174000
+        primaryCode:
+          description: The primary human readable identifier for this learning outcome. This is often the source identifier as defined by the institution.
+          $ref: '#/components/schemas/IdentifierEntry'
+          example:
+            codeType: learningOutcomeCode
+            code: LO 2.1
+        name:
+          type: array
+          description: The name of this learning outcome
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/LanguageTypedString'
+          example:
+          - language: en-GB
+            value: 'Describe the differing views, within society, relating to the scientific uses of animals and recognize the need to respect these.
+
+              '
+        abbreviation:
+          type:
+          - string
+          - 'null'
+          description: The abbreviation or internal code used to identify this LearningOutcome
+          maxLength: 256
+          example: LO12_INFO_RET
+        description:
+          type:
+          - array
+          - 'null'
+          description: The description of this learning outcome.
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/LanguageTypedString'
+          example:
+          - language: en-GB
+            value: "The candidate should have retained the information that they\nhave been taught and be able to:\n1. Relate opinions as voiced collectively or individually by:\n  * animal protection societies\n  * patient support societies\n  * establishments and researchers\n  * industry, including pharma, biotech and food\n  * people with personal, cultural or religious beliefs;\n2. Recognize the fundamental right of freedom of speech;\n3. Recall different perspectives which enable an individual to\n  determine their own opinion on the use of animals for scientific\n  purposes;\n4. Explain how different perspectives drive forward advancements\n  in animal welfare, legislation and science.\n(based on: https://repub.eur.nl/pub/132564/Repub_132564_O-A.pdf)\n"
+        parentIds:
+          description: 'The identifiers of the learning outcomes which are the parents of this learning outcome.
+
+            When the client does not request expansion of `parents`, only these identifiers are returned.
+
+            This field is [`expandable`](https://oeapi.eu/v6.0/#/technical/expanding-responses).
+
+            '
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Identifier'
+        parents:
+          description: 'The expanded learning outcome objects which are the parents of this learning outcome.
+
+            When the client requests expansion of `parents`, the full expanded learning outcome objects MUST be returned here instead of only the identifiers.
+
+            If no parents are defined, this value is `null`.
+
+            '
+          type:
+          - array
+          - 'null'
+          items:
+            oneOf:
+            - $ref: '#/components/schemas/LearningOutcome'
+            - type: 'null'
+        childIds:
+          description: "The identifiers of all learning outcomes for which this learning outcome is the parent.\nWhen the client does not request expansion of `children`, only these identifiers are returned.\nThis field is [`expandable`](https://oeapi.eu/v6.0/#/technical/expanding-responses).\n\nAlthough `childIds` and `children` (for example `organisationIds` versus `organisations`) may \nseem unusual, this naming is intentional and follows the singular–plural convention defined \nby the specification.\n"
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Identifier'
+        children:
+          description: 'The expanded learning outcome objects for which this learning outcome is the parent.
+
+            When the client requests expansion of `children`, the full expanded learning outcome objects MUST be returned here instead of only the identifiers.
+
+            If no children are defined, this value is `null`.
+
+            '
+          type:
+          - array
+          - 'null'
+          items:
+            oneOf:
+            - $ref: '#/components/schemas/LearningOutcome'
+            - type: 'null'
+        fieldsOfStudy:
+          type:
+          - string
+          - 'null'
+          description: "Field(s) of study (e.g. ISCED-F) (https://unesdoc.unesco.org/ark:/48223/pf0000228085.locale=en). \nISCED-F categorizes the fields of study 2 digits at root level and further subdivision as more digits are added.\nPreferably fieldsOfStudy contains at least 4 digits.\nISCEDF2013vSOI2021 currently allows for 6 digits max (https://www.cbs.nl/-/media/cbs/onze-diensten/methoden/classificaties/documents/2025/pubsoi2021_ed2425.pdf).\n07 Engineering, manufacturing and construction\n073 Architecture and construction\n0731 Architecture and town planning\n073101 Town planning\n"
+          minLength: 2
+          maxLength: 6
+          example: '0732'
+        otherCodes:
+          type:
+          - array
+          - 'null'
+          description: An array of additional human readable codes/identifiers for the entity being described.
+          items:
+            $ref: '#/components/schemas/IdentifierEntry'
+        complexityLevel:
+          oneOf:
+          - $ref: '#/components/schemas/learningOutcomeLevel'
+          - type: 'null'
+        validFrom:
+          type:
+          - string
+          - 'null'
+          description: The date and time for when this learning outcome will be active. Should be a string formatted as an RFC3099 full-date.
+          format: date-time
+          example: '2025-09-01T09:00:00+01:00'
+        validTo:
+          type:
+          - string
+          - 'null'
+          description: The date and time when this learning outcome will no longer be valid, or should be renewed. Should be a string formatted as an RFC3099 full-date.
+          format: date-time
+          example: '2025-09-01T09:00:00+01:00'
+        consumer:
+          oneOf:
+          - $ref: '#/components/schemas/Consumer'
+          - type: 'null'
+        ext:
+          oneOf:
+          - $ref: '#/components/schemas/Ext'
+          - type: 'null'
+    IdentifierEntry:
+      type: object
+      properties:
+        codeType:
+          $ref: '#/components/schemas/codeType'
+        code:
+          description: Human readable value for the code/identifier
+          type: string
+          example: 1234qwe12
+      required:
+      - codeType
+      - code
+      additionalProperties: false
+      example:
+        codeType: identifier
+        code: 1234qwe12
+    title:
+      type: string
+      description: A short, human-readable summary of the problem type
+      example: Resource not found
+    Pagination:
+      type: object
+      required:
+      - pageSize
+      - pageNumber
+      - hasPreviousPage
+      - hasNextPage
+      properties:
+        pageSize:
+          type: integer
+          format: int32
+          description: The number of items per page
+          example: 10
+        pageNumber:
+          type: integer
+          format: int32
+          description: The current page number
+          example: 1
+          minimum: 1
+        hasPreviousPage:
+          type: boolean
+          description: Whether there is a previous page
+          example: false
+        hasNextPage:
+          type: boolean
+          description: Whether there is a previous page
+          example: true
+        totalPages:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          description: Total number of pages
+          example: 8
+    Identifier:
+      type: string
+      description: An identifier of another resource.
+      format: uuid
+      example: 123e4567-e89b-12d3-a456-426614174000
+  responses:
+    ErrorMethodNotAllowed:
+      description: Method not allowed
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          example:
+            type: https://api.example.org/problems/method-not-allowed
+            title: Method not allowed
+            status: 405
+            detail: The method POST is not supported for this endpoint.
+            instance: https://api.example.org/courses/abc123
+    ErrorNotFound:
+      description: "Not Found.  \n\nReturned only when a specific resource identified by its identifier\ncannot be located. This applies to instance endpoints where a single,\nuniquely-addressable object is expected.  \n\nCollection endpoints should not return a 404. If no items match the request,\nthey must return an empty array. A 404 may still occur if the collection\nendpoint itself does not exist or is not accessible.\n"
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            instanceNotFound:
+              summary: 'Instance endpoint: resource not found'
+              value:
+                type: https://api.example.org/problems/not-found
+                title: Resource not found
+                status: 404
+                detail: The course with id 'abc123' could not be found.
+                instance: https://api.example.org/courses/abc123
+            collectionEndpointNotFound:
+              summary: Collection endpoint unavailable
+              value:
+                type: https://api.example.org/problems/not-found
+                title: Collection endpoint not found
+                status: 404
+                detail: The collection endpoint '/course-offerings' does not exist or is not accessible.
+                instance: https://api.example.org/course-offerings
+    ErrorNotAcceptable:
+      description: 'Not Acceptable.
+
+
+        Returned when the server cannot produce a representation in the
+
+        requested OEAPI or consumer version. The server may serve the
+
+        requested version or any lower compatible minor version.
+
+
+        If neither the requested version nor a lower minor version is
+
+        available, a 406 response is returned to indicate that no acceptable
+
+        representation can be produced.
+
+
+        This behaviour slightly deviates from strict HTTP semantics. The client
+
+        requests exactly one OEAPI version and at most one consumer with one
+
+        consumer version using the HTTP Accept header. Standard HTTP content
+
+        negotiation is not applied. The server performs an internal Accept-like
+
+        version check after the HTTP layer.
+
+
+        If the request can be satisfied, the server returns a compatible
+
+        version. A compatible version is any version within the same major
+
+        version, with a higher or lower minor version.
+
+
+        If no compatible version can be provided, the server returns 406 to
+
+        signal that the requested representation cannot be provided.
+
+
+        This approach improves clarity, implementation consistency and
+
+        debugging, because the requested and supported versions are explicit
+
+        in both the request and the 406 response, avoiding ambiguity caused
+
+        by full HTTP content negotiation or Accept-based parsing.
+
+
+        It also improves logging. Servers can log the requested and supported
+
+        versions at the point of mismatch, allowing operators to detect
+
+        outdated consumers, configuration issues or unexpected version drift.
+
+        '
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ProblemVersionNotAcceptable'
+          examples:
+            unsupportedOoapiVersion:
+              summary: Requested OEAPI version is not supported
+              description: 'Example where the client requests OEAPI version 5.0 and the server
+
+                cannot serve that version or a lower compatible minor version.
+
+                '
+              value:
+                type: https://api.example.org/problems/version-not-acceptable
+                title: Version not acceptable
+                status: 406
+                detail: The requested OEAPI version '5.0' cannot be served.
+                requestedVersion: '5.0'
+                supportedVersions:
+                - '6.1'
+                - '6.0'
+                instance: https://api.example.org/courses
+            unsupportedConsumerVersion:
+              summary: Requested consumer version is not supported
+              description: 'Example where the client requests consumer version 2.0 which is not
+
+                supported by the server and no lower compatible consumer version is
+
+                available.
+
+                '
+              value:
+                type: https://api.example.org/problems/version-not-acceptable
+                title: Version not acceptable
+                status: 406
+                detail: The consumer version '2.0' is not supported.
+                consumer:
+                  consumerKey: mbo-oke-roster-service
+                requestedVersion: '2.0'
+                supportedVersions:
+                - '1.0'
+                - '0.94'
+                instance: https://api.example.org/enrolments
+    ErrorUnauthorized:
+      description: Unauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          example:
+            type: https://api.example.org/problems/unauthorized
+            title: Unauthorized
+            status: 401
+            detail: Authentication credentials were missing or invalid.
+            instance: https://api.example.org/student/12345
+    ErrorTooManyRequests:
+      description: Too many requests
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          example:
+            type: https://api.example.org/problems/too-many-requests
+            title: Too many requests
+            status: 429
+            detail: You have exceeded the rate limit of 100 requests per minute.
+            instance: https://api.example.org/courses
+    ErrorForbidden:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          example:
+            type: https://api.example.org/problems/forbidden
+            title: Forbidden
+            status: 403
+            detail: You do not have permission to access this resource.
+            instance: https://api.example.org/admin/enrolments
+    ErrorBadRequest:
+      description: Bad request
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          example:
+            type: https://api.example.org/problems/invalid-parameter
+            title: Invalid request parameters
+            status: 400
+            detail: 'The query parameter ''mode'' must be one of: full, basic.'
+            instance: https://api.example.org/courses?mode=invalid
+    ErrorInternalServerError:
+      description: Internal Server Error
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          example:
+            type: https://api.example.org/problems/internal-server-error
+            title: Internal server error
+            status: 500
+            detail: An unexpected error occurred while processing your request.
+            instance: https://api.example.org/enrolments/submit
+x-tagGroups:
+- name: Requests and responses
+  tags:
+  - security
+  - service metadata
+  - academic sessions
+  - associations
+  - buildings
+  - courses
+  - course offerings
+  - course offering associations
+  - components
+  - documents
+  - groups
+  - learning components
+  - learning component offerings
+  - learning component offering associations
+  - learning outcomes
+  - news
+  - organisations
+  - persons
+  - programmes
+  - programme offerings
+  - programme offering associations
+  - rooms
+  - test components
+  - test component offerings
+  - test component offering associations
+  - test component offering association attempts
+- name: Models
+  tags:
+  - data_model
+  - service_model
+  - learning_outcome_model
+  - academic_session_model
+  - building_model
+  - course_model
+  - course_offering_model
+  - course_offering_association_model
+  - document_model
+  - learning_component_model
+  - learning_component_offering_model
+  - learning_component_offering_association_model
+  - test_component_model
+  - test_component_offering_model
+  - test_component_offering_association_model
+  - test_component_offering_association_attempt_model
+  - group_model
+  - membership_model
+  - organisation_model
+  - person_model
+  - programme_model
+  - programme_offering_model
+  - programme_offering_association_model
+  - room_model

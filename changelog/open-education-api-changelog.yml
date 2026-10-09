@@ -1,0 +1,50 @@
+generated: '2026-10-09'
+method: searched
+source: https://oeapi.eu/v6.0/changelog/CHANGELOG.md
+docs: https://oeapi.eu/v6.0/#/changelog/CHANGELOG
+format: Keep a Changelog
+scheme: semantic MAJOR.MINOR with release candidates (MAJOR.MINOR-rc.#)
+current_version: 6.0-RC.3
+note: Entries are headed "[<version> <title>] - <date>"; the 2026-08-25 entry appears several times verbatim in the source.
+entries:
+- version: 6.0-RC.3
+  date: '2026-08-25'
+  breaking: false
+  highlights: ["Fixed vacuum error no-unnecessary-combinator: All specifications with only one option in oneOf or allOf have been eliminated"]
+- version: 6.0-RC.3
+  date: '2026-08-24'
+  breaking: false
+  highlights: ["Add errror 409 to all PUT, PATCH and POST endpoints"]
+- version: 6.0-RC.3
+  date: '2026-08-19'
+  breaking: false
+  highlights: ["Fixed language description to RFC 5646", "Fixed readonly in ProgrammeOfferingAssociation"]
+- version: 6.0-RC.3
+  date: '2026-08-18'
+  breaking: false
+  highlights: ["Fix missing and unused expand", "Fix format of flexibleEntryPeriodEndDateTime", "Fix format in service.yaml"]
+- version: 6.0-RC.3
+  date: '2026-07-09'
+  breaking: false
+  highlights: ["Solved filter parameter issue", "Solved content-type issue"]
+- version: 6.0-RC.2
+  date: '2026-05-12'
+  breaking: false
+  highlights: ["Solved documentation issue"]
+- version: 6.0-RC.2
+  date: '2026-03-13'
+  breaking: false
+  highlights: ["update examples 406"]
+- version: 6.0-RC.2
+  date: '2026-02-23'
+  breaking: false
+  highlights: ["minor modifications on associations, attempts and results"]
+- version: 6.0-RC.2
+  date: '2026-02-19'
+  breaking: false
+  highlights: ["Fix readonly person in association PUT and readonly state", "Fix required fields in service endpoint"]
+- version: 6.0.0
+  date: '2025-12-19'
+  breaking: true
+  highlights: ["make v6 production ready"]
+  note: v6 is a new major version over v5; see https://oeapi.eu/v6.0/#/technical/major-changes

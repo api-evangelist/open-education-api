@@ -1,0 +1,733 @@
+generated: '2026-10-09'
+method: derived
+source: openapi/open-education-api-openapi.yml
+name: Open Education API MCP (candidate)
+status: candidate
+description: No official MCP server exists for the Open Education API (OEAPI). OEAPI is a specification that each institution implements on its own host, so there is no single central endpoint to wrap.
+  This is a CANDIDATE tool list derived one-tool-per-operationId from the OEAPI 6.0-rc.3 OpenAPI; an implementer would point it at its own OEAPI base URL.
+search:
+  date: '2026-10-09'
+  queries:
+  - '"Open Education API" OR OEAPI OR OOAPI MCP server "Model Context Protocol"'
+  result: 'No OEAPI/OOAPI MCP server found. The closest hit, OpenEdu MCP Server (Cicatriiz/openedu-mcp, https://mcp.so/servers/openedu-mcp), is unrelated: it wraps Open Library, Wikipedia, Dictionary and
+    arXiv.'
+  probes:
+  - url: https://oeapi.eu/llms.txt
+    status: 404
+deployment:
+  mode: none
+  auth: unknown
+  verified: derived
+  note: Nobody ships a server. OEAPI 6.0-rc.3 declares no securitySchemes; v5 declares bearerAuth and OpenID Connect. Auth is set per implementing institution.
+server:
+  base_url_template: https://{institution-oeapi-host}/v6
+  spec_server: https://demo01.eduapi.nl/v6 (SURF demo; did not resolve in DNS on 2026-10-09 per apis.yml)
+tool_count: 101
+tools:
+- name: list_service_meta_data
+  operationId: listServiceMetaData
+  method: GET
+  path: /
+  tag: service metadata
+  description: Get metadata for the service.
+  readOnly: true
+- name: list_academic_sessions
+  operationId: listAcademicSessions
+  method: GET
+  path: /academic-sessions
+  tag: academic sessions
+  description: Get a list of all academic sessions, ordered chronologically.
+  readOnly: true
+- name: list_academic_session_by_id
+  operationId: listAcademicSessionById
+  method: GET
+  path: /academic-sessions/{academicSessionId}
+  tag: academic sessions
+  description: Get a single academic session.
+  readOnly: true
+- name: list_course_offerings_by_academic_session_id
+  operationId: listCourseOfferingsByAcademicSessionId
+  method: GET
+  path: /academic-sessions/{academicSessionId}/course-offerings
+  tag: course offerings
+  description: Get a list of all course offerings during this academic session
+  readOnly: true
+- name: list_learning_component_offerings_by_academic_session_id
+  operationId: listLearningComponentOfferingsByAcademicSessionId
+  method: GET
+  path: /academic-sessions/{academicSessionId}/learning-component-offerings
+  tag: learning component offerings
+  description: Get a list of all offerings during this academic session
+  readOnly: true
+- name: list_programme_offerings_by_academic_session_id
+  operationId: listProgrammeOfferingsByAcademicSessionId
+  method: GET
+  path: /academic-sessions/{academicSessionId}/programme-offerings
+  tag: programme offerings
+  description: Get a list of all programme offerings during this academic session
+  readOnly: true
+- name: list_test_component_offerings_by_academic_session_id
+  operationId: listTestComponentOfferingsByAcademicSessionId
+  method: GET
+  path: /academic-sessions/{academicSessionId}/test-component-offerings
+  tag: test component offerings
+  description: Get a list of all test component offerings during this academic session
+  readOnly: true
+- name: list_buildings
+  operationId: listBuildings
+  method: GET
+  path: /buildings
+  tag: buildings
+  description: Get a list of all buildings, ordered by name (ascending).
+  readOnly: true
+- name: list_building_by_id
+  operationId: listBuildingById
+  method: GET
+  path: /buildings/{buildingId}
+  tag: buildings
+  description: Get a single building.
+  readOnly: true
+- name: list_rooms_by_building_id
+  operationId: listRoomsByBuildingId
+  method: GET
+  path: /buildings/{buildingId}/rooms
+  tag: buildings
+  description: Get a list of all rooms in a building.
+  readOnly: true
+- name: create_external_course_offering_association_byopen_id
+  operationId: createExternalCourseOfferingAssociationByopenId
+  method: POST
+  path: /course-offering-associations/external/me
+  tag: course offering associations
+  description: 'POST a single course offering association, enrol a person based on person information obtained from well known endpoint, an offering, '
+  readOnly: false
+- name: list_course_offering_association_by_id
+  operationId: listCourseOfferingAssociationById
+  method: GET
+  path: /course-offering-associations/{courseOfferingAssociationId}
+  tag: course offering associations
+  description: Get a single course offering association.
+  readOnly: true
+- name: replace_course_offering_association_by_id
+  operationId: replaceCourseOfferingAssociationById
+  method: PUT
+  path: /course-offering-associations/{courseOfferingAssociationId}
+  tag: course offering associations
+  description: PUT a single course offering association to enrol a person on a specific association that can later be retrieved.
+  readOnly: false
+- name: partial_update_course_offering_association_by_id
+  operationId: partialUpdateCourseOfferingAssociationById
+  method: PATCH
+  path: /course-offering-associations/{courseOfferingAssociationId}
+  tag: course offering associations
+  description: 'Update the status or result of an enrolment. Other elements of the association object COULD '
+  readOnly: false
+- name: list_course_offerings_by_id
+  operationId: listCourseOfferingsById
+  method: GET
+  path: /course-offerings/{courseOfferingId}
+  tag: course offerings
+  description: Get a single course offering.
+  readOnly: true
+- name: replace_course_offerings_by_id
+  operationId: replaceCourseOfferingsById
+  method: PUT
+  path: /course-offerings/{courseOfferingId}
+  tag: course offerings
+  description: Update all attributes of a single course offering.
+  readOnly: false
+- name: partial_update_course_offerings_by_id
+  operationId: partialUpdateCourseOfferingsById
+  method: PATCH
+  path: /course-offerings/{courseOfferingId}
+  tag: course offerings
+  description: Change attributes of a single course offering.
+  readOnly: false
+- name: list_course_offering_associations_by_course_offering_id
+  operationId: listCourseOfferingAssociationsByCourseOfferingId
+  method: GET
+  path: /course-offerings/{courseOfferingId}/course-offering-associations
+  tag: course offering associations
+  description: Get a list of all course offering associations related to the course offering based on its ID.
+  readOnly: true
+- name: list_groups_by_course_offering_id
+  operationId: listGroupsByCourseOfferingId
+  method: GET
+  path: /course-offerings/{courseOfferingId}/groups
+  tag: groups
+  description: Get an ordered list of all groups related to a course offering, ordered by name.
+  readOnly: true
+- name: list_learning_component_offerings_by_course_offering_id
+  operationId: listLearningComponentOfferingsByCourseOfferingId
+  method: GET
+  path: /course-offerings/{courseOfferingId}/learning-component-offerings
+  tag: learning component offerings
+  description: Get a list of all learning component offerings related to the course offering based on its ID.
+  readOnly: true
+- name: list_test_component_offerings_by_course_offering_id
+  operationId: listTestComponentOfferingsByCourseOfferingId
+  method: GET
+  path: /course-offerings/{courseOfferingId}/test-component-offerings
+  tag: test component offerings
+  description: Get a list of all test component offerings related to the course offering based on its ID.
+  readOnly: true
+- name: list_courses
+  operationId: listCourses
+  method: GET
+  path: /courses
+  tag: courses
+  description: Get a list of all courses, ordered by name (ascending).
+  readOnly: true
+- name: list_course_by_id
+  operationId: listCourseById
+  method: GET
+  path: /courses/{courseId}
+  tag: courses
+  description: Get a single course.
+  readOnly: true
+- name: list_course_offerings_by_course_id
+  operationId: listCourseOfferingsByCourseId
+  method: GET
+  path: /courses/{courseId}/course-offerings
+  tag: course offerings
+  description: Get a list of all course offerings for this course, ordered chronologically.
+  readOnly: true
+- name: list_learning_compoent_offerings_by_course_id
+  operationId: listLearningCompoentOfferingsByCourseId
+  method: GET
+  path: /courses/{courseId}/learning-component-offerings
+  tag: learning component offerings
+  description: Get a list of all learning component offerings for this course, ordered chronologically.
+  readOnly: true
+- name: list_learning_components_by_course_id
+  operationId: listLearningComponentsByCourseId
+  method: GET
+  path: /courses/{courseId}/learning-components
+  tag: learning components
+  description: Get an ordered list of all course learning components.
+  readOnly: true
+- name: list_test_compoent_offerings_by_course_id
+  operationId: listTestCompoentOfferingsByCourseId
+  method: GET
+  path: /courses/{courseId}/test-component-offerings
+  tag: test component offerings
+  description: Get a list of all test component offerings for this course, ordered chronologically.
+  readOnly: true
+- name: list_test_components_by_course_id
+  operationId: listTestComponentsByCourseId
+  method: GET
+  path: /courses/{courseId}/test-components
+  tag: test components
+  description: Get an ordered list of all course test components.
+  readOnly: true
+- name: list_document_by_id
+  operationId: listDocumentById
+  method: GET
+  path: /documents/{documentId}
+  tag: documents
+  description: Get the binary data from a document.
+  readOnly: true
+- name: list_groups
+  operationId: listGroups
+  method: GET
+  path: /groups
+  tag: groups
+  description: Get a list of all groups, ordered by name (ascending).
+  readOnly: true
+- name: list_group_by_id
+  operationId: listGroupById
+  method: GET
+  path: /groups/{groupId}
+  tag: groups
+  description: Get a single group.
+  readOnly: true
+- name: replace_group_by_id
+  operationId: replaceGroupById
+  method: PUT
+  path: /groups/{groupId}
+  tag: groups
+  description: Replace a single group from source system to recipient.
+  readOnly: false
+- name: list_memberships_by_group_id
+  operationId: listMembershipsByGroupId
+  method: GET
+  path: /groups/{groupId}/memberships
+  tag: groups
+  description: Get an ordered list of membershipItems (personIds that are member of a given group, and duration) ordered by personId.
+  readOnly: true
+- name: replace_personin_group_by_id
+  operationId: replacePersoninGroupById
+  method: PUT
+  path: /groups/{groupId}/memberships/{personId}
+  tag: groups
+  description: Replace or add a single group member from source system to recipient.
+  readOnly: false
+- name: list_learning_component_offering_association_by_id
+  operationId: listLearningComponentOfferingAssociationById
+  method: GET
+  path: /learning-component-offering-associations/{learningComponentOfferingAssociationId}
+  tag: learning component offering associations
+  description: Get a single learning component offering association.
+  readOnly: true
+- name: replace_learning_component_offering_association_by_id
+  operationId: replaceLearningComponentOfferingAssociationById
+  method: PUT
+  path: /learning-component-offering-associations/{learningComponentOfferingAssociationId}
+  tag: learning component offering associations
+  description: PUT a single learning component offering association to enrol a person on a specific association that can later be retrieved.
+  readOnly: false
+- name: partial_update_learning_component_offering_association_by_id
+  operationId: partialUpdateLearningComponentOfferingAssociationById
+  method: PATCH
+  path: /learning-component-offering-associations/{learningComponentOfferingAssociationId}
+  tag: learning component offering associations
+  description: 'Update the status or result of an enrolment. Other elements of the association object COULD '
+  readOnly: false
+- name: list_learning_component_offerings_by_id
+  operationId: listLearningComponentOfferingsById
+  method: GET
+  path: /learning-component-offerings/{learningComponentOfferingId}
+  tag: learning component offerings
+  description: Get a single learnig component offering.
+  readOnly: true
+- name: replace_learning_component_offerings_by_id
+  operationId: replaceLearningComponentOfferingsById
+  method: PUT
+  path: /learning-component-offerings/{learningComponentOfferingId}
+  tag: learning component offerings
+  description: Update all attributes of a single learning component offering.
+  readOnly: false
+- name: partial_update_learning_component_offerings_by_id
+  operationId: partialUpdateLearningComponentOfferingsById
+  method: PATCH
+  path: /learning-component-offerings/{learningComponentOfferingId}
+  tag: learning component offerings
+  description: Change attributes of a single learning component offering.
+  readOnly: false
+- name: list_groups_by_learning_component_offering_id
+  operationId: listGroupsByLearningComponentOfferingId
+  method: GET
+  path: /learning-component-offerings/{learningComponentOfferingId}/groups
+  tag: groups
+  description: Get an ordered list of all groups related to a learning component offering, ordered by name.
+  readOnly: true
+- name: list_learning_component_offering_associations_by_learning_component_offering_id
+  operationId: listLearningComponentOfferingAssociationsByLearningComponentOfferingId
+  method: GET
+  path: /learning-component-offerings/{learningComponentOfferingId}/learning-component-offering-associations
+  tag: learning component offering associations
+  description: Get a list of all learning component offering associations related to the learning component offering based on its ID.
+  readOnly: true
+- name: list_learning_components
+  operationId: listLearningComponents
+  method: GET
+  path: /learning-components
+  tag: learning components
+  description: Get a list of all learning components, ordered by name (ascending).
+  readOnly: true
+- name: list_learning_component_by_id
+  operationId: listLearningComponentById
+  method: GET
+  path: /learning-components/{learningComponentId}
+  tag: learning components
+  description: Get a single learnig component.
+  readOnly: true
+- name: list_offerings_by_learning_component_id
+  operationId: listOfferingsByLearningComponentId
+  method: GET
+  path: /learning-components/{learningComponentId}/learning-component-offerings
+  tag: learning component offerings
+  description: Get a list of all learning component offerings for this learning component, ordered chronologically.
+  readOnly: true
+- name: list_learning_outcomes
+  operationId: listLearningOutcomes
+  method: GET
+  path: /learning-outcomes
+  tag: learning outcomes
+  description: Get a list of all learning outcomes, ordered chronologically.
+  readOnly: true
+- name: list_learning_outcome_by_id
+  operationId: listLearningOutcomeById
+  method: GET
+  path: /learning-outcomes/{learningOutcomeId}
+  tag: learning outcomes
+  description: Get a single learnig outcome.
+  readOnly: true
+- name: list_organisations
+  operationId: listOrganisations
+  method: GET
+  path: /organisations
+  tag: organisations
+  description: Get an ordered list of all organisations, ordered by name.
+  readOnly: true
+- name: list_organisation_by_id
+  operationId: listOrganisationById
+  method: GET
+  path: /organisations/{organisationId}
+  tag: organisations
+  description: Get a single organisation.
+  readOnly: true
+- name: replace_organisation_by_id
+  operationId: replaceOrganisationById
+  method: PUT
+  path: /organisations/{organisationId}
+  tag: organisations
+  description: change the data of a single organisation.
+  readOnly: false
+- name: list_course_offerings_by_organisation_id
+  operationId: listCourseOfferingsByOrganisationId
+  method: GET
+  path: /organisations/{organisationId}/course-offerings
+  tag: course offerings
+  description: Get a list of all course offerings for a given organisation
+  readOnly: true
+- name: list_courses_by_organisation_id
+  operationId: listCoursesByOrganisationId
+  method: GET
+  path: /organisations/{organisationId}/courses
+  tag: courses
+  description: Get an ordered list of all courses for a given organisation, ordered by name.
+  readOnly: true
+- name: list_groups_by_organisation_id
+  operationId: listGroupsByOrganisationId
+  method: GET
+  path: /organisations/{organisationId}/groups
+  tag: groups
+  description: Get an ordered list of all groups for a given organisation, ordered by name.
+  readOnly: true
+- name: list_learning_component_offerings_by_organisation_id
+  operationId: listLearningComponentOfferingsByOrganisationId
+  method: GET
+  path: /organisations/{organisationId}/learning-component-offerings
+  tag: learning component offerings
+  description: Get a list of all learning component offerings for a given organisation
+  readOnly: true
+- name: list_learning_components_by_organisation_id
+  operationId: listLearningComponentsByOrganisationId
+  method: GET
+  path: /organisations/{organisationId}/learning-components
+  tag: learning components
+  description: Get an ordered list of all learning components for a given organisation, ordered by name.
+  readOnly: true
+- name: list_programme_offerings_by_organisation_id
+  operationId: listProgrammeOfferingsByOrganisationId
+  method: GET
+  path: /organisations/{organisationId}/programme-offerings
+  tag: programme offerings
+  description: Get a list of all programme offerings for a given organisation
+  readOnly: true
+- name: list_programmes_by_organisation_id
+  operationId: listProgrammesByOrganisationId
+  method: GET
+  path: /organisations/{organisationId}/programmes
+  tag: programmes
+  description: Get an ordered list of all programmes for a given organisation, ordered by name.
+  readOnly: true
+- name: list_test_component_offerings_by_organisation_id
+  operationId: listTestComponentOfferingsByOrganisationId
+  method: GET
+  path: /organisations/{organisationId}/test-component-offerings
+  tag: test component offerings
+  description: Get a list of all test component offerings for a given organisation
+  readOnly: true
+- name: list_test_components_by_organisation_id
+  operationId: listTestComponentsByOrganisationId
+  method: GET
+  path: /organisations/{organisationId}/test-components
+  tag: test components
+  description: Get an ordered list of all test components for a given organisation, ordered by name.
+  readOnly: true
+- name: list_persons
+  operationId: listPersons
+  method: GET
+  path: /persons
+  tag: persons
+  description: Get an ordered list of all persons.
+  readOnly: true
+- name: create_person
+  operationId: createPerson
+  method: POST
+  path: /persons
+  tag: persons
+  description: POST a single person.
+  readOnly: false
+- name: list_person_by_my_oauth_id
+  operationId: listPersonByMyOauthId
+  method: GET
+  path: /persons/me
+  tag: persons
+  description: Returns the person object for the currently authenticated user.
+  readOnly: true
+- name: list_person_by_id
+  operationId: listPersonById
+  method: GET
+  path: /persons/{personId}
+  tag: persons
+  description: Get a single person.
+  readOnly: true
+- name: replace_person_by_id
+  operationId: replacePersonById
+  method: PUT
+  path: /persons/{personId}
+  tag: persons
+  description: change the data of a single person.
+  readOnly: false
+- name: list_course_offering_associations_by_person_id
+  operationId: listCourseOfferingAssociationsByPersonId
+  method: GET
+  path: /persons/{personId}/course-offering-associations
+  tag: course offering associations
+  description: Get a list of all course offering associations for an individual person.
+  readOnly: true
+- name: list_learning_component_offering_associations_by_person_id
+  operationId: listLearningComponentOfferingAssociationsByPersonId
+  method: GET
+  path: /persons/{personId}/learning-component-offering-associations
+  tag: learning component offering associations
+  description: Get a list of all learning component offering associations for an individual person.
+  readOnly: true
+- name: list_programme_offering_associations_by_person_id
+  operationId: listProgrammeOfferingAssociationsByPersonId
+  method: GET
+  path: /persons/{personId}/programme-offering-associations
+  tag: programme offering associations
+  description: Get a list of all programme offering associations for an individual person.
+  readOnly: true
+- name: list_test_component_offering_associations_by_person_id
+  operationId: listTestComponentOfferingAssociationsByPersonId
+  method: GET
+  path: /persons/{personId}/test-component-offering-associations
+  tag: test component offering associations
+  description: Get a list of all test component offering associations for an individual person.
+  readOnly: true
+- name: create_external_programme_offering_association_byopen_id
+  operationId: createExternalProgrammeOfferingAssociationByopenId
+  method: POST
+  path: /programme-offering-associations/external/me
+  tag: programme offering associations
+  description: 'POST a single programme offering association, enrol a person based on person information obtained from well known endpoint, an offering, '
+  readOnly: false
+- name: list_programme_offering_association_by_id
+  operationId: listProgrammeOfferingAssociationById
+  method: GET
+  path: /programme-offering-associations/{programmeOfferingAssociationId}
+  tag: programme offering associations
+  description: Get a single programme offering association.
+  readOnly: true
+- name: replace_programme_offering_association_by_id
+  operationId: replaceProgrammeOfferingAssociationById
+  method: PUT
+  path: /programme-offering-associations/{programmeOfferingAssociationId}
+  tag: programme offering associations
+  description: PUT a single programme offering association to enrol a person on a specific association that can later be retrieved.
+  readOnly: false
+- name: partial_update_programme_offering_association_by_id
+  operationId: partialUpdateProgrammeOfferingAssociationById
+  method: PATCH
+  path: /programme-offering-associations/{programmeOfferingAssociationId}
+  tag: programme offering associations
+  description: 'Update the status or result of an enrolment. Other elements of the association object COULD '
+  readOnly: false
+- name: list_programme_offerings_by_id
+  operationId: listProgrammeOfferingsById
+  method: GET
+  path: /programme-offerings/{programmeOfferingId}
+  tag: programme offerings
+  description: Get a single programme offering.
+  readOnly: true
+- name: replace_programme_offerings_by_id
+  operationId: replaceProgrammeOfferingsById
+  method: PUT
+  path: /programme-offerings/{programmeOfferingId}
+  tag: programme offerings
+  description: Update all attributes of a single programme offering.
+  readOnly: false
+- name: partial_update_programme_offerings_by_id
+  operationId: partialUpdateProgrammeOfferingsById
+  method: PATCH
+  path: /programme-offerings/{programmeOfferingId}
+  tag: programme offerings
+  description: Change attributes of a single programme offering.
+  readOnly: false
+- name: list_groups_by_programme_offering_id
+  operationId: listGroupsByProgrammeOfferingId
+  method: GET
+  path: /programme-offerings/{programmeOfferingId}/groups
+  tag: groups
+  description: Get an ordered list of all groups related to a programme offering, ordered by name.
+  readOnly: true
+- name: list_programme_offering_associations_by_programme_offering_id
+  operationId: listProgrammeOfferingAssociationsByProgrammeOfferingId
+  method: GET
+  path: /programme-offerings/{programmeOfferingId}/programme-offering-associations
+  tag: programme offering associations
+  description: Get a list of all programme offering associations related to the programme offering based on its ID.
+  readOnly: true
+- name: list_programmes
+  operationId: listProgrammes
+  method: GET
+  path: /programmes
+  tag: programmes
+  description: Get an ordered list of all programmes, ordered by name.
+  readOnly: true
+- name: list_programme_by_id
+  operationId: listProgrammeById
+  method: GET
+  path: /programmes/{programmeId}
+  tag: programmes
+  description: Get a single programme.
+  readOnly: true
+- name: list_courses_by_programme_id
+  operationId: listCoursesByProgrammeId
+  method: GET
+  path: /programmes/{programmeId}/courses
+  tag: courses
+  description: Get an ordered list of all courses given through this programme.
+  readOnly: true
+- name: list_offerings_by_programme_id
+  operationId: listOfferingsByProgrammeId
+  method: GET
+  path: /programmes/{programmeId}/programme-offerings
+  tag: programme offerings
+  description: Get a list of all offerings for this programme, ordered chronologically.
+  readOnly: true
+- name: list_programmes_by_programme_id
+  operationId: listProgrammesByProgrammeId
+  method: GET
+  path: /programmes/{programmeId}/programmes
+  tag: programmes
+  description: Get an ordered list of nested programmes, ordered by name.
+  readOnly: true
+- name: list_rooms
+  operationId: listRooms
+  method: GET
+  path: /rooms
+  tag: rooms
+  description: Get a list of all rooms, ordered by name (ascending).
+  readOnly: true
+- name: list_room_by_id
+  operationId: listRoomById
+  method: GET
+  path: /rooms/{roomId}
+  tag: rooms
+  description: Get a single room.
+  readOnly: true
+- name: list_test_component_offering_association_by_id
+  operationId: listTestComponentOfferingAssociationById
+  method: GET
+  path: /test-component-offering-associations/{testComponentOfferingAssociationId}
+  tag: test component offering associations
+  description: Get a single test component offering association.
+  readOnly: true
+- name: replace_test_component_offering_association_by_id
+  operationId: replaceTestComponentOfferingAssociationById
+  method: PUT
+  path: /test-component-offering-associations/{testComponentOfferingAssociationId}
+  tag: test component offering associations
+  description: PUT a single test component offering association to enrol a person on a specific association that can later be retrieved.
+  readOnly: false
+- name: partial_update_test_component_offering_association_by_id
+  operationId: partialUpdateTestComponentOfferingAssociationById
+  method: PATCH
+  path: /test-component-offering-associations/{testComponentOfferingAssociationId}
+  tag: test component offering associations
+  description: 'Update the status or result of an enrolment. Other elements of the association object COULD '
+  readOnly: false
+- name: list_test_component_offering_association_url
+  operationId: listTestComponentOfferingAssociationUrl
+  method: GET
+  path: /test-component-offering-associations/{testComponentOfferingAssociationId}/url
+  tag: test component offering associations
+  description: Get the URL of the test component association to start the testing tool.
+  readOnly: true
+- name: list_test_component_offering_association_attempts_by_test_component_offering_association_id
+  operationId: listTestComponentOfferingAssociationAttemptsByTestComponentOfferingAssociationId
+  method: GET
+  path: /test-component-offering-associations/{testComponentOfferingAssociationId}/test-component-offering-association-attempts
+  tag: test component offering association attempts
+  description: Get a list of all test component offering association attempts related to the test component offering association based on its ID.
+  readOnly: true
+- name: insert_or_replace_test_component_offering_association_attempt_by_association_id_and_attempt_id
+  operationId: insertOrReplaceTestComponentOfferingAssociationAttemptByAssociationIdAndAttemptId
+  method: PUT
+  path: /test-component-offering-associations/{testComponentOfferingAssociationId}/test-component-offering-association-attempt/{testComponentOfferingAssociationAttemptId}
+  tag: test component offering association attempts
+  description: PUT a single test component offering association attempt to enrol a person on a specific attempt or update information on that enrolment that can later be retrieved.
+  readOnly: false
+- name: list_test_component_offering_association_attempt_by_id
+  operationId: listTestComponentOfferingAssociationAttemptById
+  method: GET
+  path: /test-component-offering-associations-attempt/{testComponentOfferingAssociationAttemptId}
+  tag: test component offering association attempts
+  description: Get a single test component offering association attempt.
+  readOnly: true
+- name: insert_or_replace_test_component_offering_association_attempt_by_id
+  operationId: insertOrReplaceTestComponentOfferingAssociationAttemptById
+  method: PUT
+  path: /test-component-offering-associations-attempt/{testComponentOfferingAssociationAttemptId}
+  tag: test component offering association attempts
+  description: 'PUT a single test component offering association attempt to enrol a person in a specific attempt or '
+  readOnly: false
+- name: partial_update_test_component_offering_association_attempt_by_id
+  operationId: partialUpdateTestComponentOfferingAssociationAttemptById
+  method: PATCH
+  path: /test-component-offering-associations-attempt/{testComponentOfferingAssociationAttemptId}
+  tag: test component offering association attempts
+  description: 'Update the result of an attempt. Other elements of the attempt object COULD '
+  readOnly: false
+- name: list_test_component_offerings_by_id
+  operationId: listTestComponentOfferingsById
+  method: GET
+  path: /test-component-offerings/{testComponentOfferingId}
+  tag: test component offerings
+  description: Get a single learnig component offering.
+  readOnly: true
+- name: replace_test_component_offerings_by_id
+  operationId: replaceTestComponentOfferingsById
+  method: PUT
+  path: /test-component-offerings/{testComponentOfferingId}
+  tag: test component offerings
+  description: Update all attributes of a single test component offering.
+  readOnly: false
+- name: partial_update_test_component_offerings_by_id
+  operationId: partialUpdateTestComponentOfferingsById
+  method: PATCH
+  path: /test-component-offerings/{testComponentOfferingId}
+  tag: test component offerings
+  description: Change attributes of a single test component offering.
+  readOnly: false
+- name: list_groups_by_test_component_offering_id
+  operationId: listGroupsByTestComponentOfferingId
+  method: GET
+  path: /test-component-offerings/{testComponentOfferingId}/groups
+  tag: groups
+  description: Get an ordered list of all groups related to a test component offering, ordered by name.
+  readOnly: true
+- name: list_test_component_offering_associations_by_test_component_offering_id
+  operationId: listTestComponentOfferingAssociationsByTestComponentOfferingId
+  method: GET
+  path: /test-component-offerings/{testComponentOfferingId}/test-component-offering-associations
+  tag: test component offering associations
+  description: Get a list of all test component offering associations related to the test component offering based on its ID.
+  readOnly: true
+- name: list_test_components
+  operationId: listTestComponents
+  method: GET
+  path: /test-components
+  tag: test components
+  description: Get a list of all test components, ordered by name.
+  readOnly: true
+- name: list_test_component_by_id
+  operationId: listTestComponentById
+  method: GET
+  path: /test-components/{testComponentId}
+  tag: test components
+  description: Get a single test component.
+  readOnly: true
+- name: list_offerings_by_test_component_id
+  operationId: listOfferingsByTestComponentId
+  method: GET
+  path: /test-components/{testComponentId}/test-component-offerings
+  tag: test component offerings
+  description: Get a list of all offerings for this test component, ordered chronologically.
+  readOnly: true

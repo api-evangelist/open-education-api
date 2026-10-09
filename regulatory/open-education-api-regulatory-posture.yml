@@ -1,0 +1,18 @@
+generated: '2026-10-09'
+method: none
+probe: true
+source: https://oeapi.eu/v6.0/
+signals: {}
+checked:
+  - {url: 'https://oeapi.eu/', http_status: 200, note: 'docsify JavaScript shell; rendered nav (60 links) links no privacy policy, terms, cookie, accessibility, subprocessor or trust page'}
+  - {url: 'https://oeapi.eu/v6.0/technical/security.md', http_status: 200, note: 'implementation guidance for implementers (access control, data classification), not the publisher''s own posture'}
+  - {url: 'https://oeapi.eu/v6.0/governance/version-management.md', http_status: 200, note: 'no stated support period; deprecation described only as "removed in a future major version"'}
+  - {url: 'https://oeapi.eu/v6.0/technical/versioning.md', http_status: 200, note: 'no support lifetime stated'}
+  - {url: 'https://oeapi.eu/v6.0/architecture/README.md', http_status: 200, note: 'no regulatory signal'}
+  - {url: 'https://oeapi.eu/v6.0/governance/by-laws.md', http_status: 200, note: 'no regulatory signal'}
+  - {url: 'https://oeapi.eu/v6.0/contact.md', http_status: 200, note: 'no regulatory signal'}
+note: >-
+  Open Education API (OEAPI) is an open specification published as a docs site, not a hosted
+  service. The preflight dossier found no legal_pages, and none of the published pages speak
+  to any catalog regulatory signal (no privacy policy, DSR, subprocessors, residency,
+  accessibility conformance, SBOM or support lifetime). Recorded as a checked absence.

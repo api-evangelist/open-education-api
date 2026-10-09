@@ -1,0 +1,478 @@
+openapi: 3.2.0
+info:
+  version: 6.0-rc.3
+  title: Open Education Documents API
+  description: OpenAPI (fka Swagger) specification for the Open Education API.
+  license:
+    name: EUPL-1.2
+    url: https://github.com/open-education-api/specification/blob/release/6.0/LICENSE.md
+  contact:
+    name: OEAPI Working Group / SURF
+    url: https://oeapi.eu
+    email: info@oeapi.eu
+  x-logo:
+    url: ./logo.png
+    href: ./docs.html
+servers:
+- url: https://demo01.eduapi.nl/v6
+  description: SURF demo implementation
+security: []
+tags:
+- name: Documents
+  description: The API for accessing and retrieving document resources.
+paths:
+  /documents/{documentId}:
+    get:
+      summary: GET /documents/{documentId}
+      operationId: listDocumentById
+      description: 'Get the binary data from a document.
+
+
+        Security must be implemented at the level of the actual deployment rather than in the core specification.
+
+        This means that the specification remains neutral, while concrete security measures can be applied in practice
+
+        using established techniques such as OAuth flows with fine-grained definitions. For example, access may be
+
+        managed through the flow identified as nl-test-admin-flow-2-3-4. The previous inline declaration has therefore
+
+        been removed to avoid conflating implementation details with the specification.'
+      tags:
+      - Documents
+      parameters:
+      - name: documentId
+        in: path
+        description: Document ID
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - $ref: '#/components/parameters/fields'
+      - $ref: '#/components/parameters/consumer'
+      responses:
+        '200':
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+              examples:
+                file-download:
+                  description: File download
+                  summary: File download
+                  value: <raw data>
+          description: OK
+        '400':
+          $ref: '#/components/responses/ErrorBadRequest'
+        '401':
+          $ref: '#/components/responses/ErrorUnauthorized'
+        '403':
+          $ref: '#/components/responses/ErrorForbidden'
+        '404':
+          $ref: '#/components/responses/ErrorNotFound'
+        '405':
+          $ref: '#/components/responses/ErrorMethodNotAllowed'
+        '406':
+          $ref: '#/components/responses/ErrorNotAcceptable'
+        '429':
+          $ref: '#/components/responses/ErrorTooManyRequests'
+        '500':
+          $ref: '#/components/responses/ErrorInternalServerError'
+components:
+  responses:
+    ErrorNotFound:
+      description: "Not Found.  \n\nReturned only when a specific resource identified by its identifier\ncannot be located. This applies to instance endpoints where a single,\nuniquely-addressable object is expected.  \n\nCollection endpoints should not return a 404. If no items match the request,\nthey must return an empty array. A 404 may still occur if the collection\nendpoint itself does not exist or is not accessible.\n"
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            instanceNotFound:
+              summary: 'Instance endpoint: resource not found'
+              value:
+                type: https://api.example.org/problems/not-found
+                title: Resource not found
+                status: 404
+                detail: The course with id 'abc123' could not be found.
+                instance: https://api.example.org/courses/abc123
+            collectionEndpointNotFound:
+              summary: Collection endpoint unavailable
+              value:
+                type: https://api.example.org/problems/not-found
+                title: Collection endpoint not found
+                status: 404
+                detail: The collection endpoint '/course-offerings' does not exist or is not accessible.
+                instance: https://api.example.org/course-offerings
+    ErrorUnauthorized:
+      description: Unauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          example:
+            type: https://api.example.org/problems/unauthorized
+            title: Unauthorized
+            status: 401
+            detail: Authentication credentials were missing or invalid.
+            instance: https://api.example.org/student/12345
+    ErrorNotAcceptable:
+      description: 'Not Acceptable.
+
+
+        Returned when the server cannot produce a representation in the
+
+        requested OEAPI or consumer version. The server may serve the
+
+        requested version or any lower compatible minor version.
+
+
+        If neither the requested version nor a lower minor version is
+
+        available, a 406 response is returned to indicate that no acceptable
+
+        representation can be produced.
+
+
+        This behaviour slightly deviates from strict HTTP semantics. The client
+
+        requests exactly one OEAPI version and at most one consumer with one
+
+        consumer version using the HTTP Accept header. Standard HTTP content
+
+        negotiation is not applied. The server performs an internal Accept-like
+
+        version check after the HTTP layer.
+
+
+        If the request can be satisfied, the server returns a compatible
+
+        version. A compatible version is any version within the same major
+
+        version, with a higher or lower minor version.
+
+
+        If no compatible version can be provided, the server returns 406 to
+
+        signal that the requested representation cannot be provided.
+
+
+        This approach improves clarity, implementation consistency and
+
+        debugging, because the requested and supported versions are explicit
+
+        in both the request and the 406 response, avoiding ambiguity caused
+
+        by full HTTP content negotiation or Accept-based parsing.
+
+
+        It also improves logging. Servers can log the requested and supported
+
+        versions at the point of mismatch, allowing operators to detect
+
+        outdated consumers, configuration issues or unexpected version drift.
+
+        '
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ProblemVersionNotAcceptable'
+          examples:
+            unsupportedOoapiVersion:
+              summary: Requested OEAPI version is not supported
+              description: 'Example where the client requests OEAPI version 5.0 and the server
+
+                cannot serve that version or a lower compatible minor version.
+
+                '
+              value:
+                type: https://api.example.org/problems/version-not-acceptable
+                title: Version not acceptable
+                status: 406
+                detail: The requested OEAPI version '5.0' cannot be served.
+                requestedVersion: '5.0'
+                supportedVersions:
+                - '6.1'
+                - '6.0'
+                instance: https://api.example.org/courses
+            unsupportedConsumerVersion:
+              summary: Requested consumer version is not supported
+              description: 'Example where the client requests consumer version 2.0 which is not
+
+                supported by the server and no lower compatible consumer version is
+
+                available.
+
+                '
+              value:
+                type: https://api.example.org/problems/version-not-acceptable
+                title: Version not acceptable
+                status: 406
+                detail: The consumer version '2.0' is not supported.
+                consumer:
+                  consumerKey: mbo-oke-roster-service
+                requestedVersion: '2.0'
+                supportedVersions:
+                - '1.0'
+                - '0.94'
+                instance: https://api.example.org/enrolments
+    ErrorTooManyRequests:
+      description: Too many requests
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          example:
+            type: https://api.example.org/problems/too-many-requests
+            title: Too many requests
+            status: 429
+            detail: You have exceeded the rate limit of 100 requests per minute.
+            instance: https://api.example.org/courses
+    ErrorMethodNotAllowed:
+      description: Method not allowed
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          example:
+            type: https://api.example.org/problems/method-not-allowed
+            title: Method not allowed
+            status: 405
+            detail: The method POST is not supported for this endpoint.
+            instance: https://api.example.org/courses/abc123
+    ErrorForbidden:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          example:
+            type: https://api.example.org/problems/forbidden
+            title: Forbidden
+            status: 403
+            detail: You do not have permission to access this resource.
+            instance: https://api.example.org/admin/enrolments
+    ErrorBadRequest:
+      description: Bad request
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          example:
+            type: https://api.example.org/problems/invalid-parameter
+            title: Invalid request parameters
+            status: 400
+            detail: 'The query parameter ''mode'' must be one of: full, basic.'
+            instance: https://api.example.org/courses?mode=invalid
+    ErrorInternalServerError:
+      description: Internal Server Error
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          example:
+            type: https://api.example.org/problems/internal-server-error
+            title: Internal server error
+            status: 500
+            detail: An unexpected error occurred while processing your request.
+            instance: https://api.example.org/enrolments/submit
+  parameters:
+    consumer:
+      name: consumer
+      in: query
+      description: Request entities intended for a specific consumer. The `consumer` profile allows for adding additional data, or specific rules concerning the presentation of the data. A consumer can be selected based on the key of the consumer profile. An implementation of the OEAPI SHOULD always return the consumer information inside the consumer property of the object(s) that are requested. Further information regarding the use of consumers can be found in the [documentation](https://oeapi.eu/v6.0/#/technical/consumers-and-profiles/)
+      required: false
+      schema:
+        type: string
+    fields:
+      name: fields
+      in: query
+      required: false
+      style: form
+      explode: false
+      description: "Allows clients to indicate which fields should be included in the response.  \nThis parameter supports the principle of data minimisation and helps to optimise \ndata usage and performance by reducing unnecessary data transmission.\n\nThe `fields` parameter uses *nested field selection syntax* with parentheses for subfields, \nfor example: `programme(code)` or `campus(city)`.  \nMultiple fields can be grouped within parentheses, for example:  \n`fields=(id,title,ectsCredits,programme(code),campus(city))`.\n\nWhen omitted, the server returns all fields the client has access to.  \nUnknown field names SHOULD be ignored.  \nThe server MUST always include *mandatory fields* (e.g., identifiers such as `id`) \nthat are required for a valid or minimal response, even if not explicitly requested.\n\n*Important:* This is a **request hint**, not a **security feature**.  \nThe server MAY disregard the request for a restricted set of fields, and the final response \nstructure MAY depend on server logic and the client’s access rights.\n\n\nIf a client requests unauthorised fields, these MUST be silently omitted or redacted.\n"
+      schema:
+        type: string
+        example: (id,title,ectsCredits,programme(code),campus(city))
+      examples:
+        minimal:
+          summary: Return a minimal fieldset for course offerings
+          value: (id,title,ectsCredits,languageOfInstruction)
+        nested:
+          summary: Include nested programme code and campus city
+          value: (id,title,programme(code),campus(city))
+        combined:
+          summary: Example using multiple nested fields
+          value: (id,title,ectsCredits,programme(code,name),campus(city,country))
+  schemas:
+    ProblemVersionNotAcceptable:
+      allOf:
+      - $ref: '#/components/schemas/Problem'
+      - type: object
+        required:
+        - requestedVersion
+        - supportedVersions
+        properties:
+          type:
+            $ref: '#/components/schemas/type'
+          title:
+            $ref: '#/components/schemas/title'
+          consumer:
+            description: 'Indicates which party caused the version mismatch. When null, the 406 was
+
+              triggered by an unsupported OEAPI version. If populated with a Consumer
+
+              object, the 406 was caused by a consumer-specific version that did not match
+
+              any supported version. This field MAY contain a full Consumer object or be
+
+              null.
+
+              '
+            oneOf:
+            - $ref: '#/components/schemas/Consumer'
+            - type: 'null'
+          requestedVersion:
+            type: string
+            description: The version requested by the client.
+            example: '5.0'
+          supportedVersions:
+            type: array
+            description: Versions the server can serve, typically in descending order.
+            items:
+              type: string
+            example:
+            - '4.2'
+            - '4.1'
+    Consumer:
+      type: object
+      description: The additional elements of a consumer that may be provided, see the [documentation on support for specific consumers](https://oeapi.eu/v6.0/#/technical/consumers-and-profiles/) for further information about this mechanism.
+      required:
+      - consumerKey
+      properties:
+        consumerKey:
+          description: The key of the consumer (destination) for which this information is intended. See the [consumer registry](https://oeapi.eu/v6.0/#/technical/consumers-and-profiles/). This key is used to select the additional data to be presented in the request.
+          type: string
+          example: test-consumer
+        exampleProperty:
+          description: An example of an additional property
+          type:
+          - string
+          - 'null'
+          example: value-of-example-property
+      additionalProperties: true
+    title:
+      type: string
+      description: A short, human-readable summary of the problem type
+      example: Resource not found
+    Problem:
+      type: object
+      description: 'A problem details object, conforming to RFC 7807 (Problem Details for HTTP
+
+        APIs). See https://datatracker.ietf.org/doc/html/rfc7807. It provides a
+
+        machine-readable format for error conditions, including a type URI, title,
+
+        status code, and optional detail and instance fields. This ensures
+
+        consistent handling of error responses across the API.
+
+        '
+      required:
+      - type
+      - status
+      - title
+      properties:
+        type:
+          type: string
+          format: uri
+          maxLength: 2048
+          description: "An absolute URI that identifies the problem type. When dereferenced, \nit should provide human-readable documentation.\n"
+          example: https://example.org/problems/bad-request
+        title:
+          type: string
+          description: A short, human-readable summary of the problem type
+          example: Resource not found
+        status:
+          type: integer
+          format: int32
+          description: "The HTTP status code generated by the origin server for this occurrence \nof the problem.\n"
+          example: 404
+        detail:
+          type:
+          - string
+          - 'null'
+          description: 'A human-readable explanation specific to this occurrence of the problem
+
+            '
+          example: The course with id 'abc123' could not be found in the catalogue.
+        instance:
+          type:
+          - string
+          - 'null'
+          format: uri
+          maxLength: 2048
+          description: 'An absolute URI that identifies the specific occurrence of the problem.
+
+            '
+          example: https://api.example.org/courses/abc123
+    type:
+      type: string
+      format: uri
+      maxLength: 2048
+      description: "An absolute URI that identifies the problem type. When dereferenced, \nit should provide human-readable documentation.\n"
+      example: https://example.org/problems/bad-request
+x-tagGroups:
+- name: Requests and responses
+  tags:
+  - security
+  - service metadata
+  - academic sessions
+  - associations
+  - buildings
+  - courses
+  - course offerings
+  - course offering associations
+  - components
+  - documents
+  - groups
+  - learning components
+  - learning component offerings
+  - learning component offering associations
+  - learning outcomes
+  - news
+  - organisations
+  - persons
+  - programmes
+  - programme offerings
+  - programme offering associations
+  - rooms
+  - test components
+  - test component offerings
+  - test component offering associations
+  - test component offering association attempts
+- name: Models
+  tags:
+  - data_model
+  - service_model
+  - learning_outcome_model
+  - academic_session_model
+  - building_model
+  - course_model
+  - course_offering_model
+  - course_offering_association_model
+  - document_model
+  - learning_component_model
+  - learning_component_offering_model
+  - learning_component_offering_association_model
+  - test_component_model
+  - test_component_offering_model
+  - test_component_offering_association_model
+  - test_component_offering_association_attempt_model
+  - group_model
+  - membership_model
+  - organisation_model
+  - person_model
+  - programme_model
+  - programme_offering_model
+  - programme_offering_association_model
+  - room_model

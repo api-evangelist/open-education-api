@@ -1,0 +1,12 @@
+name: Open Education API rate limits
+generated: '2026-10-09'
+method: none
+source: openapi/open-education-api-openapi.yml
+limit_count: 0
+note: No rate limits are published. The specification defines a 429 ErrorTooManyRequests problem+json response on all
+  operations, but declares no rate-limit headers; its example detail ("You have exceeded the rate limit of 100 requests per
+  minute.") is illustrative, not a published limit. Throttling is left to each implementer's API manager
+  (https://oeapi.eu/v6.0/architecture/IAA.md lists throttling under API-manager authorisation rules).
+exhaustion_status: 429
+headers: []
+limits: []

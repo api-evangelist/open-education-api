@@ -1,0 +1,77 @@
+generated: '2026-10-09'
+method: derived
+generator: derive-problem-types.py
+source:
+- openapi/open-education-api-openapi.yml
+- openapi/open-education-api-v5-openapi.yml
+format: rfc9457
+envelope:
+  media_type: application/problem+json
+  schema: Problem
+coverage:
+  operations: 153
+  statuses_declared: 9
+problems:
+- status: 400
+  title: Bad Request
+  description: Bad request
+  operations: 153
+  media_types:
+  - application/problem+json
+  schema: Problem
+- status: 401
+  title: Unauthorized
+  description: Unauthorized
+  operations: 150
+  media_types:
+  - application/problem+json
+  schema: Problem
+- status: 403
+  title: Forbidden
+  description: Forbidden
+  operations: 150
+  media_types:
+  - application/problem+json
+  schema: Problem
+- status: 404
+  title: Not Found
+  description: 'Not Found.  '
+  operations: 136
+  media_types:
+  - application/problem+json
+  schema: Problem
+- status: 405
+  title: Method Not Allowed
+  description: Method not allowed
+  operations: 150
+  media_types:
+  - application/problem+json
+  schema: Problem
+- status: 406
+  title: Not Acceptable
+  description: Not Acceptable.
+  operations: 101
+  media_types:
+  - application/problem+json
+  schema: ProblemVersionNotAcceptable
+- status: 409
+  title: Conflict
+  description: Conflict
+  operations: 26
+  media_types:
+  - application/problem+json
+  schema: Problem
+- status: 429
+  title: Too Many Requests
+  description: Too many requests
+  operations: 150
+  media_types:
+  - application/problem+json
+  schema: Problem
+- status: 500
+  title: Internal Server Error
+  description: Internal Server Error
+  operations: 150
+  media_types:
+  - application/problem+json
+  schema: Problem

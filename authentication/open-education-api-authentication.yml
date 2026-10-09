@@ -1,0 +1,33 @@
+generated: '2026-10-09'
+method: searched
+source: https://oeapi.eu/v6.0/architecture/IAA.md
+docs: https://oeapi.eu/v6.0/#/architecture/IAA
+summary:
+  types:
+  - http
+  - openIdConnect
+  note: OEAPI is a specification implemented by each institution on its own host. The v6.0-rc.3 contract declares no
+    securitySchemes; the v5 contract declares bearerAuth and openIdConnect (placeholder discovery URL example.nl). The docs
+    state the specification "does not prescribe a specific authentication and authorisation method" and recommend OAuth2.
+schemes:
+- name: bearerAuth
+  type: http
+  scheme: bearer
+  sources:
+  - openapi/open-education-api-v5-openapi.yml
+- name: openId
+  type: openIdConnect
+  openIdConnectUrl: https://example.nl/.well-known/openid-configuration
+  note: placeholder URL in the contract; each implementer supplies its own.
+  sources:
+  - openapi/open-education-api-v5-openapi.yml
+recommendations:
+- flow: oauth2 client_credentials
+  use: machine-to-machine exchange where user authorisation is not required
+  quote: "For machine-to-machine (M2M) data exchange (where user authorisation is not required), we recommend, as a best practice, using the OAuth2 client credentials grant type for authenticating and authorising the client to access the data."
+- flow: openid connect (oauth2 authorization code)
+  use: delegated user access
+  quote: "For an implementation requiring delegated user access to approve data processing, we recommend using the OpenID Connect flow, based on the OAuth2 authorisation code flow"
+- tokens: "For both flows, we recommend supporting both JWT and reference tokens for access tokens."
+- provider: SURFconext also provides OIDC (https://servicedesk.surf.nl/wiki/spaces/IAM/pages/128910009/Tutorials)
+security_guideline: https://oeapi.eu/v6.0/#/technical/security

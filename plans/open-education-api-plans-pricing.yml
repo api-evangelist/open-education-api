@@ -1,0 +1,14 @@
+name: Open Education API plans and pricing
+generated: '2026-10-09'
+method: none
+source: https://oeapi.eu/
+audience: unclear
+pricing_basis: none
+published: false
+plan_count: 0
+note: OEAPI is an open specification published by the OEAPI Working Group / SURF ("The OEAPI itself is not an API that can
+  be called", https://oeapi.eu/v6.0/introduction/get-started.md). No pricing page or plans are published; any cost belongs
+  to the individual implementing institution or supplier.
+delivery:
+  mode: unclear
+plans: []

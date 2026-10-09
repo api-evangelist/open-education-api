@@ -1,0 +1,21 @@
+# harvested from https://github.com/open-education-api/specification/blob/32baca313e05299d6d15333622679812a80b2d9b/.spectral.yaml on 2026-10-09 — a Spectral ruleset published in the provider's own GitHub repository (open-education-api/specification); found by GitHub code search, fetched verbatim
+x-method: harvested
+x-stamped: 2026-10-09
+x-source-url: https://github.com/open-education-api/specification/blob/32baca313e05299d6d15333622679812a80b2d9b/.spectral.yaml
+# .spectral.yaml
+extends:
+  - [spectral:oas, all]
+
+rules:
+  oas3-missing-example: false
+  operation-description: false
+  component-description: false
+  no-unnecessary-combinator: false
+#  camel-case-properties: false
+#  path-item-refs: false
+#  oas-missing-type: false
+#  no-unnecessary-combinator: false
+  circular-references: false
+#  description-duplication: false
+  oas3-unused-component: false
+#  oas3-valid-schema-example: false

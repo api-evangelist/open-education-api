@@ -1,0 +1,42 @@
+generated: '2026-10-09'
+method: searched
+source: https://oeapi.eu/v6.0/technical/design-principles.md
+standards:
+- id: oeapi
+  conforms: true
+  domain_standard: true
+  evidence: openapi/open-education-api-openapi.yml info.title / info.version 6.0-rc.3 -- the contract IS the Open Education API (OEAPI) education-data
+    standard (Edustandaard governance, https://oeapi.eu/v6.0/#/governance/README)
+- id: rfc7807
+  conforms: true
+  evidence: 'openapi/open-education-api-openapi.yml components.schemas.Problem: "A problem details object, conforming to RFC 7807"; all error
+    responses use application/problem+json'
+- id: nl-rest-api-design-rules
+  conforms: true
+  evidence: 'https://oeapi.eu/v6.0/technical/design-principles.md: "The REST interface is based on the REST-API Design Rules ... (Nederlandse
+    API Strategie)"'
+- id: rfc5646
+  conforms: true
+  evidence: 'Changelog 2026-08-19: "Fixed language description to RFC 5646" (https://oeapi.eu/v6.0/changelog/CHANGELOG.md)'
+- id: pagination
+  conforms: true
+  evidence: pageSize/pageNumber parameters and components.schemas.Pagination in openapi/open-education-api-openapi.yml
+- id: oauth2
+  conforms: false
+  evidence: 'Recommended, not required: "the specification does not prescribe a specific authentication and authorisation method" ... "we recommend
+    the OAuth2 protocol" (https://oeapi.eu/v6.0/architecture/IAA.md)'
+- id: oidc
+  conforms: true
+  evidence: openapi/open-education-api-v5-openapi.yml components.securitySchemes.openId (type openIdConnect); v6 contract declares none
+- id: openapi-3.0
+  conforms: true
+  evidence: the document declares 3.0.3
+- id: openapi-3.1
+  conforms: true
+  evidence: the document declares 3.1.1
+- id: rfc9457
+  conforms: true
+  evidence: application/problem+json on 1166 response(s), e.g. GET / 400
+- id: idempotency
+  conforms: false
+  evidence: no idempotency key parameter on mutating operations

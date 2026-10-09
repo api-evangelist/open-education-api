@@ -1,0 +1,332 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist overlay for Open Education API 5.0.0
+  version: 1.0.0
+extends: ../openapi/_original/open-education-api-v5-openapi.yml
+x-generated: '2026-10-09'
+x-method: generated
+x-source: openapi/open-education-api-v5-openapi.yml
+x-rationale: The OOAPI 5.0.0 contract defines no operationIds, so tools and skills cannot reference its operations. This overlay
+  adds mechanically derived operationIds (method + path segments) and agent read/write hints, plus a templated implementer
+  server. The original openapi file is not mutated.
+actions:
+- target: $.servers
+  description: Add a templated server for an institution's own OOAPI v5 implementation.
+  update:
+  - url: https://{host}/v5
+    description: An institution's own OOAPI v5 implementation.
+    variables:
+      host:
+        default: demo01.eduapi.nl
+- target: $.paths['/'].get
+  description: Derived operationId for GET /.
+  update:
+    operationId: getServiceMetadata
+    x-agent-hints:
+      readOnly: true
+- target: $.paths['/persons'].get
+  description: Derived operationId for GET /persons.
+  update:
+    operationId: getPersons
+    x-agent-hints:
+      readOnly: true
+- target: $.paths['/persons'].post
+  description: Derived operationId for POST /persons.
+  update:
+    operationId: postPersons
+    x-agent-hints:
+      readOnly: false
+- target: $.paths['/persons/me'].get
+  description: Derived operationId for GET /persons/me.
+  update:
+    operationId: getPersonsMe
+    x-agent-hints:
+      readOnly: true
+- target: $.paths['/persons/{personId}'].get
+  description: Derived operationId for GET /persons/{personId}.
+  update:
+    operationId: getPersonsByPersonId
+    x-agent-hints:
+      readOnly: true
+- target: $.paths['/persons/{personId}/associations'].get
+  description: Derived operationId for GET /persons/{personId}/associations.
+  update:
+    operationId: getPersonsByPersonIdAssociations
+    x-agent-hints:
+      readOnly: true
+- target: $.paths['/persons/{personId}/groups'].get
+  description: Derived operationId for GET /persons/{personId}/groups.
+  update:
+    operationId: getPersonsByPersonIdGroups
+    x-agent-hints:
+      readOnly: true
+- target: $.paths['/organizations'].get
+  description: Derived operationId for GET /organizations.
+  update:
+    operationId: getOrganizations
+    x-agent-hints:
+      readOnly: true
+- target: $.paths['/organizations/{organizationId}'].get
+  description: Derived operationId for GET /organizations/{organizationId}.
+  update:
+    operationId: getOrganizationsByOrganizationId
+    x-agent-hints:
+      readOnly: true
+- target: $.paths['/organizations/{organizationId}/programs'].get
+  description: Derived operationId for GET /organizations/{organizationId}/programs.
+  update:
+    operationId: getOrganizationsByOrganizationIdPrograms
+    x-agent-hints:
+      readOnly: true
+- target: $.paths['/organizations/{organizationId}/courses'].get
+  description: Derived operationId for GET /organizations/{organizationId}/courses.
+  update:
+    operationId: getOrganizationsByOrganizationIdCourses
+    x-agent-hints:
+      readOnly: true
+- target: $.paths['/organizations/{organizationId}/components'].get
+  description: Derived operationId for GET /organizations/{organizationId}/components.
+  update:
+    operationId: getOrganizationsByOrganizationIdComponents
+    x-agent-hints:
+      readOnly: true
+- target: $.paths['/organizations/{organizationId}/offerings'].get
+  description: Derived operationId for GET /organizations/{organizationId}/offerings.
+  update:
+    operationId: getOrganizationsByOrganizationIdOfferings
+    x-agent-hints:
+      readOnly: true
+- target: $.paths['/organizations/{organizationId}/groups'].get
+  description: Derived operationId for GET /organizations/{organizationId}/groups.
+  update:
+    operationId: getOrganizationsByOrganizationIdGroups
+    x-agent-hints:
+      readOnly: true
+- target: $.paths['/organizations/{organizationId}/education-specifications'].get
+  description: Derived operationId for GET /organizations/{organizationId}/education-specifications.
+  update:
+    operationId: getOrganizationsByOrganizationIdEducationSpecifications
+    x-agent-hints:
+      readOnly: true
+- target: $.paths['/academic-sessions'].get
+  description: Derived operationId for GET /academic-sessions.
+  update:
+    operationId: getAcademicSessions
+    x-agent-hints:
+      readOnly: true
+- target: $.paths['/academic-sessions/{academicSessionId}'].get
+  description: Derived operationId for GET /academic-sessions/{academicSessionId}.
+  update:
+    operationId: getAcademicSessionsByAcademicSessionId
+    x-agent-hints:
+      readOnly: true
+- target: $.paths['/academic-sessions/{academicSessionId}/offerings'].get
+  description: Derived operationId for GET /academic-sessions/{academicSessionId}/offerings.
+  update:
+    operationId: getAcademicSessionsByAcademicSessionIdOfferings
+    x-agent-hints:
+      readOnly: true
+- target: $.paths['/programs'].get
+  description: Derived operationId for GET /programs.
+  update:
+    operationId: getPrograms
+    x-agent-hints:
+      readOnly: true
+- target: $.paths['/programs/{programId}'].get
+  description: Derived operationId for GET /programs/{programId}.
+  update:
+    operationId: getProgramsByProgramId
+    x-agent-hints:
+      readOnly: true
+- target: $.paths['/programs/{programId}/programs'].get
+  description: Derived operationId for GET /programs/{programId}/programs.
+  update:
+    operationId: getProgramsByProgramIdPrograms
+    x-agent-hints:
+      readOnly: true
+- target: $.paths['/programs/{programId}/courses'].get
+  description: Derived operationId for GET /programs/{programId}/courses.
+  update:
+    operationId: getProgramsByProgramIdCourses
+    x-agent-hints:
+      readOnly: true
+- target: $.paths['/programs/{programId}/offerings'].get
+  description: Derived operationId for GET /programs/{programId}/offerings.
+  update:
+    operationId: getProgramsByProgramIdOfferings
+    x-agent-hints:
+      readOnly: true
+- target: $.paths['/courses'].get
+  description: Derived operationId for GET /courses.
+  update:
+    operationId: getCourses
+    x-agent-hints:
+      readOnly: true
+- target: $.paths['/courses/{courseId}'].get
+  description: Derived operationId for GET /courses/{courseId}.
+  update:
+    operationId: getCoursesByCourseId
+    x-agent-hints:
+      readOnly: true
+- target: $.paths['/courses/{courseId}/components'].get
+  description: Derived operationId for GET /courses/{courseId}/components.
+  update:
+    operationId: getCoursesByCourseIdComponents
+    x-agent-hints:
+      readOnly: true
+- target: $.paths['/courses/{courseId}/offerings'].get
+  description: Derived operationId for GET /courses/{courseId}/offerings.
+  update:
+    operationId: getCoursesByCourseIdOfferings
+    x-agent-hints:
+      readOnly: true
+- target: $.paths['/components/{componentId}'].get
+  description: Derived operationId for GET /components/{componentId}.
+  update:
+    operationId: getComponentsByComponentId
+    x-agent-hints:
+      readOnly: true
+- target: $.paths['/components/{componentId}/offerings'].get
+  description: Derived operationId for GET /components/{componentId}/offerings.
+  update:
+    operationId: getComponentsByComponentIdOfferings
+    x-agent-hints:
+      readOnly: true
+- target: $.paths['/offerings/{offeringId}'].get
+  description: Derived operationId for GET /offerings/{offeringId}.
+  update:
+    operationId: getOfferingsByOfferingId
+    x-agent-hints:
+      readOnly: true
+- target: $.paths['/offerings/{offeringId}/associations'].get
+  description: Derived operationId for GET /offerings/{offeringId}/associations.
+  update:
+    operationId: getOfferingsByOfferingIdAssociations
+    x-agent-hints:
+      readOnly: true
+- target: $.paths['/offerings/{offeringId}/groups'].get
+  description: Derived operationId for GET /offerings/{offeringId}/groups.
+  update:
+    operationId: getOfferingsByOfferingIdGroups
+    x-agent-hints:
+      readOnly: true
+- target: $.paths['/associations/{associationId}'].get
+  description: Derived operationId for GET /associations/{associationId}.
+  update:
+    operationId: getAssociationsByAssociationId
+    x-agent-hints:
+      readOnly: true
+- target: $.paths['/associations/{associationId}'].patch
+  description: Derived operationId for PATCH /associations/{associationId}.
+  update:
+    operationId: patchAssociationsByAssociationId
+    x-agent-hints:
+      readOnly: false
+- target: $.paths['/associations/external/me'].post
+  description: Derived operationId for POST /associations/external/me.
+  update:
+    operationId: postAssociationsExternalMe
+    x-agent-hints:
+      readOnly: false
+- target: $.paths['/buildings'].get
+  description: Derived operationId for GET /buildings.
+  update:
+    operationId: getBuildings
+    x-agent-hints:
+      readOnly: true
+- target: $.paths['/buildings/{buildingId}'].get
+  description: Derived operationId for GET /buildings/{buildingId}.
+  update:
+    operationId: getBuildingsByBuildingId
+    x-agent-hints:
+      readOnly: true
+- target: $.paths['/buildings/{buildingId}/rooms'].get
+  description: Derived operationId for GET /buildings/{buildingId}/rooms.
+  update:
+    operationId: getBuildingsByBuildingIdRooms
+    x-agent-hints:
+      readOnly: true
+- target: $.paths['/rooms'].get
+  description: Derived operationId for GET /rooms.
+  update:
+    operationId: getRooms
+    x-agent-hints:
+      readOnly: true
+- target: $.paths['/rooms/{roomId}'].get
+  description: Derived operationId for GET /rooms/{roomId}.
+  update:
+    operationId: getRoomsByRoomId
+    x-agent-hints:
+      readOnly: true
+- target: $.paths['/news-feeds'].get
+  description: Derived operationId for GET /news-feeds.
+  update:
+    operationId: getNewsFeeds
+    x-agent-hints:
+      readOnly: true
+- target: $.paths['/news-feeds/{newsFeedId}'].get
+  description: Derived operationId for GET /news-feeds/{newsFeedId}.
+  update:
+    operationId: getNewsFeedsByNewsFeedId
+    x-agent-hints:
+      readOnly: true
+- target: $.paths['/news-feeds/{newsFeedId}/news-items'].get
+  description: Derived operationId for GET /news-feeds/{newsFeedId}/news-items.
+  update:
+    operationId: getNewsFeedsByNewsFeedIdNewsItems
+    x-agent-hints:
+      readOnly: true
+- target: $.paths['/news-items/{newsItemId}'].get
+  description: Derived operationId for GET /news-items/{newsItemId}.
+  update:
+    operationId: getNewsItemsByNewsItemId
+    x-agent-hints:
+      readOnly: true
+- target: $.paths['/education-specifications'].get
+  description: Derived operationId for GET /education-specifications.
+  update:
+    operationId: getEducationSpecifications
+    x-agent-hints:
+      readOnly: true
+- target: $.paths['/education-specifications/{educationSpecificationId}'].get
+  description: Derived operationId for GET /education-specifications/{educationSpecificationId}.
+  update:
+    operationId: getEducationSpecificationsByEducationSpecificationId
+    x-agent-hints:
+      readOnly: true
+- target: $.paths['/education-specifications/{educationSpecificationId}/education-specifications'].get
+  description: Derived operationId for GET /education-specifications/{educationSpecificationId}/education-specifications.
+  update:
+    operationId: getEducationSpecificationsByEducationSpecificationIdEducationSpecifications
+    x-agent-hints:
+      readOnly: true
+- target: $.paths['/education-specifications/{educationSpecificationId}/courses'].get
+  description: Derived operationId for GET /education-specifications/{educationSpecificationId}/courses.
+  update:
+    operationId: getEducationSpecificationsByEducationSpecificationIdCourses
+    x-agent-hints:
+      readOnly: true
+- target: $.paths['/education-specifications/{educationSpecificationId}/programs'].get
+  description: Derived operationId for GET /education-specifications/{educationSpecificationId}/programs.
+  update:
+    operationId: getEducationSpecificationsByEducationSpecificationIdPrograms
+    x-agent-hints:
+      readOnly: true
+- target: $.paths['/groups'].get
+  description: Derived operationId for GET /groups.
+  update:
+    operationId: getGroups
+    x-agent-hints:
+      readOnly: true
+- target: $.paths['/groups/{groupId}'].get
+  description: Derived operationId for GET /groups/{groupId}.
+  update:
+    operationId: getGroupsByGroupId
+    x-agent-hints:
+      readOnly: true
+- target: $.paths['/groups/{groupId}/persons'].get
+  description: Derived operationId for GET /groups/{groupId}/persons.
+  update:
+    operationId: getGroupsByGroupIdPersons
+    x-agent-hints:
+      readOnly: true

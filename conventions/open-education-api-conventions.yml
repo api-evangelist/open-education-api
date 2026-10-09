@@ -1,0 +1,56 @@
+generated: '2026-10-09'
+method: searched
+source: https://oeapi.eu/v6.0/technical/design-principles.md
+docs:
+- https://oeapi.eu/v6.0/#/technical/design-principles
+- https://oeapi.eu/v6.0/#/technical/versioning
+- https://oeapi.eu/v6.0/#/technical/expanding-responses
+- https://oeapi.eu/v6.0/#/technical/filtering-responses
+- https://oeapi.eu/v6.0/#/technical/sorting-language
+- https://oeapi.eu/v6.0/#/technical/identifiers
+context: OEAPI is a specification; each institution implements these conventions on its own host.
+style: REST, "based on the REST-API Design Rules (Nederlandse API Strategie)"
+auth:
+  style: not prescribed by the specification; OAuth2 client credentials / OpenID Connect recommended
+  see: authentication/open-education-api-authentication.yml
+identifiers: UUIDs for every resource (https://oeapi.eu/v6.0/#/technical/identifiers)
+pagination:
+  style: page-number
+  params: [pageSize, pageNumber]
+  page_size_values: [10, 20, 50, 100, 250]
+  page_size_default: 10
+  response_fields: [pageSize, pageNumber, hasPreviousPage, hasNextPage, totalPages]
+  source: openapi/open-education-api-openapi.yml (components.parameters.pageSize, components.schemas.Pagination)
+ordering: "The server determines the order of results. Clients must not rely on a specific default ordering."
+filtering:
+  params: [search, filterQuery, consumer, since, until]
+  text_search_note: the design-principles page names the text search parameter `q`; the v6 contract parameter is `search`.
+field_selection:
+  param: fields
+  example: GET /persons/me?fields=(givenName,surname,email)
+  note: "This is a hint, not a security control — the server always determines the final response shape."
+expansion:
+  param: expand
+  docs: https://oeapi.eu/v6.0/#/technical/expanding-responses
+versioning:
+  mechanism: Accept header media type parameters (version, consumer, consumer-version); actual version echoed in Content-Type
+  see: lifecycle/open-education-api-lifecycle.yml
+errors:
+  format: application/problem+json (RFC 7807 Problem schema; required type, status, title)
+  statuses: [400, 401, 403, 404, 405, 406, 409, 429, 500]
+  see: errors/
+rate_limit_signaling:
+  status: 429 (ErrorTooManyRequests problem+json)
+  headers: none declared in the contract
+  see: rate-limits/open-education-api-rate-limits.yml
+request_id: none documented
+idempotency:
+  coverage: none
+  note: No Idempotency-Key header or replay protection is defined in either contract or the docs. The v6 contract has
+    3 POST, 14 PUT and 9 PATCH operations; PUT is idempotent by HTTP semantics only. 409 Conflict was added to POST/PUT/PATCH
+    in 6.0-RC.3.
+reversibility:
+  status: none
+  note: The v6 contract defines no DELETE operations and no cancel/void/undo/restore operation, and the docs state no
+    reversal window. Write surface is POST/PUT/PATCH on associations/results-type resources; reversal behaviour is left to
+    each implementer.

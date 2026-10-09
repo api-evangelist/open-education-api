@@ -1,0 +1,418 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/open-education-api/main/json-schema/open-education-api-academic-session-schema.json",
+  "title": "AcademicSession",
+  "description": "A named period of time that can be used to communicate the various schedules and time periods an institution recognizes and uses to organise their education. AcademicSessions can be nested.\nOfferings MAY be linked to a specific AcademicSession to indicate that the specified Offering takes place during the AcademicSession, however this is not mandatory.\n",
+  "x-generated": "2026-10-09",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/open-education-api-openapi.yml#/components/schemas/AcademicSession",
+  "type": "object",
+  "required": [
+    "academicSessionId",
+    "academicSessionType",
+    "primaryCode",
+    "name",
+    "startDateTime",
+    "endDateTime"
+  ],
+  "properties": {
+    "academicSessionId": {
+      "type": "string",
+      "description": "Unique id for this academic session",
+      "format": "uuid"
+    },
+    "academicSessionType": {
+      "$ref": "#/$defs/academicSessionType"
+    },
+    "primaryCode": {
+      "description": "The primary human readable identifier for this academic session. This is often the source identifier as defined by the institution.",
+      "$ref": "#/$defs/IdentifierEntry"
+    },
+    "name": {
+      "type": "array",
+      "description": "The name of this academic session",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/LanguageTypedString"
+      }
+    },
+    "abbreviation": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The abbreviation or internal code used to identify this AcademicSession",
+      "maxLength": 256
+    },
+    "startDateTime": {
+      "type": "string",
+      "description": "The moment on which this academic session starts, RFC3339 (full-date)",
+      "format": "date-time"
+    },
+    "endDateTime": {
+      "type": "string",
+      "description": "The moment on which this academic session ends, RFC3339 (full-date)",
+      "format": "date-time"
+    },
+    "parentId": {
+      "description": "The identifier of the parent academicSession for this session (e.g. Autumn\nterm 20xx where the current session is week 40).\nWhen the client does not request expansion of `parent`, only this\nidentifier is returned.\nThis field is [`expandable`](https://oeapi.eu/v6.0/#/technical/expanding-responses).\n",
+      "oneOf": [
+        {
+          "$ref": "#/$defs/Identifier"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "parent": {
+      "description": "The expanded parent academicSession object of this session (e.g. Autumn\nterm 20xx where the current session is week 40).\nWhen the client requests expansion of `parent`, the full expanded\nacademicSession object MUST be returned here instead of only the identifier.\nIf no parent is defined, this value is `null`.\n",
+      "oneOf": [
+        {
+          "$ref": "#/$defs/AcademicSession"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "childIds": {
+      "description": "The list of identifiers of child academicSessions of this session (e.g. all\nacademic sessions in Autumn term 20xx).\nWhen the client does not request expansion of `children`, only these\nidentifiers are returned.\nThis field is [`expandable`](https://oeapi.eu/v6.0/#/technical/expanding-responses).\n\nAlthough `childIds` and `children` (for example `organisationIds` versus `organisations`) may \nseem unusual, this naming is intentional and follows the singular–plural convention defined \nby the specification.\n",
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "$ref": "#/$defs/Identifier"
+      }
+    },
+    "children": {
+      "description": "The expanded child academicSession objects of this session (e.g. all\nacademic sessions in Autumn term 20xx).\nWhen the client requests expansion of `children`, the full expanded\nacademicSession objects MUST be returned here instead of only the identifiers.\nIf no child sessions are defined, this value is `null`.\n",
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "$ref": "#/$defs/AcademicSession"
+      }
+    },
+    "yearId": {
+      "description": "The identifier of the top-level academicSession year for this session\n(e.g. 20xx where the current session is week 40 of a semester).\nWhen the client does not request expansion of `year`, only this identifier\nis returned.\nThis field is [`expandable`](https://oeapi.eu/v6.0/#/technical/expanding-responses).\n",
+      "oneOf": [
+        {
+          "$ref": "#/$defs/Identifier"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "year": {
+      "description": "The expanded top-level academicSession year object for this session\n(e.g. 20xx where the current session is week 40 of a semester).\nWhen the client requests expansion of `year`, the full expanded\nacademicSession object MUST be returned here instead of only the identifier.\nIf no top-level year is defined, this value is `null`.\n",
+      "oneOf": [
+        {
+          "$ref": "#/$defs/AcademicSession"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "otherCodes": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "description": "An array of additional human readable codes/identifiers for the entity being described.",
+      "items": {
+        "$ref": "#/$defs/IdentifierEntry"
+      }
+    },
+    "consumer": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/Consumer"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "ext": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/Ext"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "$defs": {
+    "AcademicSession": {
+      "type": "object",
+      "description": "A named period of time that can be used to communicate the various schedules and time periods an institution recognizes and uses to organise their education. AcademicSessions can be nested.\nOfferings MAY be linked to a specific AcademicSession to indicate that the specified Offering takes place during the AcademicSession, however this is not mandatory.\n",
+      "required": [
+        "academicSessionId",
+        "academicSessionType",
+        "primaryCode",
+        "name",
+        "startDateTime",
+        "endDateTime"
+      ],
+      "properties": {
+        "academicSessionId": {
+          "type": "string",
+          "description": "Unique id for this academic session",
+          "format": "uuid"
+        },
+        "academicSessionType": {
+          "$ref": "#/$defs/academicSessionType"
+        },
+        "primaryCode": {
+          "description": "The primary human readable identifier for this academic session. This is often the source identifier as defined by the institution.",
+          "$ref": "#/$defs/IdentifierEntry"
+        },
+        "name": {
+          "type": "array",
+          "description": "The name of this academic session",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/LanguageTypedString"
+          }
+        },
+        "abbreviation": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The abbreviation or internal code used to identify this AcademicSession",
+          "maxLength": 256
+        },
+        "startDateTime": {
+          "type": "string",
+          "description": "The moment on which this academic session starts, RFC3339 (full-date)",
+          "format": "date-time"
+        },
+        "endDateTime": {
+          "type": "string",
+          "description": "The moment on which this academic session ends, RFC3339 (full-date)",
+          "format": "date-time"
+        },
+        "parentId": {
+          "description": "The identifier of the parent academicSession for this session (e.g. Autumn\nterm 20xx where the current session is week 40).\nWhen the client does not request expansion of `parent`, only this\nidentifier is returned.\nThis field is [`expandable`](https://oeapi.eu/v6.0/#/technical/expanding-responses).\n",
+          "oneOf": [
+            {
+              "$ref": "#/$defs/Identifier"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "parent": {
+          "description": "The expanded parent academicSession object of this session (e.g. Autumn\nterm 20xx where the current session is week 40).\nWhen the client requests expansion of `parent`, the full expanded\nacademicSession object MUST be returned here instead of only the identifier.\nIf no parent is defined, this value is `null`.\n",
+          "oneOf": [
+            {
+              "$ref": "#/$defs/AcademicSession"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "childIds": {
+          "description": "The list of identifiers of child academicSessions of this session (e.g. all\nacademic sessions in Autumn term 20xx).\nWhen the client does not request expansion of `children`, only these\nidentifiers are returned.\nThis field is [`expandable`](https://oeapi.eu/v6.0/#/technical/expanding-responses).\n\nAlthough `childIds` and `children` (for example `organisationIds` versus `organisations`) may \nseem unusual, this naming is intentional and follows the singular–plural convention defined \nby the specification.\n",
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "$ref": "#/$defs/Identifier"
+          }
+        },
+        "children": {
+          "description": "The expanded child academicSession objects of this session (e.g. all\nacademic sessions in Autumn term 20xx).\nWhen the client requests expansion of `children`, the full expanded\nacademicSession objects MUST be returned here instead of only the identifiers.\nIf no child sessions are defined, this value is `null`.\n",
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "$ref": "#/$defs/AcademicSession"
+          }
+        },
+        "yearId": {
+          "description": "The identifier of the top-level academicSession year for this session\n(e.g. 20xx where the current session is week 40 of a semester).\nWhen the client does not request expansion of `year`, only this identifier\nis returned.\nThis field is [`expandable`](https://oeapi.eu/v6.0/#/technical/expanding-responses).\n",
+          "oneOf": [
+            {
+              "$ref": "#/$defs/Identifier"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "year": {
+          "description": "The expanded top-level academicSession year object for this session\n(e.g. 20xx where the current session is week 40 of a semester).\nWhen the client requests expansion of `year`, the full expanded\nacademicSession object MUST be returned here instead of only the identifier.\nIf no top-level year is defined, this value is `null`.\n",
+          "oneOf": [
+            {
+              "$ref": "#/$defs/AcademicSession"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "otherCodes": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "description": "An array of additional human readable codes/identifiers for the entity being described.",
+          "items": {
+            "$ref": "#/$defs/IdentifierEntry"
+          }
+        },
+        "consumer": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/Consumer"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "ext": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/Ext"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "Consumer": {
+      "type": "object",
+      "description": "The additional elements of a consumer that may be provided, see the [documentation on support for specific consumers](https://oeapi.eu/v6.0/#/technical/consumers-and-profiles/) for further information about this mechanism.",
+      "required": [
+        "consumerKey"
+      ],
+      "properties": {
+        "consumerKey": {
+          "description": "The key of the consumer (destination) for which this information is intended. See the [consumer registry](https://oeapi.eu/v6.0/#/technical/consumers-and-profiles/). This key is used to select the additional data to be presented in the request.",
+          "type": "string"
+        },
+        "exampleProperty": {
+          "description": "An example of an additional property",
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": true
+    },
+    "Ext": {
+      "type": "object",
+      "description": "Object for additional non-standard attributes"
+    },
+    "Identifier": {
+      "type": "string",
+      "description": "An identifier of another resource.",
+      "format": "uuid"
+    },
+    "IdentifierEntry": {
+      "type": "object",
+      "properties": {
+        "codeType": {
+          "$ref": "#/$defs/codeType"
+        },
+        "code": {
+          "description": "Human readable value for the code/identifier",
+          "type": "string"
+        }
+      },
+      "required": [
+        "codeType",
+        "code"
+      ],
+      "additionalProperties": false
+    },
+    "Language": {
+      "description": "The language used in the described entity. The value **must be a language tag that conforms to RFC 5646** (Tags for Identifying Languages, BCP 47):\nhttps://www.rfc-editor.org/rfc/rfc5646.html\n\nA tag consists of the following components, in this exact order:\n1. **language** – two‑ to three‑letter codes (ISO 639‑1/‑2) **or** four‑letter codes (ISO 639‑5) **or** five‑ to eight‑letter registered language subtags.\n2. **script** – optional, four letters in Title‑Case (e.g. `Latn`, `Hant`).\n3. **region** – optional, either two uppercase letters (ISO 3166‑1) **or** three digits (UN M.49).\n4. **variant** – zero or more subtags, each either five‑ to eight‑alphanumerics or a digit followed by three alphanumerics (e.g. `1901`, `oxendict`).\n5. **extension** – zero or more extensions. Each extension starts with a *singleton* (a single alphanumeric character except `x`) followed by one or more subtags of two‑ to eight‑alphanumerics (e.g. `u‑co‑phonebk`).\n6. **private‑use** – optional, the letter `x` followed by one or more subtags of one‑ to eight‑alphanumerics (e.g. `x‑private`).\n\nThe most common form is a two‑letter language code (ISO 639‑1) optionally followed by a hyphen and a two‑letter country code (ISO 3166‑1), for example `en` or `en‑GB`.\n\nMore specific tags are also valid, for instance `zh‑Hant‑TW` (Traditional Chinese as used in Taiwan).\n\nFor sign languages two conventions are recognised:\n* `sgn` – e.g. `nl‑sgn‑NL` (Dutch Sign Language)\n* `s`   – e.g. `nl‑s‑NL` (Dutch Sign Language)\n",
+      "type": "string",
+      "minLength": 2,
+      "pattern": "^(?:(?:[A-Za-z]{2,3}(?:-[A-Za-z]{3}){0,2}|[A-Za-z]{4}|[A-Za-z]{5,8})(?:-[A-Za-z]{4})?(?:-(?:[A-Z]{2}|[0-9]{3}))?(?:-(?:[A-Za-z0-9]{5,8}|[0-9][A-Za-z0-9]{3}))*?(?:-(?:[A-WY-Za-wy-z0-9](?:-[A-Za-z0-9]{2,8})+))*?(?:-x(?:-[A-Za-z0-9]{1,8})+)?|x(?:-[A-Za-z0-9]{1,8})+)$"
+    },
+    "LanguageTypedString": {
+      "type": "object",
+      "description": "A String with an associated language code. IF this object is used both fields are mandatory.",
+      "required": [
+        "language",
+        "value"
+      ],
+      "properties": {
+        "language": {
+          "$ref": "#/$defs/Language"
+        },
+        "value": {
+          "description": "String to describe the entity.",
+          "type": "string"
+        }
+      }
+    },
+    "academicSessionType": {
+      "type": "string",
+      "description": "The type of this academic session. This is an *extensible enumeration*.\n\n- academic_year: Academic year\n- semester: Semester, typically comprising two terms per academic year\n- trimester: Trimester, typically comprising three terms per academic year\n- quarter: Quarter, typically comprising four terms per academic year\n- testing_period: A period during which tests take place\n- period: Any other period within an academic year\n\nImplementations may add further values beyond those listed above, provided they do not overlap in definition with existing values.\n",
+      "x-ooapi-extensible-enum": [
+        "academic_year",
+        "semester",
+        "trimester",
+        "quarter",
+        "testing_period",
+        "period"
+      ]
+    },
+    "codeType": {
+      "type": "string",
+      "description": "The type of code or identifier.\n\nThe predefined values are:\n\n| Code                      | Description                                                       |\n|---------------------------|-------------------------------------------------------------------|\n| `account_id`              | Identifier for an account.                                        |\n| `bag_id`                  | Identifier for a building in the Dutch Building and Address       |\n|                           | Registry (BAG).                                                   |\n| `building_id`             | Identifier for a building.                                        |\n| `component_code`          | Identifier for a component (part of a course).                    |\n| `eckid`                   | Identifier assigned within the Dutch *Educatieve ContentKeten iD* |\n|                           | framework. It enables persistent identification and exchange of   |\n|                           | digital learning resources within the Dutch educational sector for|\n|                           | EQF levels 1, 2, 3 and 4. Comparable international approaches     |\n|                           | include LRMI, DOI and Handle                                      |\n|                           | identifiers for learning resources.                               |\n| `email_address`           | An email address.                                                 |\n| `esi`                     | European Student Identifier.                                      |\n| `group_code`              | Identifier for a group of people.                                 |\n| `group_type_code`         | Identifier for the type of group.                                 |\n| `identifier`              | Generic identifier.                                               |\n| `institution_code`        | Registration number of an educational institution. In the         |\n|                           | Netherlands, the former BRIN code has been replaced by the        |\n|                           | institution code, issued by the Ministry of Education, Culture    |\n|                           | and Science (OCW).                                                |\n| `isbn`                    | International Standard Book Number (for books).                   |\n| `issn`                    | International Standard Serial Number (for periodicals).           |\n| `kvk_organisation_id`     | Identifier for a KvK (Dutch Chamber of Commerce) registered       |\n|                           | organisation.                                                     |\n| `kvk_establishment_id`    | Identifier for a specific establishment of a KvK                  |\n|                           | (Dutch Chamber of Commerce) registered organisation.              |\n| `leerbedrijf_id`          | Dutch registration/accreditation id for organisations offering    |\n|                           | internships for vocational education students.                    |\n| `national_identity_number`| Government-assigned personal identifier (e.g. NI number in the UK,|\n|                           | or *personnummer* in Sweden).                                     |\n| `offering_code`           | Identifier for a specific offering (programme, course or          |\n|                           | component).                                                       |\n| `organisation_id`         | Identifier for an organisation.                                   |\n| `orcid`                   | Open Researcher and Contributor ID.                               |\n| `product_id`              | Identifier for a product.                                         |\n| `programme_code`          | Identifier of a programme (a recognised collection of courses).   |\n|                           | In the Netherlands, the former CREBO and CROHO codes have been    |\n|                           | replaced by the programme code as registered in RIO, under the    |\n|                           | authority of OCW.                                                 |\n| `room_code`               | Identifier for a room.                                            |\n| `schac_home`              | Home organisation represented by its domain name.                 |\n| `student_number`          | Identifier for a student.                                         |\n| `studielink_number`       | Identifier assigned to a student by Studielink (Dutch central     |\n|                           | enrolment system).                                                |\n| `system_id`               | Identifier used within a specific system.                         |\n| `username`                | User login name.                                                  |\n| `uuid`                    | Universally unique identifier.                                    |\n\nThis is an *extensible enumeration*. Use the prefix `x-` for custom values.\n",
+      "x-ooapi-extensible-enum": [
+        "account_id",
+        "bag_id",
+        "building_id",
+        "component_code",
+        "eckid",
+        "email_address",
+        "esi",
+        "group_code",
+        "group_type_code",
+        "identifier",
+        "institution_code",
+        "isbn",
+        "issn",
+        "kvk_organisation_id",
+        "kvk_establishment_id",
+        "leerbedrijf_id",
+        "offering_code",
+        "organisation_id",
+        "orcid",
+        "product_id",
+        "programme_code",
+        "room_code",
+        "schac_home",
+        "student_number",
+        "studielink_number",
+        "system_id",
+        "username",
+        "uuid",
+        "national_identity_number"
+      ]
+    }
+  }
+}

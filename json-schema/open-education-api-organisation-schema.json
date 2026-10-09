@@ -1,0 +1,632 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/open-education-api/main/json-schema/open-education-api-organisation-schema.json",
+  "title": "Organisation",
+  "description": "A description of a group of people working together to achieve a goal",
+  "x-generated": "2026-10-09",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/open-education-api-openapi.yml#/components/schemas/Organisation",
+  "type": "object",
+  "required": [
+    "organisationId",
+    "organisationType",
+    "name",
+    "primaryCode"
+  ],
+  "properties": {
+    "organisationId": {
+      "type": "string",
+      "description": "Unique id of this organisation",
+      "format": "uuid"
+    },
+    "primaryCode": {
+      "description": "The primary human readable identifier for the organisation. This is often the source identifier as defined by the root organisation.",
+      "$ref": "#/$defs/IdentifierEntry"
+    },
+    "organisationType": {
+      "$ref": "#/$defs/organisationType"
+    },
+    "name": {
+      "type": "array",
+      "description": "The name of the organisation",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/LanguageTypedString"
+      }
+    },
+    "shortName": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Short name of the organisation",
+      "maxLength": 256
+    },
+    "description": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "description": "If the organisation is an educational organisation, any general description should clearly mention the type of \neducation organisation, especially in the case of a binary system. In Dutch; universiteit (university) or \nhogeschool (university of applied sciences).\nIf the organisation is not an educational organisation, a general description should describe the role it plays \nin education like providing certain types of internships, educational services, products or facilities.\n",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/LanguageTypedString"
+      }
+    },
+    "addresses": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "description": "Addresses of this organisation",
+      "items": {
+        "$ref": "#/$defs/Address"
+      }
+    },
+    "link": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "URL of the organisation's website",
+      "format": "uri",
+      "maxLength": 2048
+    },
+    "logo": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Logo of this organisation",
+      "format": "uri",
+      "maxLength": 2048
+    },
+    "otherCodes": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "description": "An array of additional human readable codes/identifiers for the entity being described.",
+      "items": {
+        "$ref": "#/$defs/IdentifierEntry"
+      }
+    },
+    "rootId": {
+      "description": "The identifier of the organisation which is the root organisation of this organisation.\nWhen the client does not request expansion of `root`, only this identifier is returned.\nThis field is [`expandable`](https://oeapi.eu/v6.0/#/technical/expanding-responses).\n",
+      "oneOf": [
+        {
+          "$ref": "#/$defs/Identifier"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "root": {
+      "description": "The expanded organisation object which is the root organisation of this organisation.\nWhen the client requests expansion of `root`, the full expanded organisation object MUST be returned here instead of only the identifier.\nIf no root organisation is defined, this value is `null`.\n",
+      "oneOf": [
+        {
+          "$ref": "#/$defs/Organisation"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "parentId": {
+      "description": "The identifier of the organisational unit which is the parent of this organisation.\nWhen the client does not request expansion of `parent`, only this identifier is returned.\nThis field is [`expandable`](https://oeapi.eu/v6.0/#/technical/expanding-responses).\n",
+      "oneOf": [
+        {
+          "$ref": "#/$defs/Identifier"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "parent": {
+      "description": "The expanded organisation object which is the parent of this organisation.\nWhen the client requests expansion of `parent`, the full expanded organisation object MUST be returned here instead of only the identifier.\nIf no parent organisation is defined, this value is `null`.\n",
+      "oneOf": [
+        {
+          "$ref": "#/$defs/Organisation"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "childIds": {
+      "description": "The identifiers of the organisational units for which this organisation is the parent.\nWhen the client does not request expansion of `children`, only these identifiers are returned.\nThis field is [`expandable`](https://oeapi.eu/v6.0/#/technical/expanding-responses).\n\nAlthough `childIds` and `children` (for example `organisationIds` versus `organisations`) may \nseem unusual, this naming is intentional and follows the singular–plural convention defined \nby the specification.\n",
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "$ref": "#/$defs/Identifier"
+      }
+    },
+    "children": {
+      "description": "The expanded organisational unit objects for which this organisation is the parent.\nWhen the client requests expansion of `children`, the full expanded organisation objects MUST be returned here instead of only the identifiers.\nIf no children are defined, this value is `null`.\n",
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "oneOf": [
+          {
+            "$ref": "#/$defs/Organisation"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "consumer": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/Consumer"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "ext": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/Ext"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "$defs": {
+    "Address": {
+      "type": "object",
+      "description": "The full street address",
+      "required": [
+        "addressType"
+      ],
+      "properties": {
+        "addressType": {
+          "$ref": "#/$defs/addressType"
+        },
+        "street": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The street name"
+        },
+        "streetNumber": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The street number"
+        },
+        "additional": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "description": "Further details like building name, suite, apartment number, etc.",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/LanguageTypedString"
+          }
+        },
+        "postCode": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Code to help sort and deliver mail also known as Postal code and ZIP code"
+        },
+        "city": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "name of the city / locality"
+        },
+        "countryCode": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/Country"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "geolocation": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "description": "Geolocation of the entrance of this address (WGS84 coordinate reference system)",
+          "required": [
+            "latitude",
+            "longitude"
+          ],
+          "properties": {
+            "latitude": {
+              "type": "number",
+              "format": "double"
+            },
+            "longitude": {
+              "type": "number",
+              "format": "double"
+            }
+          }
+        },
+        "ext": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/Ext"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "Consumer": {
+      "type": "object",
+      "description": "The additional elements of a consumer that may be provided, see the [documentation on support for specific consumers](https://oeapi.eu/v6.0/#/technical/consumers-and-profiles/) for further information about this mechanism.",
+      "required": [
+        "consumerKey"
+      ],
+      "properties": {
+        "consumerKey": {
+          "description": "The key of the consumer (destination) for which this information is intended. See the [consumer registry](https://oeapi.eu/v6.0/#/technical/consumers-and-profiles/). This key is used to select the additional data to be presented in the request.",
+          "type": "string"
+        },
+        "exampleProperty": {
+          "description": "An example of an additional property",
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": true
+    },
+    "Country": {
+      "type": "object",
+      "description": "An object indicating a country based on at least one iso-3166 code. In situations where more than one ISO-3166 code is provided, the codes must refer to the same country.\n",
+      "properties": {
+        "iso3166-1-alpha2": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 2,
+          "maxLength": 2,
+          "description": "A country code based on https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2"
+        },
+        "iso3166-1-alpha3": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 3,
+          "maxLength": 3,
+          "description": "A country code based on https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3"
+        },
+        "iso3166-2": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 5,
+          "maxLength": 6,
+          "description": "A country subdivision code based on https://en.wikipedia.org/wiki/ISO_3166-2"
+        },
+        "iso3166-3": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 4,
+          "maxLength": 4,
+          "description": "A code for a country that no longer exists is listed on ISO 3166-3 (https://en.wikipedia.org/wiki/ISO_3166-3).\nImplementations should refrain from using the original ISO 3166-1 code for such a country since country codes\ncan be reassigned to new countries once the original country code is officially declared obsolete.\n"
+        }
+      }
+    },
+    "Ext": {
+      "type": "object",
+      "description": "Object for additional non-standard attributes"
+    },
+    "Identifier": {
+      "type": "string",
+      "description": "An identifier of another resource.",
+      "format": "uuid"
+    },
+    "IdentifierEntry": {
+      "type": "object",
+      "properties": {
+        "codeType": {
+          "$ref": "#/$defs/codeType"
+        },
+        "code": {
+          "description": "Human readable value for the code/identifier",
+          "type": "string"
+        }
+      },
+      "required": [
+        "codeType",
+        "code"
+      ],
+      "additionalProperties": false
+    },
+    "Language": {
+      "description": "The language used in the described entity. The value **must be a language tag that conforms to RFC 5646** (Tags for Identifying Languages, BCP 47):\nhttps://www.rfc-editor.org/rfc/rfc5646.html\n\nA tag consists of the following components, in this exact order:\n1. **language** – two‑ to three‑letter codes (ISO 639‑1/‑2) **or** four‑letter codes (ISO 639‑5) **or** five‑ to eight‑letter registered language subtags.\n2. **script** – optional, four letters in Title‑Case (e.g. `Latn`, `Hant`).\n3. **region** – optional, either two uppercase letters (ISO 3166‑1) **or** three digits (UN M.49).\n4. **variant** – zero or more subtags, each either five‑ to eight‑alphanumerics or a digit followed by three alphanumerics (e.g. `1901`, `oxendict`).\n5. **extension** – zero or more extensions. Each extension starts with a *singleton* (a single alphanumeric character except `x`) followed by one or more subtags of two‑ to eight‑alphanumerics (e.g. `u‑co‑phonebk`).\n6. **private‑use** – optional, the letter `x` followed by one or more subtags of one‑ to eight‑alphanumerics (e.g. `x‑private`).\n\nThe most common form is a two‑letter language code (ISO 639‑1) optionally followed by a hyphen and a two‑letter country code (ISO 3166‑1), for example `en` or `en‑GB`.\n\nMore specific tags are also valid, for instance `zh‑Hant‑TW` (Traditional Chinese as used in Taiwan).\n\nFor sign languages two conventions are recognised:\n* `sgn` – e.g. `nl‑sgn‑NL` (Dutch Sign Language)\n* `s`   – e.g. `nl‑s‑NL` (Dutch Sign Language)\n",
+      "type": "string",
+      "minLength": 2,
+      "pattern": "^(?:(?:[A-Za-z]{2,3}(?:-[A-Za-z]{3}){0,2}|[A-Za-z]{4}|[A-Za-z]{5,8})(?:-[A-Za-z]{4})?(?:-(?:[A-Z]{2}|[0-9]{3}))?(?:-(?:[A-Za-z0-9]{5,8}|[0-9][A-Za-z0-9]{3}))*?(?:-(?:[A-WY-Za-wy-z0-9](?:-[A-Za-z0-9]{2,8})+))*?(?:-x(?:-[A-Za-z0-9]{1,8})+)?|x(?:-[A-Za-z0-9]{1,8})+)$"
+    },
+    "LanguageTypedString": {
+      "type": "object",
+      "description": "A String with an associated language code. IF this object is used both fields are mandatory.",
+      "required": [
+        "language",
+        "value"
+      ],
+      "properties": {
+        "language": {
+          "$ref": "#/$defs/Language"
+        },
+        "value": {
+          "description": "String to describe the entity.",
+          "type": "string"
+        }
+      }
+    },
+    "Organisation": {
+      "type": "object",
+      "description": "A description of a group of people working together to achieve a goal",
+      "required": [
+        "organisationId",
+        "organisationType",
+        "name",
+        "primaryCode"
+      ],
+      "properties": {
+        "organisationId": {
+          "type": "string",
+          "description": "Unique id of this organisation",
+          "format": "uuid"
+        },
+        "primaryCode": {
+          "description": "The primary human readable identifier for the organisation. This is often the source identifier as defined by the root organisation.",
+          "$ref": "#/$defs/IdentifierEntry"
+        },
+        "organisationType": {
+          "$ref": "#/$defs/organisationType"
+        },
+        "name": {
+          "type": "array",
+          "description": "The name of the organisation",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/LanguageTypedString"
+          }
+        },
+        "shortName": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Short name of the organisation",
+          "maxLength": 256
+        },
+        "description": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "description": "If the organisation is an educational organisation, any general description should clearly mention the type of \neducation organisation, especially in the case of a binary system. In Dutch; universiteit (university) or \nhogeschool (university of applied sciences).\nIf the organisation is not an educational organisation, a general description should describe the role it plays \nin education like providing certain types of internships, educational services, products or facilities.\n",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/LanguageTypedString"
+          }
+        },
+        "addresses": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "description": "Addresses of this organisation",
+          "items": {
+            "$ref": "#/$defs/Address"
+          }
+        },
+        "link": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "URL of the organisation's website",
+          "format": "uri",
+          "maxLength": 2048
+        },
+        "logo": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Logo of this organisation",
+          "format": "uri",
+          "maxLength": 2048
+        },
+        "otherCodes": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "description": "An array of additional human readable codes/identifiers for the entity being described.",
+          "items": {
+            "$ref": "#/$defs/IdentifierEntry"
+          }
+        },
+        "rootId": {
+          "description": "The identifier of the organisation which is the root organisation of this organisation.\nWhen the client does not request expansion of `root`, only this identifier is returned.\nThis field is [`expandable`](https://oeapi.eu/v6.0/#/technical/expanding-responses).\n",
+          "oneOf": [
+            {
+              "$ref": "#/$defs/Identifier"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "root": {
+          "description": "The expanded organisation object which is the root organisation of this organisation.\nWhen the client requests expansion of `root`, the full expanded organisation object MUST be returned here instead of only the identifier.\nIf no root organisation is defined, this value is `null`.\n",
+          "oneOf": [
+            {
+              "$ref": "#/$defs/Organisation"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "parentId": {
+          "description": "The identifier of the organisational unit which is the parent of this organisation.\nWhen the client does not request expansion of `parent`, only this identifier is returned.\nThis field is [`expandable`](https://oeapi.eu/v6.0/#/technical/expanding-responses).\n",
+          "oneOf": [
+            {
+              "$ref": "#/$defs/Identifier"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "parent": {
+          "description": "The expanded organisation object which is the parent of this organisation.\nWhen the client requests expansion of `parent`, the full expanded organisation object MUST be returned here instead of only the identifier.\nIf no parent organisation is defined, this value is `null`.\n",
+          "oneOf": [
+            {
+              "$ref": "#/$defs/Organisation"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "childIds": {
+          "description": "The identifiers of the organisational units for which this organisation is the parent.\nWhen the client does not request expansion of `children`, only these identifiers are returned.\nThis field is [`expandable`](https://oeapi.eu/v6.0/#/technical/expanding-responses).\n\nAlthough `childIds` and `children` (for example `organisationIds` versus `organisations`) may \nseem unusual, this naming is intentional and follows the singular–plural convention defined \nby the specification.\n",
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "$ref": "#/$defs/Identifier"
+          }
+        },
+        "children": {
+          "description": "The expanded organisational unit objects for which this organisation is the parent.\nWhen the client requests expansion of `children`, the full expanded organisation objects MUST be returned here instead of only the identifiers.\nIf no children are defined, this value is `null`.\n",
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "oneOf": [
+              {
+                "$ref": "#/$defs/Organisation"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "consumer": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/Consumer"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "ext": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/Ext"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "addressType": {
+      "type": "string",
+      "description": "The type of address, indicating its intended use:\n  \n- postal: Used for receiving post\n- visit: Used for physical visits\n- deliveries: Used for deliveries\n- invoicing: Used for invoicing purposes\n- teaching: The location where educational activities take place\n\nThis is an *extensible enumeration*. Use the prefix `x-` for custom values.\n",
+      "x-ooapi-extensible-enum": [
+        "postal",
+        "visit",
+        "deliveries",
+        "invoicing",
+        "teaching"
+      ]
+    },
+    "codeType": {
+      "type": "string",
+      "description": "The type of code or identifier.\n\nThe predefined values are:\n\n| Code                      | Description                                                       |\n|---------------------------|-------------------------------------------------------------------|\n| `account_id`              | Identifier for an account.                                        |\n| `bag_id`                  | Identifier for a building in the Dutch Building and Address       |\n|                           | Registry (BAG).                                                   |\n| `building_id`             | Identifier for a building.                                        |\n| `component_code`          | Identifier for a component (part of a course).                    |\n| `eckid`                   | Identifier assigned within the Dutch *Educatieve ContentKeten iD* |\n|                           | framework. It enables persistent identification and exchange of   |\n|                           | digital learning resources within the Dutch educational sector for|\n|                           | EQF levels 1, 2, 3 and 4. Comparable international approaches     |\n|                           | include LRMI, DOI and Handle                                      |\n|                           | identifiers for learning resources.                               |\n| `email_address`           | An email address.                                                 |\n| `esi`                     | European Student Identifier.                                      |\n| `group_code`              | Identifier for a group of people.                                 |\n| `group_type_code`         | Identifier for the type of group.                                 |\n| `identifier`              | Generic identifier.                                               |\n| `institution_code`        | Registration number of an educational institution. In the         |\n|                           | Netherlands, the former BRIN code has been replaced by the        |\n|                           | institution code, issued by the Ministry of Education, Culture    |\n|                           | and Science (OCW).                                                |\n| `isbn`                    | International Standard Book Number (for books).                   |\n| `issn`                    | International Standard Serial Number (for periodicals).           |\n| `kvk_organisation_id`     | Identifier for a KvK (Dutch Chamber of Commerce) registered       |\n|                           | organisation.                                                     |\n| `kvk_establishment_id`    | Identifier for a specific establishment of a KvK                  |\n|                           | (Dutch Chamber of Commerce) registered organisation.              |\n| `leerbedrijf_id`          | Dutch registration/accreditation id for organisations offering    |\n|                           | internships for vocational education students.                    |\n| `national_identity_number`| Government-assigned personal identifier (e.g. NI number in the UK,|\n|                           | or *personnummer* in Sweden).                                     |\n| `offering_code`           | Identifier for a specific offering (programme, course or          |\n|                           | component).                                                       |\n| `organisation_id`         | Identifier for an organisation.                                   |\n| `orcid`                   | Open Researcher and Contributor ID.                               |\n| `product_id`              | Identifier for a product.                                         |\n| `programme_code`          | Identifier of a programme (a recognised collection of courses).   |\n|                           | In the Netherlands, the former CREBO and CROHO codes have been    |\n|                           | replaced by the programme code as registered in RIO, under the    |\n|                           | authority of OCW.                                                 |\n| `room_code`               | Identifier for a room.                                            |\n| `schac_home`              | Home organisation represented by its domain name.                 |\n| `student_number`          | Identifier for a student.                                         |\n| `studielink_number`       | Identifier assigned to a student by Studielink (Dutch central     |\n|                           | enrolment system).                                                |\n| `system_id`               | Identifier used within a specific system.                         |\n| `username`                | User login name.                                                  |\n| `uuid`                    | Universally unique identifier.                                    |\n\nThis is an *extensible enumeration*. Use the prefix `x-` for custom values.\n",
+      "x-ooapi-extensible-enum": [
+        "account_id",
+        "bag_id",
+        "building_id",
+        "component_code",
+        "eckid",
+        "email_address",
+        "esi",
+        "group_code",
+        "group_type_code",
+        "identifier",
+        "institution_code",
+        "isbn",
+        "issn",
+        "kvk_organisation_id",
+        "kvk_establishment_id",
+        "leerbedrijf_id",
+        "offering_code",
+        "organisation_id",
+        "orcid",
+        "product_id",
+        "programme_code",
+        "room_code",
+        "schac_home",
+        "student_number",
+        "studielink_number",
+        "system_id",
+        "username",
+        "uuid",
+        "national_identity_number"
+      ]
+    },
+    "organisationType": {
+      "type": "string",
+      "description": "The type of this organisation. When using non-root organisation types, make sure that there is always a parent organisation of type root available.\n\n- root: The top-level organisation, representing the organisation itself\n- institute: A subdivision of the root organisation, typically focused on a broad field of study\n- department: An organisational unit within an organisation or one of the subdivisions of an organisation, focused on a specific discipline\n- faculty: A major academic division within an institution, often overseeing multiple departments\n- branch: A geographically separate location or campus of an organisation\n- academy: A specialised academic unit, often focused on applied or artistic disciplines\n- school: An organisational unit typically used in primary, secondary, or specialised higher education contexts\n\nThis is an extensible enumeration. Use the prefix `x-` for custom values.\n",
+      "x-ooapi-extensible-enum": [
+        "root",
+        "institute",
+        "department",
+        "faculty",
+        "branch",
+        "academy",
+        "school"
+      ]
+    }
+  }
+}

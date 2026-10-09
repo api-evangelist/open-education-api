@@ -1,0 +1,38 @@
+generated: '2026-10-09'
+method: generated
+source: Packaged Agent Skills generated from openapi/open-education-api-openapi.yml (OEAPI 6.0-rc.3). Every operationId verified verbatim in the spec. No provider-published skills or AGENTS.md found (https://raw.githubusercontent.com/open-education-api/specification/master/AGENTS.md
+  -> 404 on 2026-10-09).
+skills:
+- file: open-education-api-browse-course-catalog.md
+  name: browse-course-catalog
+  api: openapi/open-education-api-openapi.yml
+  operations:
+  - listOrganisations
+  - listCoursesByOrganisationId
+  - listCourseById
+  - listCourseOfferingsByCourseId
+- file: open-education-api-explore-programme-structure.md
+  name: explore-programme-structure
+  api: openapi/open-education-api-openapi.yml
+  operations:
+  - listProgrammes
+  - listProgrammeById
+  - listProgrammesByProgrammeId
+  - listCoursesByProgrammeId
+  - listOfferingsByProgrammeId
+- file: open-education-api-enrol-in-a-course-offering.md
+  name: enrol-in-a-course-offering
+  api: openapi/open-education-api-openapi.yml
+  operations:
+  - listPersonByMyOauthId
+  - listCourseOfferingsById
+  - createExternalCourseOfferingAssociationByopenId
+  - listCourseOfferingAssociationById
+- file: open-education-api-retrieve-student-associations-and-results.md
+  name: retrieve-student-associations-and-results
+  api: openapi/open-education-api-openapi.yml
+  operations:
+  - listPersonById
+  - listCourseOfferingAssociationsByPersonId
+  - listProgrammeOfferingAssociationsByPersonId
+  - listTestComponentOfferingAssociationsByPersonId

@@ -1,0 +1,27 @@
+generated: '2026-10-09'
+method: searched
+source: https://oeapi.eu/v6.0/technical/versioning.md
+docs:
+- https://oeapi.eu/v6.0/#/technical/versioning
+- https://oeapi.eu/v6.0/#/governance/version-management
+- https://oeapi.eu/v6.0/#/technical/major-changes
+current_version: 6.0-rc.3
+previous_major: 5.0.0
+versioning:
+  scheme: semantic MAJOR.MINOR (no patch versions); release candidates MAJOR.MINOR-rc.#
+  quote: "OEAPI uses semantic versioning with a major and minor version number"
+  mechanism: header
+  header: Accept / Content-Type media type parameters, e.g. "application/vnd.oeapi+json;version=7.0;consumer=mbo-oke-roster-service;consumer-version=6.0"
+  model: "OEAPI uses a header-based, explicit, single-choice versioning model."
+  fallback: "Only minor version fallback is allowed. Major version fallback is never permitted."
+  unsupported_version: 406 Not Acceptable with requested version and supported versions in a problem+json body
+  compatibility: "Minor versions are therefore backwards and forwards compatible within the same major version."
+deprecation:
+  policy: "The original attribute is deprecated and removed in a future major version, following clear agreements on timeline, impact, and implementation guidance."
+  major_notice: "Upcoming major versions are announced well in advance (target: one year)."
+  source: https://oeapi.eu/v6.0/governance/version-management.md
+  sunset_headers: none documented
+  deprecated_operations: []
+  deprecated_operations_note: no operation in either contract carries deprecated:true
+status_page: null
+status_page_note: OEAPI is a specification, not a hosted service; no status page or SLA is published.

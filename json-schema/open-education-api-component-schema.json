@@ -1,0 +1,1500 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/open-education-api/main/json-schema/open-education-api-component-schema.json",
+  "title": "Component",
+  "description": "A component is a part of a course",
+  "x-generated": "2026-10-09",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/open-education-api-v5-openapi.yml#/components/schemas/Component",
+  "type": "object",
+  "required": [
+    "componentId",
+    "componentType",
+    "name",
+    "teachingLanguage",
+    "abbreviation",
+    "primaryCode"
+  ],
+  "properties": {
+    "componentId": {
+      "type": "string",
+      "description": "Unique id of this component",
+      "format": "uuid",
+      "readOnly": true
+    },
+    "primaryCode": {
+      "description": "The primary human readable identifier for this component. This is often the source identifier as defined by the institution.",
+      "$ref": "#/$defs/IdentifierEntry",
+      "readOnly": true
+    },
+    "componentType": {
+      "$ref": "#/$defs/componentType"
+    },
+    "name": {
+      "type": "array",
+      "description": "The name of this component",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/LanguageTypedString"
+      }
+    },
+    "abbreviation": {
+      "type": "string",
+      "description": "The abbreviation of this component",
+      "maxLength": 256
+    },
+    "modeOfDelivery": {
+      "$ref": "#/$defs/modesOfDelivery"
+    },
+    "duration": {
+      "type": "string",
+      "description": "The duration of this component. The duration format is from the ISO 8601 ABNF as given in Appendix A of RFC 3339.",
+      "pattern": "^(-?)P(?=\\d|T\\d)(?:(\\d+)Y)?(?:(\\d+)M)?(?:(\\d+)([DW]))?(?:T(?:(\\d+)H)?(?:(\\d+)M)?(?:(\\d+(?:\\.\\d+)?)S)?)?$"
+    },
+    "description": {
+      "type": "array",
+      "description": "The description of this component.",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/LanguageTypedString"
+      }
+    },
+    "teachingLanguage": {
+      "type": "string",
+      "description": "The (primary) teaching language in which this component is given, should be a three-letter language code as specified by ISO 639-2.",
+      "minLength": 3,
+      "maxLength": 3,
+      "pattern": "^[a-z]{3}$"
+    },
+    "learningOutcomes": {
+      "type": "array",
+      "description": "Statements that describe the knowledge or skills students should acquire by the end of a particular course (ECTS-learningoutcome).",
+      "items": {
+        "type": "array",
+        "minItems": 1,
+        "items": {
+          "$ref": "#/$defs/LanguageTypedString"
+        }
+      }
+    },
+    "enrollment": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/LanguageTypedString"
+      },
+      "description": "The extra information that is provided for enrollment"
+    },
+    "resources": {
+      "type": "array",
+      "description": "An overview of the literature and other resources that is used in this course (ECTS-recommended reading and other sources)",
+      "items": {
+        "type": "string"
+      }
+    },
+    "assessment": {
+      "type": "array",
+      "description": "A description of the way exams for this course are taken (ECTS-assessment method and criteria).",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/LanguageTypedString"
+      }
+    },
+    "addresses": {
+      "type": "array",
+      "description": "Addresses for this component",
+      "items": {
+        "$ref": "#/$defs/Address"
+      }
+    },
+    "otherCodes": {
+      "type": "array",
+      "description": "An array of additional human readable codes/identifiers for the entity being described.",
+      "items": {
+        "$ref": "#/$defs/IdentifierEntry"
+      }
+    },
+    "course": {
+      "description": "The course of which this component is a part. [`expandable`](#tag/course_model)\nBy default only the `courseId` (a string) is returned. If the client requested an expansion of `course` the full course object should be returned.\n",
+      "oneOf": [
+        {
+          "$ref": "#/$defs/Identifier",
+          "title": "courseId"
+        },
+        {
+          "$ref": "#/$defs/Course",
+          "title": "Course object"
+        }
+      ]
+    },
+    "organization": {
+      "description": "The organization which provides this component. [`expandable`](#tag/organization_model)\nBy default only the `organizationId` (a string) is returned. If the client requested an expansion of `organization` the full organization object should be returned.\n",
+      "oneOf": [
+        {
+          "$ref": "#/$defs/Identifier",
+          "title": "organizationId"
+        },
+        {
+          "$ref": "#/$defs/Organization",
+          "title": "Organization object"
+        }
+      ]
+    },
+    "consumers": {
+      "description": "The additional consumer elements that can be provided, see the [documentation on support for specific consumers](https://openonderwijsapi.nl/v5/#/technical/consumers-and-profiles/) for more information about this mechanism.",
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Consumer"
+      }
+    },
+    "ext": {
+      "$ref": "#/$defs/Ext"
+    }
+  },
+  "$defs": {
+    "Address": {
+      "type": "object",
+      "description": "The full street address",
+      "required": [
+        "addressType"
+      ],
+      "properties": {
+        "addressType": {
+          "$ref": "#/$defs/addressType"
+        },
+        "street": {
+          "type": "string",
+          "description": "The street name"
+        },
+        "streetNumber": {
+          "type": "string",
+          "description": "The street number"
+        },
+        "additional": {
+          "type": "array",
+          "description": "Further details like building name, suite, apartment number, etc.",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/LanguageTypedString"
+          }
+        },
+        "postalCode": {
+          "type": "string",
+          "description": "Postal code"
+        },
+        "city": {
+          "type": "string",
+          "description": "name of the city / locality"
+        },
+        "countryCode": {
+          "type": "string",
+          "description": "the country code according to [iso-3166-1-alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)"
+        },
+        "geolocation": {
+          "type": "object",
+          "description": "Geolocation of the entrance of this address (WGS84 coordinate reference system)",
+          "required": [
+            "latitude",
+            "longitude"
+          ],
+          "properties": {
+            "latitude": {
+              "type": "number",
+              "format": "double"
+            },
+            "longitude": {
+              "type": "number",
+              "format": "double"
+            }
+          }
+        },
+        "ext": {
+          "$ref": "#/$defs/Ext"
+        }
+      }
+    },
+    "Consumer": {
+      "type": "object",
+      "description": "Object for communicating data to a specific consumer (destination). This object has no relationship with the `consumer` query parameter.",
+      "required": [
+        "consumerKey"
+      ],
+      "properties": {
+        "consumerKey": {
+          "description": "The key of the consumer (destination) for which this information is intended. See the [consumer registry](https://openonderwijsapi.nl/v5/#/technical/consumers-and-profiles/) for more information.",
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "Course": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/CourseId"
+        },
+        {
+          "$ref": "#/$defs/CourseProperties"
+        },
+        {
+          "properties": {
+            "validFrom": {
+              "description": "The first day this course is valid (inclusive).",
+              "type": "string",
+              "format": "date"
+            },
+            "validTo": {
+              "description": "The day this course ceases to be valid (e.g. exclusive).",
+              "type": "string",
+              "format": "date"
+            }
+          }
+        }
+      ]
+    },
+    "CourseId": {
+      "type": "object",
+      "description": "An object describing the metadata of a course",
+      "required": [
+        "courseId"
+      ],
+      "properties": {
+        "courseId": {
+          "type": "string",
+          "description": "Unique id of this course",
+          "format": "uuid",
+          "readOnly": true
+        }
+      }
+    },
+    "CourseProperties": {
+      "type": "object",
+      "description": "An object describing the metadata of a course",
+      "required": [
+        "name",
+        "abbreviation",
+        "description",
+        "teachingLanguage",
+        "level",
+        "primaryCode"
+      ],
+      "properties": {
+        "primaryCode": {
+          "description": "The primary human readable identifier for this course. This is often the source identifier as defined by the institution.",
+          "$ref": "#/$defs/IdentifierEntry",
+          "readOnly": true
+        },
+        "name": {
+          "type": "array",
+          "description": "The name of this course (ECTS-title)",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/LanguageTypedString"
+          }
+        },
+        "abbreviation": {
+          "type": "string",
+          "description": "The abbreviation or internal code used to identify this course (ECTS-code)",
+          "maxLength": 256
+        },
+        "studyLoad": {
+          "$ref": "#/$defs/StudyLoadDescriptor"
+        },
+        "modeOfDelivery": {
+          "$ref": "#/$defs/modesOfDelivery"
+        },
+        "duration": {
+          "type": "string",
+          "description": "The duration of this course. The duration format is from the ISO 8601 ABNF as given in Appendix A of RFC 3339.",
+          "pattern": "^(-?)P(?=\\d|T\\d)(?:(\\d+)Y)?(?:(\\d+)M)?(?:(\\d+)([DW]))?(?:T(?:(\\d+)H)?(?:(\\d+)M)?(?:(\\d+(?:\\.\\d+)?)S)?)?$"
+        },
+        "firstStartDate": {
+          "type": "string",
+          "description": "The date when participants can follow this course for the first time.",
+          "format": "date"
+        },
+        "description": {
+          "type": "array",
+          "description": "The description of this course (ECTS-description).",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/LanguageTypedString"
+          }
+        },
+        "teachingLanguage": {
+          "type": "string",
+          "description": "The (primary) teaching language in which this course is given, should be a three-letter language code as specified by ISO 639-2.",
+          "minLength": 3,
+          "maxLength": 3,
+          "pattern": "^[a-z]{3}$"
+        },
+        "fieldsOfStudy": {
+          "type": "string",
+          "description": "Field(s) of study (e.g. ISCED-F) (https://unesdoc.unesco.org/ark:/48223/pf0000228085.locale=en).",
+          "maxLength": 4
+        },
+        "learningOutcomes": {
+          "type": "array",
+          "description": "Statements that describe the knowledge or skills students should acquire by the end of a particular course (ECTS-learningoutcome).",
+          "items": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "$ref": "#/$defs/LanguageTypedString"
+            }
+          }
+        },
+        "admissionRequirements": {
+          "type": "array",
+          "description": "This information may be given at an institutional level and/or at the level of individual programmes. Make sure that it is clear whether the information applies to fee-paying students (national and/or international) or to exchange students.",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/LanguageTypedString"
+          }
+        },
+        "qualificationRequirements": {
+          "type": "array",
+          "description": "Normally, students will receive a diploma when they have completed the (official) study program and have obtained the required number of credits. If there are any other specific requirements that students need to have fulfilled, mention them here.",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/LanguageTypedString"
+          }
+        },
+        "level": {
+          "$ref": "#/$defs/level"
+        },
+        "enrollment": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/LanguageTypedString"
+          },
+          "description": "The extra information that is provided for enrollment"
+        },
+        "resources": {
+          "type": "array",
+          "description": "An overview of the literature and other resources that is used in this course (ECTS-recommended reading and other sources)",
+          "items": {
+            "type": "string"
+          }
+        },
+        "assessment": {
+          "type": "array",
+          "description": "A description of the way exams for this course are taken (ECTS-assessment method and criteria).",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/LanguageTypedString"
+          }
+        },
+        "link": {
+          "type": "string",
+          "description": "URL of the course's website",
+          "format": "uri",
+          "maxLength": 2048
+        },
+        "educationSpecification": {
+          "description": "The educationSpecification of which this course is a more concrete implementation. [`expandable`](#tag/education_specification_model)",
+          "oneOf": [
+            {
+              "$ref": "#/$defs/Identifier",
+              "title": "educationSpecificationId"
+            },
+            {
+              "$ref": "#/$defs/EducationSpecification",
+              "title": "EducationSpecification"
+            }
+          ]
+        },
+        "addresses": {
+          "type": "array",
+          "description": "Addresses for this course",
+          "items": {
+            "$ref": "#/$defs/Address"
+          }
+        },
+        "otherCodes": {
+          "type": "array",
+          "description": "An array of additional human readable codes/identifiers for the entity being described.",
+          "items": {
+            "$ref": "#/$defs/IdentifierEntry"
+          }
+        },
+        "consumers": {
+          "description": "The additional consumer elements that can be provided, see the [documentation on support for specific consumers](https://openonderwijsapi.nl/v5/#/technical/consumers-and-profiles/) for more information about this mechanism.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Consumer"
+          }
+        },
+        "ext": {
+          "$ref": "#/$defs/Ext"
+        },
+        "programs": {
+          "description": "The program of which this course is a part of. This object is [`expandable`](#tag/program_model)",
+          "type": "array",
+          "items": {
+            "oneOf": [
+              {
+                "$ref": "#/$defs/Identifier",
+                "title": "programId"
+              },
+              {
+                "$ref": "#/$defs/Program",
+                "title": "Program object"
+              }
+            ]
+          }
+        },
+        "coordinators": {
+          "description": "The person(s) responsible for this course. This object is [`expandable`](#tag/person_model)",
+          "type": "array",
+          "items": {
+            "oneOf": [
+              {
+                "$ref": "#/$defs/Identifier",
+                "title": "personId"
+              },
+              {
+                "$ref": "#/$defs/Person",
+                "title": "Person object"
+              }
+            ]
+          }
+        },
+        "organization": {
+          "description": "The organization that manages this group. [`expandable`](#tag/organization_model)\nBy default only the `organizationId` (a string) is returned. If the client requested an expansion of `organization` the full organization object should be returned.\n",
+          "oneOf": [
+            {
+              "$ref": "#/$defs/Identifier",
+              "title": "organizationId"
+            },
+            {
+              "$ref": "#/$defs/Organization",
+              "title": "Organization object"
+            }
+          ]
+        }
+      }
+    },
+    "EducationSpecification": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/EducationSpecificationId"
+        },
+        {
+          "$ref": "#/$defs/EducationSpecificationProperties"
+        },
+        {
+          "properties": {
+            "validFrom": {
+              "description": "The first day this EducationSpecification is valid (inclusive).",
+              "type": "string",
+              "format": "date"
+            },
+            "validTo": {
+              "description": "The day this EducationSpecification ceases to be valid (e.g. exclusive).",
+              "type": "string",
+              "format": "date"
+            }
+          }
+        }
+      ]
+    },
+    "EducationSpecificationId": {
+      "type": "object",
+      "properties": {
+        "educationSpecificationId": {
+          "type": "string",
+          "description": "Unique id for this education specification",
+          "format": "uuid"
+        }
+      },
+      "required": [
+        "educationSpecificationId"
+      ]
+    },
+    "EducationSpecificationProperties": {
+      "type": "object",
+      "description": "The specification of an education object. This specification allows for other education objects to be derived from it.\nIt is used to aggregate education objects from a supplying institution.\nIt clusters programs to a main educationSpecification that is used in registries such as RIO. \n",
+      "required": [
+        "primaryCode",
+        "educationSpecificationType",
+        "name"
+      ],
+      "properties": {
+        "primaryCode": {
+          "description": "The primary human readable identifier for the entity. \nThis will often take the form of a human readable code as defined by the institution or region\n",
+          "$ref": "#/$defs/IdentifierEntry"
+        },
+        "otherCodes": {
+          "type": "array",
+          "description": "An array of additional human readable codes/identifiers for the entity being described.",
+          "items": {
+            "$ref": "#/$defs/IdentifierEntry"
+          }
+        },
+        "educationSpecificationType": {
+          "$ref": "#/$defs/educationSpecificationType"
+        },
+        "name": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/LanguageTypedString"
+          },
+          "description": "The name of this education specification"
+        },
+        "abbreviation": {
+          "type": "string",
+          "description": "The abbreviation of this program",
+          "maxLength": 256
+        },
+        "description": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/LanguageTypedString"
+          },
+          "description": "The description of this program. [The limited implementation of Git Hub Markdown syntax](#tag/formatting-and-displaying-results-from-API) MAY be used for rich text representation."
+        },
+        "formalDocument": {
+          "$ref": "#/$defs/formalDocument"
+        },
+        "level": {
+          "$ref": "#/$defs/level"
+        },
+        "sector": {
+          "$ref": "#/$defs/sector"
+        },
+        "levelOfQualification": {
+          "$ref": "#/$defs/levelOfQualification"
+        },
+        "fieldsOfStudy": {
+          "type": "string",
+          "description": "Field(s) of study (e.g. ISCED-F) (https://unesdoc.unesco.org/ark:/48223/pf0000228085.locale=en).",
+          "maxLength": 4
+        },
+        "studyLoad": {
+          "$ref": "#/$defs/StudyLoadDescriptor"
+        },
+        "learningOutcomes": {
+          "type": "array",
+          "description": "Statements that describe the knowledge or skills students should acquire by the end of a particular course or program (ECTS-learningoutcome).",
+          "items": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "$ref": "#/$defs/LanguageTypedString"
+            }
+          }
+        },
+        "link": {
+          "type": "string",
+          "description": "URL of the program's website",
+          "format": "uri",
+          "maxLength": 2048
+        },
+        "parent": {
+          "description": "The educationSpecification that is the parent of this educationSpecification if it exists. [`expandable`](#tag/education_specification_model)",
+          "oneOf": [
+            {
+              "$ref": "#/$defs/Identifier",
+              "title": "educationSpecificationId"
+            },
+            {
+              "$ref": "#/$defs/EducationSpecification",
+              "title": "EducationSpecification"
+            }
+          ]
+        },
+        "children": {
+          "type": "array",
+          "description": "The EducationSpecifications that have this EducationSpecification as their parent. [`expandable`](#tag/education_specification_model)",
+          "items": {
+            "oneOf": [
+              {
+                "$ref": "#/$defs/Identifier",
+                "title": "educationSpecificationId"
+              },
+              {
+                "$ref": "#/$defs/EducationSpecification",
+                "title": "EducationSpecification"
+              }
+            ]
+          }
+        },
+        "organization": {
+          "description": "The organization that manages this group. [`expandable`](#tag/organization_model)\nBy default only the `organizationId` (a string) is returned. If the client requested an expansion of `organization` the full organization object should be returned.\n",
+          "oneOf": [
+            {
+              "$ref": "#/$defs/Identifier",
+              "title": "organizationId"
+            },
+            {
+              "$ref": "#/$defs/Organization",
+              "title": "Organization object"
+            }
+          ]
+        },
+        "consumers": {
+          "description": "The additional consumer elements that can be provided, see the [documentation on support for specific consumers](https://openonderwijsapi.nl/v5/#/technical/consumers-and-profiles/) for more information about this mechanism.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Consumer"
+          }
+        },
+        "ext": {
+          "$ref": "#/$defs/Ext"
+        }
+      }
+    },
+    "Ext": {
+      "type": "object",
+      "description": "Object for additional non-standard attributes"
+    },
+    "ICERelationType": {
+      "type": "string",
+      "description": "Type of relation between person and In Case of Emergency contact",
+      "enum": [
+        "partner",
+        "parent",
+        "other"
+      ]
+    },
+    "Identifier": {
+      "type": "string",
+      "description": "An identifier of another resource.",
+      "format": "uuid"
+    },
+    "IdentifierEntry": {
+      "type": "object",
+      "properties": {
+        "codeType": {
+          "$ref": "#/$defs/codeType"
+        },
+        "code": {
+          "description": "Human readable value for the code/identifier",
+          "type": "string"
+        }
+      },
+      "required": [
+        "codeType",
+        "code"
+      ],
+      "additionalProperties": false
+    },
+    "LanguageTypedString": {
+      "type": "object",
+      "description": "A String with an associated language code.",
+      "properties": {
+        "language": {
+          "description": "The language used in the described entity. A string formatted according to RFC3066.",
+          "type": "string",
+          "pattern": "^[a-z]{2,4}(-[A-Z][a-z]{3})?(-([A-Z]{2}|[0-9]{3}))?$"
+        },
+        "value": {
+          "description": "String to describe the entity.",
+          "type": "string"
+        }
+      }
+    },
+    "Organization": {
+      "type": "object",
+      "description": "A description of a group of people working together to achieve a goal",
+      "required": [
+        "organizationId",
+        "organizationType",
+        "name",
+        "shortName",
+        "primaryCode"
+      ],
+      "properties": {
+        "organizationId": {
+          "type": "string",
+          "description": "Unique id of this organization",
+          "format": "uuid",
+          "readOnly": true
+        },
+        "primaryCode": {
+          "description": "The primary human readable identifier for the organization. This is often the source identifier as defined by the institution.",
+          "$ref": "#/$defs/IdentifierEntry",
+          "readOnly": true
+        },
+        "organizationType": {
+          "$ref": "#/$defs/organizationType"
+        },
+        "name": {
+          "type": "array",
+          "description": "The name of the organization",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/LanguageTypedString"
+          }
+        },
+        "shortName": {
+          "type": "string",
+          "description": "Short name of the organization",
+          "maxLength": 256
+        },
+        "description": {
+          "type": "array",
+          "description": "Any general description of the organization should clearly mention the type of higher education organization, especially in the case of a binary system. In Dutch; universiteit (university) or hogeschool (university of applied sciences).",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/LanguageTypedString"
+          }
+        },
+        "addresses": {
+          "type": "array",
+          "description": "Addresses of this organization",
+          "items": {
+            "$ref": "#/$defs/Address"
+          }
+        },
+        "link": {
+          "type": "string",
+          "description": "URL of the organization's website",
+          "format": "uri",
+          "maxLength": 2048
+        },
+        "logo": {
+          "type": "string",
+          "description": "Logo of this organization",
+          "format": "uri",
+          "maxLength": 2048
+        },
+        "otherCodes": {
+          "type": "array",
+          "description": "An array of additional human readable codes/identifiers for the entity being described.",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/IdentifierEntry"
+          }
+        },
+        "parent": {
+          "description": "The organizational unit which is the parent of this organization. [`expandable`](#tag/organization_model)\nBy default only the `organizationId` (a string) is returned. If the client requested an expansion of `organization` the full organization object should be returned.\n",
+          "oneOf": [
+            {
+              "$ref": "#/$defs/Identifier",
+              "title": "organizationId"
+            },
+            {
+              "$ref": "#/$defs/Organization",
+              "title": "Organization object"
+            }
+          ]
+        },
+        "children": {
+          "type": "array",
+          "description": "All the organizational units for which this organization is the parent. [`expandable`](#tag/organization_model)\nBy default only the `organizationId` (a string) is returned. If the client requested an expansion of `organization` the full organization object should be returned.\n",
+          "items": {
+            "oneOf": [
+              {
+                "$ref": "#/$defs/Identifier",
+                "title": "organizationId"
+              },
+              {
+                "$ref": "#/$defs/Organization",
+                "title": "Organization object"
+              }
+            ]
+          }
+        },
+        "consumers": {
+          "description": "The additional consumer elements that can be provided, see the [documentation on support for specific consumers](https://openonderwijsapi.nl/v5/#/technical/consumers-and-profiles/) for more information about this mechanism.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Consumer"
+          }
+        },
+        "ext": {
+          "$ref": "#/$defs/Ext"
+        }
+      }
+    },
+    "Person": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/PersonId"
+        },
+        {
+          "$ref": "#/$defs/PersonProperties"
+        }
+      ]
+    },
+    "PersonId": {
+      "type": "object",
+      "properties": {
+        "personId": {
+          "type": "string",
+          "description": "Unique id of this person",
+          "format": "uuid"
+        }
+      },
+      "required": [
+        "personId"
+      ]
+    },
+    "PersonProperties": {
+      "type": "object",
+      "description": "A person that has a relationship with this institution",
+      "required": [
+        "givenName",
+        "surname",
+        "displayName",
+        "affiliations",
+        "mail",
+        "primaryCode",
+        "activeEnrollment"
+      ],
+      "properties": {
+        "primaryCode": {
+          "description": "The primary human readable identifier for the person. This is often the source identifier as defined by the institution.",
+          "$ref": "#/$defs/IdentifierEntry",
+          "readOnly": true
+        },
+        "givenName": {
+          "type": "string",
+          "description": "The first name of this person",
+          "maxLength": 256
+        },
+        "surnamePrefix": {
+          "type": "string",
+          "description": "The prefix of the family name of this person"
+        },
+        "surname": {
+          "type": "string",
+          "description": "The family name of this person",
+          "maxLength": 256
+        },
+        "displayName": {
+          "type": "string",
+          "description": "The name of this person which will be displayed",
+          "maxLength": 256
+        },
+        "initials": {
+          "type": "string",
+          "description": "The initials of this person"
+        },
+        "activeEnrollment": {
+          "type": "boolean",
+          "description": "Whether this person has an active enrollment."
+        },
+        "dateOfBirth": {
+          "type": "string",
+          "description": "The date of birth of this person, RFC3339 (full-date)",
+          "format": "date"
+        },
+        "cityOfBirth": {
+          "type": "string",
+          "description": "The city of birth of this person"
+        },
+        "countryOfBirth": {
+          "type": "string",
+          "description": "The country of birth of this person the country code according to [iso-3166-1-alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)"
+        },
+        "nationality": {
+          "type": "string",
+          "description": "The nationality of this person the nationality according to https://gist.github.com/zspine/2365808"
+        },
+        "dateOfNationality": {
+          "type": "string",
+          "description": "The date of nationality of this person, RFC3339 (full-date)",
+          "format": "date"
+        },
+        "affiliations": {
+          "$ref": "#/$defs/personAffiliations"
+        },
+        "mail": {
+          "type": "string",
+          "description": "The primary e-mailaddress of this person",
+          "format": "email",
+          "maxLength": 256
+        },
+        "secondaryMail": {
+          "type": "string",
+          "description": "The secondary e-mailaddress of this person",
+          "format": "email",
+          "maxLength": 256
+        },
+        "telephoneNumber": {
+          "type": "string",
+          "description": "The telephone number of this person",
+          "maxLength": 256
+        },
+        "mobileNumber": {
+          "type": "string",
+          "description": "The mobile number of this person",
+          "maxLength": 256
+        },
+        "photoSocial": {
+          "type": "string",
+          "description": "The url of the informal picture of this person",
+          "format": "uri",
+          "maxLength": 2048
+        },
+        "photoOfficial": {
+          "type": "string",
+          "description": "The url of the official picture of this person",
+          "format": "uri",
+          "maxLength": 2048
+        },
+        "gender": {
+          "$ref": "#/$defs/gender"
+        },
+        "titlePrefix": {
+          "type": "string",
+          "description": "A title prefix to be used for this person"
+        },
+        "titleSuffix": {
+          "type": "string",
+          "description": "A title suffix to be used for this person"
+        },
+        "office": {
+          "type": "string",
+          "description": "The name of the office where this person is located"
+        },
+        "address": {
+          "$ref": "#/$defs/Address"
+        },
+        "ICEName": {
+          "type": "string",
+          "description": "Full name of In Case of Emergency contact",
+          "maxLength": 256
+        },
+        "ICEPhoneNumber": {
+          "type": "string",
+          "description": "Phone number of In Case of Emergency contact",
+          "maxLength": 256
+        },
+        "ICERelation": {
+          "$ref": "#/$defs/ICERelationType"
+        },
+        "languageOfChoice": {
+          "type": "array",
+          "description": "The language(s) of choice for this person, RFC3066",
+          "items": {
+            "type": "string"
+          }
+        },
+        "otherCodes": {
+          "type": "array",
+          "description": "An array of additional human readable codes/identifiers for the entity being described.",
+          "items": {
+            "$ref": "#/$defs/IdentifierEntry"
+          }
+        },
+        "consumers": {
+          "description": "The additional consumer elements that can be provided, see the [documentation on support for specific consumers](https://openonderwijsapi.nl/v5/#/technical/consumers-and-profiles/) for more information about this mechanism.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Consumer"
+          }
+        },
+        "ext": {
+          "$ref": "#/$defs/Ext"
+        }
+      }
+    },
+    "Program": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/ProgramId"
+        },
+        {
+          "$ref": "#/$defs/ProgramProperties"
+        },
+        {
+          "properties": {
+            "validFrom": {
+              "description": "The first day this program is valid (inclusive).",
+              "type": "string",
+              "format": "date"
+            },
+            "validTo": {
+              "description": "The day this program ceases to be valid (e.g. exclusive).",
+              "type": "string",
+              "format": "date"
+            }
+          }
+        }
+      ]
+    },
+    "ProgramId": {
+      "type": "object",
+      "description": "A collection of courses that lead to a certifiable learning outcome",
+      "required": [
+        "programId"
+      ],
+      "properties": {
+        "programId": {
+          "type": "string",
+          "description": "Unique id for this program",
+          "format": "uuid",
+          "readOnly": true
+        }
+      }
+    },
+    "ProgramProperties": {
+      "type": "object",
+      "description": "A collection of courses that lead to a certifiable learning outcome",
+      "required": [
+        "programType",
+        "name",
+        "abbreviation",
+        "description",
+        "primaryCode",
+        "teachingLanguage"
+      ],
+      "properties": {
+        "primaryCode": {
+          "description": "The primary human readable identifier for the program. This is often the source identifier as defined by the institution.",
+          "$ref": "#/$defs/IdentifierEntry",
+          "readOnly": true
+        },
+        "programType": {
+          "$ref": "#/$defs/programType"
+        },
+        "name": {
+          "description": "The name of this program",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/LanguageTypedString"
+          }
+        },
+        "abbreviation": {
+          "type": "string",
+          "description": "The abbreviation of this program",
+          "maxLength": 256
+        },
+        "description": {
+          "type": "array",
+          "description": "The description of this program",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/LanguageTypedString"
+          }
+        },
+        "teachingLanguage": {
+          "type": "string",
+          "description": "The (primary) teaching language in which this program is given, should be a three-letter language code as specified by ISO 639-2.",
+          "minLength": 3,
+          "maxLength": 3,
+          "pattern": "^[a-z]{3}$"
+        },
+        "studyLoad": {
+          "$ref": "#/$defs/StudyLoadDescriptor"
+        },
+        "qualificationAwarded": {
+          "$ref": "#/$defs/qualificationAwarded"
+        },
+        "modeOfStudy": {
+          "$ref": "#/$defs/modeOfStudy"
+        },
+        "modeOfDelivery": {
+          "$ref": "#/$defs/modesOfDelivery"
+        },
+        "duration": {
+          "type": "string",
+          "description": "The duration of this program. The duration format is from the ISO 8601 ABNF as given in Appendix A of RFC 3339.",
+          "pattern": "^(-?)P(?=\\d|T\\d)(?:(\\d+)Y)?(?:(\\d+)M)?(?:(\\d+)([DW]))?(?:T(?:(\\d+)H)?(?:(\\d+)M)?(?:(\\d+(?:\\.\\d+)?)S)?)?$"
+        },
+        "firstStartDate": {
+          "type": "string",
+          "description": "The date when participants can follow this program for the first time.",
+          "format": "date"
+        },
+        "levelOfQualification": {
+          "$ref": "#/$defs/levelOfQualification"
+        },
+        "level": {
+          "$ref": "#/$defs/level"
+        },
+        "sector": {
+          "$ref": "#/$defs/sector"
+        },
+        "fieldsOfStudy": {
+          "type": "string",
+          "description": "Field(s) of study (e.g. ISCED-F) (https://unesdoc.unesco.org/ark:/48223/pf0000228085.locale=en).",
+          "maxLength": 4
+        },
+        "enrollment": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/LanguageTypedString"
+          },
+          "description": "The extra information that is provided for enrollment"
+        },
+        "resources": {
+          "type": "array",
+          "description": "An overview of the literature and other resources that is used in this course (ECTS-recommended reading and other sources)",
+          "items": {
+            "type": "string"
+          }
+        },
+        "learningOutcomes": {
+          "type": "array",
+          "description": "List of learning outcomes at program level. It is advisable to limit the number of learning outcomes to approximately 20. It is also advisable to make sure that the program learning outcomes in the course catalogue correspond with those on the Diploma Supplement.",
+          "items": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "$ref": "#/$defs/LanguageTypedString"
+            }
+          }
+        },
+        "assessment": {
+          "type": "array",
+          "description": "A description of the way exams for this course are taken (ECTS-assessment method and criteria).",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/LanguageTypedString"
+          }
+        },
+        "admissionRequirements": {
+          "type": "array",
+          "description": "This information may be given at an institutional level and/or at the level of individual programmes. Make sure that it is clear whether the information applies to fee-paying students (national and/or international) or to exchange students.",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/LanguageTypedString"
+          }
+        },
+        "qualificationRequirements": {
+          "type": "array",
+          "description": "Normally, students will receive a diploma when they have completed the (official) study program and have obtained the required number of credits. If there are any other specific requirements that students need to have fulfilled, mention them here.",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/LanguageTypedString"
+          }
+        },
+        "link": {
+          "type": "string",
+          "description": "URL of the program's website",
+          "format": "uri",
+          "maxLength": 2048
+        },
+        "educationSpecification": {
+          "description": "The educationSpecification of which this program is a more concrete implementation. [`expandable`](#tag/education_specification_model)",
+          "oneOf": [
+            {
+              "$ref": "#/$defs/Identifier",
+              "title": "educationSpecificationId"
+            },
+            {
+              "$ref": "#/$defs/EducationSpecification",
+              "title": "EducationSpecification"
+            }
+          ]
+        },
+        "otherCodes": {
+          "type": "array",
+          "description": "An array of additional human readable codes/identifiers for the entity being described.",
+          "items": {
+            "$ref": "#/$defs/IdentifierEntry"
+          }
+        },
+        "addresses": {
+          "type": "array",
+          "description": "Addresses for this program",
+          "items": {
+            "$ref": "#/$defs/Address"
+          }
+        },
+        "parent": {
+          "description": "Parent program of which the current program is a child. This object is [`expandable`](#tag/program_model)",
+          "oneOf": [
+            {
+              "$ref": "#/$defs/Identifier",
+              "title": "programId"
+            },
+            {
+              "$ref": "#/$defs/Program",
+              "title": "Expanded Program"
+            }
+          ]
+        },
+        "children": {
+          "type": "array",
+          "description": "Programs which are a part of this program (e.g specializations). This object is [`expandable`](#tag/program_model)",
+          "items": {
+            "oneOf": [
+              {
+                "$ref": "#/$defs/Identifier",
+                "title": "programId"
+              },
+              {
+                "$ref": "#/$defs/Program",
+                "title": "Expanded Program"
+              }
+            ]
+          }
+        },
+        "coordinators": {
+          "description": "The person(s) responsible for this program. This object is [`expandable`](#tag/person_model)",
+          "type": "array",
+          "items": {
+            "oneOf": [
+              {
+                "$ref": "#/$defs/Identifier",
+                "title": "personId"
+              },
+              {
+                "$ref": "#/$defs/Person",
+                "title": "Person object"
+              }
+            ]
+          }
+        },
+        "organization": {
+          "description": "The organization providing this program. [`expandable`](#tag/organization_model)\nBy default only the `organizationId` (a string) is returned. If the client requested an expansion of `organization` the full organization object should be returned.\n",
+          "oneOf": [
+            {
+              "$ref": "#/$defs/Identifier",
+              "title": "organizationId"
+            },
+            {
+              "$ref": "#/$defs/Organization",
+              "title": "Organization object"
+            }
+          ]
+        },
+        "consumers": {
+          "description": "The additional consumer elements that can be provided, see the [documentation on support for specific consumers](https://openonderwijsapi.nl/v5/#/technical/consumers-and-profiles/) for more information about this mechanism.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Consumer"
+          }
+        },
+        "ext": {
+          "$ref": "#/$defs/Ext"
+        }
+      }
+    },
+    "StudyLoadDescriptor": {
+      "type": "object",
+      "description": "The amount of effort to complete this education in the specified unit.",
+      "properties": {
+        "studyLoadUnit": {
+          "description": "The unit in which the studyload is specfied\n- contacttime: CONTACTUUR\tamount of time spent in classes\n- ects: ECTS_PUNT\tEuropean Credit Transfer System\n- sbu: SBU\tstudentloadhours\n- sp: STUDIEPUNT studentpoints\n- hour: UUR\thours\n",
+          "type": "string",
+          "enum": [
+            "contacttime",
+            "ects",
+            "sbu",
+            "sp",
+            "hour"
+          ]
+        },
+        "value": {
+          "description": "The amount of load depicted in numbers",
+          "type": "number"
+        }
+      }
+    },
+    "addressType": {
+      "type": "string",
+      "description": "Address type\n- postal: post\n- visit: bezoek\n- deliveries: bezorg\n- billing: factuur\n- teaching: the address where education takes place\n",
+      "enum": [
+        "postal",
+        "visit",
+        "deliveries",
+        "billing",
+        "teaching"
+      ]
+    },
+    "codeType": {
+      "type": "string",
+      "description": "The code/identifier type. \n\nThis is an *extensible enumeration*. Use `x-` to prefix custom values\n\nThe predefined values are:\n  - `brin`: The registration number for a Dutch educational institution that is issued by the Dutch Ministry of Education, Culture and Science\n  - `crohoCreboCode`: programs with a CREBO and CROHO number are accredited by the Dutch Ministry of Education, Culture and Science (OCW)\n  - `programCode`: Identifier for the program (collection of courses)\n  - `componentCode`: The code for a component (part of a course)\n  - `offeringCode`: The code to identify a specific offering (program, course or component offering)\n  - `organizationId`: The identifier for the organization\n  - `buildingId`: The number or code to identify a building\n  - `bagId`: The identification of a building as it is known in the Dutch Building Administration (BAG)\n  - `roomCode`: The code for a room\n  - `systemId`: Identifier assigned to an entity in context of a specific system\n  - `productId`: Identifier assigned to a specific product\n  - `nationalIdentityNumber`: Identifier assigned by the governement of the person. e.g. a social security number in the USA\n  - `studentNumber`: Identifier for the student\n  - `studielinkNumber`: Identifier for the person as determined by Studielink\n  - `esi`: European Student Identifier\n  - `userName`: The name of a user\n  - `accountId`: Identifier assigned to a specific account\n  - `emailAdress`: An email address\n  - `groupCode`: The identifier for a group (of persons)\n  - `isbn`: International Standard Book Number that serve as product identifiers for Books\n  - `issn`: International Standard Book Number that serve as product identifiers for periodicals\n  - `orcId`: Open Researcher and Contributor ID\n  - `uuid`: A universally unique identifier\n  - `schacHome`: Home organization using the domain name of the organization\n  - `identifier`: Generic Identifier\n",
+      "x-ooapi-extensible-enum": [
+        "brin",
+        "crohoCreboCode",
+        "programCode",
+        "componentCode",
+        "offeringCode",
+        "organizationId",
+        "buildingId",
+        "bagId",
+        "roomCode",
+        "systemId",
+        "productId",
+        "nationalIdentityNumber",
+        "studentNumber",
+        "studielinkNumber",
+        "esi",
+        "userName",
+        "accountId",
+        "emailAdress",
+        "groupCode",
+        "isbn",
+        "issn",
+        "orcId",
+        "uuid",
+        "schacHome",
+        "identifier"
+      ]
+    },
+    "componentType": {
+      "type": "string",
+      "description": "The component type\n- test: tentamen\n- lecture: college\n- practical: practicum\n- tutorial: werkcollege\n- consultation: consultatie\n- project: project\n- workshop: workshop\n- excursion: excursie\n- independent study: zelfstudie\n- external: extern\n- skills training: vaardighedentraining\n",
+      "enum": [
+        "test",
+        "lecture",
+        "practical",
+        "tutorial",
+        "consultation",
+        "project",
+        "workshop",
+        "excursion",
+        "independent study",
+        "external",
+        "skills training"
+      ]
+    },
+    "educationSpecificationType": {
+      "type": "string",
+      "description": "The type of education specification\n  - program: HOOPLEIDING\n  - privateProgram: PARTICULIEREOPLEIDING\n  - programCluster: HOONDERWIJSEENHEDENCLUSTER\n  - course: HOONDERWIJSEENHEID\n",
+      "enum": [
+        "program",
+        "privateProgram",
+        "cluster",
+        "course"
+      ]
+    },
+    "formalDocument": {
+      "type": "string",
+      "description": "The type of formal document obtained after completion of this education\n  - diploma: DIPLOMA\n  - certificate: CERTIFICAAT\n  - no official document: GEEN OFFICIEEL DOCUMENT\n  - testimonial: GETUIGSCHRIFT\n  - school advice: SCHOOLADVIES\n",
+      "enum": [
+        "diploma",
+        "certificate",
+        "no official document",
+        "testimonial",
+        "school advice"
+      ]
+    },
+    "gender": {
+      "type": "string",
+      "description": "The gender of this person",
+      "enum": [
+        "M",
+        "F",
+        "U",
+        "X"
+      ]
+    },
+    "level": {
+      "type": "string",
+      "description": "The level of this course (ECTS-year of study if applicable)\n- secondary vocational education: mbo\n- secondary vocational education 1: mbo 1, corresponds to levelOfQualification 1\n- secondary vocational education 2: mbo 2, corresponds to levelOfQualification 2\n- secondary vocational education 3: mbo 3, corresponds to levelOfQualification 3\n- secondary vocational education 4: mbo 4, corresponds to levelOfQualification 4\n- associate degree: associate degree, corresponds to levelOfQualification 5\n- bachelor: bachelor, corresponds to levelOfQualification 6\n- master: master, corresponds to levelOfQualification 7\n- doctoral: doctoraal, corresponds to levelOfQualification 8\n- undefined: onbepaald\n- undivided: ongedeeld\n- nt2-1: NT2 niveau 1\n- nt2-2: NT2 niveau 2\n",
+      "enum": [
+        "secondary vocational education",
+        "secondary vocational education 1",
+        "secondary vocational education 2",
+        "secondary vocational education 3",
+        "secondary vocational education 4",
+        "associate degree",
+        "bachelor",
+        "master",
+        "doctoral",
+        "undefined",
+        "undivided",
+        "nt2-1",
+        "nt2-2"
+      ]
+    },
+    "levelOfQualification": {
+      "type": "string",
+      "description": "Level of qualification according to the Dutch National Qualification Framework and the European Qualifications Framework, see [this overview](https://nlqf.nl/images/downloads/English2018/Schematic_overview_NLQF_2020.pdf) for more information.",
+      "enum": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "4+",
+        "5",
+        "6",
+        "7",
+        "8"
+      ]
+    },
+    "modeOfStudy": {
+      "type": "string",
+      "description": "Indicates whether the education is full-time, part-time, dual or self-paced.\n  - full-time: fulltime\n  - part-time: parttime\n  - dual training: duaal\n  - self-paced: eigen tempo\n",
+      "enum": [
+        "full-time",
+        "part-time",
+        "dual training",
+        "self-paced"
+      ]
+    },
+    "modesOfDelivery": {
+      "type": "array",
+      "description": "The mode of delivery of the component (ECTS-mode of delivery)\n- distance-learning: afstandsleren\n- on campus: op de campus\n- online: online\n- hybrid: hybride\n- situated: op locatie\n",
+      "items": {
+        "type": "string",
+        "enum": [
+          "distance-learning",
+          "on campus",
+          "online",
+          "hybrid",
+          "situated"
+        ]
+      }
+    },
+    "organizationType": {
+      "type": "string",
+      "description": "The type of this organization. Each OOAPI endpoint should have a single organization with type `root`, describing the root organization.\n- root: the root of this organization, representing the Educational Institution itself\n- institute: instituut\n- department: departement\n- faculty: faculteit\n- branch: vestiging\n- academy: academie\n- school: school\n",
+      "enum": [
+        "root",
+        "institute",
+        "department",
+        "faculty",
+        "branch",
+        "academy",
+        "school"
+      ]
+    },
+    "personAffiliations": {
+      "type": "array",
+      "description": "The affiliations of this person, the relations a person has with the organization providing this endpoint\n- student: student\n- employee: medewerker\n- guest: gast\n",
+      "items": {
+        "type": "string",
+        "enum": [
+          "student",
+          "employee",
+          "guest"
+        ]
+      }
+    },
+    "programType": {
+      "type": "string",
+      "description": "The type of this program\n- program: opleiding\n- minor: minor\n- honours: honours\n- specialization: specialisatie\n- track: track\n",
+      "enum": [
+        "program",
+        "minor",
+        "honours",
+        "specialization",
+        "track"
+      ]
+    },
+    "qualificationAwarded": {
+      "type": "string",
+      "description": "Type of qualificaton that can be obtained on finishing the program",
+      "enum": [
+        "AD",
+        "BA",
+        "BSc",
+        "LLB",
+        "MA",
+        "MSc",
+        "LLM",
+        "Phd",
+        "None"
+      ]
+    },
+    "sector": {
+      "type": "string",
+      "description": "The sector for this program\n- secondary vocational education: middelbaar beroepsonderwijs\n- higher professional education: hoger beroepsonderwijs\n- university education: universitair onderwijs\n",
+      "enum": [
+        "secondary vocational education",
+        "higher professional education",
+        "university education"
+      ]
+    }
+  }
+}

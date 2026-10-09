@@ -1,0 +1,58 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist overlay for Open Education API 6.0-rc.3
+  version: 1.0.0
+extends: ../openapi/_original/oeapi-6.0-rc.3.yaml
+x-generated: '2026-10-09'
+x-method: generated
+x-source: openapi/open-education-api-openapi.yml
+x-rationale: 'OEAPI is a standard each institution implements on its own host, and the only server in the contract (https://demo01.eduapi.nl/v6,
+  SURF demo) did not resolve on 2026-10-09. This overlay adds a templated implementer server, provenance metadata and agent
+  read/write hints. It deliberately does NOT add securitySchemes: the spec tag `security` states that no global security is
+  defined so the core stays neutral, and auth is chosen per implementation.'
+actions:
+- target: $.servers
+  description: Add a templated server for an institution's own OEAPI implementation alongside the SURF demo server.
+  update:
+  - url: https://{host}/v6
+    description: An institution's own OEAPI 6 implementation (OEAPI is implemented per institution).
+    variables:
+      host:
+        default: demo01.eduapi.nl
+        description: Hostname of the implementing institution's OEAPI endpoint.
+- target: $.info
+  description: Record provenance and the implementation model.
+  update:
+    x-api-evangelist:
+      aid: open-education-api:open-education-api
+      spec_source: https://oeapi.eu/specification/v6.0/oeapi-6.0-rc.3.yaml
+      docs: https://oeapi.eu/v6.0/
+      implementation_model: specification implemented per institution; no central hosted API
+      mcp: mcp/open-education-api-mcp.yml (candidate, deployment.mode none)
+- target: $.paths.*.get
+  description: Mark every GET as a read-only, safe operation for agents.
+  update:
+    x-agent-hints:
+      readOnly: true
+      idempotent: true
+- target: $.paths.*.put
+  description: PUT replaces a resource by id; idempotent by HTTP semantics.
+  update:
+    x-agent-hints:
+      readOnly: false
+      idempotent: true
+      confirm: recommended
+- target: $.paths.*.patch
+  description: PATCH partially updates a resource.
+  update:
+    x-agent-hints:
+      readOnly: false
+      idempotent: false
+      confirm: recommended
+- target: $.paths.*.post
+  description: POST creates a resource or association; not idempotent.
+  update:
+    x-agent-hints:
+      readOnly: false
+      idempotent: false
+      confirm: required

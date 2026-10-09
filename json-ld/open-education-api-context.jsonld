@@ -1,0 +1,949 @@
+{
+  "@context": {
+    "@vocab": "https://oeapi.eu/schema#",
+    "schema": "https://schema.org/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "dcterms": "http://purl.org/dc/terms/",
+    "open": "https://oeapi.eu/schema#",
+    "Service": "open:Service",
+    "contactEmail": {
+      "@id": "open:contactEmail",
+      "@type": "xsd:string"
+    },
+    "specification": {
+      "@id": "open:specification",
+      "@type": "@id"
+    },
+    "documentation": {
+      "@id": "open:documentation",
+      "@type": "@id"
+    },
+    "supportedConsumers": {
+      "@id": "open:supportedConsumers",
+      "@container": "@list"
+    },
+    "supportedOperations": {
+      "@id": "open:supportedOperations",
+      "@container": "@list"
+    },
+    "supportedExpands": {
+      "@id": "open:supportedExpands",
+      "@container": "@list"
+    },
+    "ext": {
+      "@id": "open:ext"
+    },
+    "AcademicSession": "open:AcademicSession",
+    "academicSessionId": {
+      "@id": "open:academicSessionId",
+      "@type": "xsd:string"
+    },
+    "academicSessionType": {
+      "@id": "open:academicSessionType",
+      "@type": "@id"
+    },
+    "primaryCode": {
+      "@id": "open:primaryCode",
+      "@type": "@id"
+    },
+    "name": {
+      "@id": "open:name",
+      "@container": "@list"
+    },
+    "abbreviation": {
+      "@id": "open:abbreviation",
+      "@type": "xsd:string"
+    },
+    "startDateTime": {
+      "@id": "open:startDateTime",
+      "@type": "xsd:dateTime"
+    },
+    "endDateTime": {
+      "@id": "open:endDateTime",
+      "@type": "xsd:dateTime"
+    },
+    "parentId": {
+      "@id": "open:parentId"
+    },
+    "parent": {
+      "@id": "open:parent"
+    },
+    "childIds": {
+      "@id": "open:childIds",
+      "@container": "@list"
+    },
+    "children": {
+      "@id": "open:children",
+      "@container": "@list"
+    },
+    "yearId": {
+      "@id": "open:yearId"
+    },
+    "year": {
+      "@id": "open:year"
+    },
+    "otherCodes": {
+      "@id": "open:otherCodes",
+      "@container": "@list"
+    },
+    "consumer": {
+      "@id": "open:consumer"
+    },
+    "Building": "open:Building",
+    "buildingId": {
+      "@id": "open:buildingId",
+      "@type": "xsd:string"
+    },
+    "description": {
+      "@id": "open:description",
+      "@container": "@list"
+    },
+    "address": {
+      "@id": "open:address"
+    },
+    "LearningComponent": "open:LearningComponent",
+    "componentId": {
+      "@id": "open:componentId",
+      "@type": "xsd:string"
+    },
+    "componentType": {
+      "@id": "open:componentType",
+      "@type": "@id"
+    },
+    "modesOfDelivery": {
+      "@id": "open:modesOfDelivery",
+      "@container": "@list"
+    },
+    "duration": {
+      "@id": "open:duration",
+      "@type": "xsd:string"
+    },
+    "teachingLanguages": {
+      "@id": "open:teachingLanguages",
+      "@container": "@list"
+    },
+    "learningOutcomeIds": {
+      "@id": "open:learningOutcomeIds",
+      "@container": "@list"
+    },
+    "learningOutcomes": {
+      "@id": "open:learningOutcomes",
+      "@container": "@list"
+    },
+    "enrolment": {
+      "@id": "open:enrolment",
+      "@container": "@list"
+    },
+    "resources": {
+      "@id": "open:resources",
+      "@container": "@list"
+    },
+    "assessment": {
+      "@id": "open:assessment",
+      "@container": "@list"
+    },
+    "addresses": {
+      "@id": "open:addresses",
+      "@container": "@list"
+    },
+    "courseId": {
+      "@id": "open:courseId"
+    },
+    "course": {
+      "@id": "open:course"
+    },
+    "organisationId": {
+      "@id": "open:organisationId"
+    },
+    "organisation": {
+      "@id": "open:organisation"
+    },
+    "TestComponent": "open:TestComponent",
+    "extraDuration": {
+      "@id": "open:extraDuration",
+      "@type": "xsd:string"
+    },
+    "resultValueType": {
+      "@id": "open:resultValueType"
+    },
+    "attempts": {
+      "@id": "open:attempts",
+      "@type": "xsd:integer"
+    },
+    "passFrom": {
+      "@id": "open:passFrom",
+      "@type": "xsd:string"
+    },
+    "state": {
+      "@id": "open:state"
+    },
+    "Membership": "open:Membership",
+    "personId": {
+      "@id": "open:personId",
+      "@type": "xsd:string"
+    },
+    "groupId": {
+      "@id": "open:groupId",
+      "@type": "xsd:string"
+    },
+    "role": {
+      "@id": "open:role",
+      "@type": "@id"
+    },
+    "LearningOutcome": "open:LearningOutcome",
+    "learningOutcomeId": {
+      "@id": "open:learningOutcomeId",
+      "@type": "xsd:string"
+    },
+    "parentIds": {
+      "@id": "open:parentIds",
+      "@container": "@list"
+    },
+    "parents": {
+      "@id": "open:parents",
+      "@container": "@list"
+    },
+    "fieldsOfStudy": {
+      "@id": "open:fieldsOfStudy",
+      "@type": "xsd:string"
+    },
+    "complexityLevel": {
+      "@id": "open:complexityLevel"
+    },
+    "validFrom": {
+      "@id": "open:validFrom",
+      "@type": "xsd:dateTime"
+    },
+    "validTo": {
+      "@id": "open:validTo",
+      "@type": "xsd:dateTime"
+    },
+    "Organisation": "open:Organisation",
+    "organisationType": {
+      "@id": "open:organisationType",
+      "@type": "@id"
+    },
+    "shortName": {
+      "@id": "open:shortName",
+      "@type": "xsd:string"
+    },
+    "link": {
+      "@id": "open:link",
+      "@type": "@id"
+    },
+    "logo": {
+      "@id": "open:logo",
+      "@type": "@id"
+    },
+    "rootId": {
+      "@id": "open:rootId"
+    },
+    "root": {
+      "@id": "open:root"
+    },
+    "Room": "open:Room",
+    "roomId": {
+      "@id": "open:roomId",
+      "@type": "xsd:string"
+    },
+    "roomType": {
+      "@id": "open:roomType",
+      "@type": "@id"
+    },
+    "totalSeats": {
+      "@id": "open:totalSeats",
+      "@type": "xsd:integer"
+    },
+    "availableSeats": {
+      "@id": "open:availableSeats",
+      "@type": "xsd:integer"
+    },
+    "floor": {
+      "@id": "open:floor",
+      "@type": "xsd:string"
+    },
+    "wing": {
+      "@id": "open:wing",
+      "@type": "xsd:string"
+    },
+    "geolocation": {
+      "@id": "open:geolocation"
+    },
+    "building": {
+      "@id": "open:building"
+    },
+    "TestComponentOfferingAssociationAttempt": "open:TestComponentOfferingAssociationAttempt",
+    "attemptId": {
+      "@id": "open:attemptId",
+      "@type": "xsd:string"
+    },
+    "opportunity": {
+      "@id": "open:opportunity",
+      "@type": "xsd:string"
+    },
+    "attempt": {
+      "@id": "open:attempt",
+      "@type": "xsd:integer"
+    },
+    "roomIds": {
+      "@id": "open:roomIds",
+      "@container": "@list"
+    },
+    "rooms": {
+      "@id": "open:rooms",
+      "@container": "@list"
+    },
+    "attendance": {
+      "@id": "open:attendance"
+    },
+    "irregularities": {
+      "@id": "open:irregularities",
+      "@type": "xsd:string"
+    },
+    "coordinatorId": {
+      "@id": "open:coordinatorId"
+    },
+    "coordinator": {
+      "@id": "open:coordinator"
+    },
+    "documents": {
+      "@id": "open:documents",
+      "@container": "@list"
+    },
+    "result": {
+      "@id": "open:result"
+    },
+    "Problem": "open:Problem",
+    "type": {
+      "@id": "open:type",
+      "@type": "@id"
+    },
+    "title": {
+      "@id": "open:title",
+      "@type": "xsd:string"
+    },
+    "status": {
+      "@id": "open:status",
+      "@type": "xsd:integer"
+    },
+    "detail": {
+      "@id": "open:detail",
+      "@type": "xsd:string"
+    },
+    "instance": {
+      "@id": "open:instance",
+      "@type": "@id"
+    },
+    "Consumer": "open:Consumer",
+    "consumerKey": {
+      "@id": "open:consumerKey",
+      "@type": "xsd:string"
+    },
+    "exampleProperty": {
+      "@id": "open:exampleProperty",
+      "@type": "xsd:string"
+    },
+    "filterPresence": "open:filterPresence",
+    "Pagination": "open:Pagination",
+    "pageSize": {
+      "@id": "open:pageSize",
+      "@type": "xsd:integer"
+    },
+    "pageNumber": {
+      "@id": "open:pageNumber",
+      "@type": "xsd:integer"
+    },
+    "hasPreviousPage": {
+      "@id": "open:hasPreviousPage",
+      "@type": "xsd:boolean"
+    },
+    "hasNextPage": {
+      "@id": "open:hasNextPage",
+      "@type": "xsd:boolean"
+    },
+    "totalPages": {
+      "@id": "open:totalPages",
+      "@type": "xsd:integer"
+    },
+    "IdentifierEntry": "open:IdentifierEntry",
+    "codeType": {
+      "@id": "open:codeType",
+      "@type": "@id"
+    },
+    "code": {
+      "@id": "open:code",
+      "@type": "xsd:string"
+    },
+    "LanguageTypedString": "open:LanguageTypedString",
+    "language": {
+      "@id": "open:language",
+      "@type": "@id"
+    },
+    "value": {
+      "@id": "open:value",
+      "@type": "xsd:string"
+    },
+    "CourseOfferingId": "open:CourseOfferingId",
+    "courseOfferingId": {
+      "@id": "open:courseOfferingId",
+      "@type": "xsd:string"
+    },
+    "EnrolmentPeriods": "open:EnrolmentPeriods",
+    "targetGroups": {
+      "@id": "open:targetGroups",
+      "@container": "@list"
+    },
+    "enrolmentType": {
+      "@id": "open:enrolmentType",
+      "@type": "xsd:string"
+    },
+    "enrolmentUrl": {
+      "@id": "open:enrolmentUrl",
+      "@type": "xsd:string"
+    },
+    "queueEnabled": {
+      "@id": "open:queueEnabled",
+      "@type": "xsd:boolean"
+    },
+    "queuedNumberStudents": {
+      "@id": "open:queuedNumberStudents",
+      "@type": "xsd:decimal"
+    },
+    "maxQueuedNumberStudents": {
+      "@id": "open:maxQueuedNumberStudents",
+      "@type": "xsd:decimal"
+    },
+    "comment": {
+      "@id": "open:comment",
+      "@type": "xsd:string"
+    },
+    "OfferingProperties": "open:OfferingProperties",
+    "groupIds": {
+      "@id": "open:groupIds"
+    },
+    "academicSession": {
+      "@id": "open:academicSession"
+    },
+    "rosteringState": {
+      "@id": "open:rosteringState"
+    },
+    "maxNumberStudents": {
+      "@id": "open:maxNumberStudents",
+      "@type": "xsd:decimal"
+    },
+    "enrolledNumberStudents": {
+      "@id": "open:enrolledNumberStudents",
+      "@type": "xsd:decimal"
+    },
+    "pendingNumberStudents": {
+      "@id": "open:pendingNumberStudents",
+      "@type": "xsd:decimal"
+    },
+    "minNumberStudents": {
+      "@id": "open:minNumberStudents",
+      "@type": "xsd:decimal"
+    },
+    "resultExpected": {
+      "@id": "open:resultExpected",
+      "@type": "xsd:boolean"
+    },
+    "enrolmentPeriods": {
+      "@id": "open:enrolmentPeriods",
+      "@container": "@list"
+    },
+    "supplementaryInformation": {
+      "@id": "open:supplementaryInformation",
+      "@type": "@id"
+    },
+    "Country": "open:Country",
+    "iso3166-1-alpha2": {
+      "@id": "open:iso3166-1-alpha2",
+      "@type": "xsd:string"
+    },
+    "iso3166-1-alpha3": {
+      "@id": "open:iso3166-1-alpha3",
+      "@type": "xsd:string"
+    },
+    "iso3166-2": {
+      "@id": "open:iso3166-2",
+      "@type": "xsd:string"
+    },
+    "iso3166-3": {
+      "@id": "open:iso3166-3",
+      "@type": "xsd:string"
+    },
+    "Address": "open:Address",
+    "addressType": {
+      "@id": "open:addressType",
+      "@type": "@id"
+    },
+    "street": {
+      "@id": "open:street",
+      "@type": "xsd:string"
+    },
+    "streetNumber": {
+      "@id": "open:streetNumber",
+      "@type": "xsd:string"
+    },
+    "additional": {
+      "@id": "open:additional",
+      "@container": "@list"
+    },
+    "postCode": {
+      "@id": "open:postCode",
+      "@type": "xsd:string"
+    },
+    "city": {
+      "@id": "open:city",
+      "@type": "xsd:string"
+    },
+    "countryCode": {
+      "@id": "open:countryCode"
+    },
+    "Cost": "open:Cost",
+    "costType": {
+      "@id": "open:costType",
+      "@type": "@id"
+    },
+    "amount": {
+      "@id": "open:amount",
+      "@type": "xsd:string"
+    },
+    "vatAmount": {
+      "@id": "open:vatAmount",
+      "@type": "xsd:string"
+    },
+    "amountWithoutVat": {
+      "@id": "open:amountWithoutVat",
+      "@type": "xsd:string"
+    },
+    "currency": {
+      "@id": "open:currency",
+      "@type": "xsd:string"
+    },
+    "displayAmount": {
+      "@id": "open:displayAmount",
+      "@container": "@list"
+    },
+    "CourseId": "open:CourseId",
+    "StudyLoadDescriptor": "open:StudyLoadDescriptor",
+    "studyLoadUnit": {
+      "@id": "open:studyLoadUnit",
+      "@type": "@id"
+    },
+    "ProgrammeId": "open:ProgrammeId",
+    "programmeId": {
+      "@id": "open:programmeId",
+      "@type": "xsd:string"
+    },
+    "PersonId": "open:PersonId",
+    "Nationality": "open:Nationality",
+    "PersonProperties": "open:PersonProperties",
+    "givenName": {
+      "@id": "open:givenName",
+      "@type": "xsd:string"
+    },
+    "alternateName": {
+      "@id": "open:alternateName",
+      "@type": "xsd:string"
+    },
+    "preferredName": {
+      "@id": "open:preferredName",
+      "@type": "xsd:string"
+    },
+    "surnamePrefix": {
+      "@id": "open:surnamePrefix",
+      "@type": "xsd:string"
+    },
+    "surname": {
+      "@id": "open:surname",
+      "@type": "xsd:string"
+    },
+    "displayName": {
+      "@id": "open:displayName",
+      "@type": "xsd:string"
+    },
+    "initials": {
+      "@id": "open:initials",
+      "@type": "xsd:string"
+    },
+    "idCheckName": {
+      "@id": "open:idCheckName",
+      "@type": "xsd:string"
+    },
+    "activeEnrolment": {
+      "@id": "open:activeEnrolment",
+      "@type": "xsd:boolean"
+    },
+    "dateOfBirth": {
+      "@id": "open:dateOfBirth",
+      "@type": "xsd:date"
+    },
+    "cityOfBirth": {
+      "@id": "open:cityOfBirth",
+      "@type": "xsd:string"
+    },
+    "countryOfBirth": {
+      "@id": "open:countryOfBirth"
+    },
+    "nationality": {
+      "@id": "open:nationality"
+    },
+    "dateOfNationality": {
+      "@id": "open:dateOfNationality",
+      "@type": "xsd:date"
+    },
+    "affiliations": {
+      "@id": "open:affiliations",
+      "@container": "@list"
+    },
+    "email": {
+      "@id": "open:email",
+      "@type": "xsd:string"
+    },
+    "secondaryEmail": {
+      "@id": "open:secondaryEmail",
+      "@type": "xsd:string"
+    },
+    "telephoneNumber": {
+      "@id": "open:telephoneNumber",
+      "@type": "xsd:string"
+    },
+    "mobileNumber": {
+      "@id": "open:mobileNumber",
+      "@type": "xsd:string"
+    },
+    "photoSocial": {
+      "@id": "open:photoSocial",
+      "@type": "@id"
+    },
+    "photoOfficial": {
+      "@id": "open:photoOfficial",
+      "@type": "@id"
+    },
+    "gender": {
+      "@id": "open:gender"
+    },
+    "titlePrefix": {
+      "@id": "open:titlePrefix",
+      "@type": "xsd:string"
+    },
+    "titleSuffix": {
+      "@id": "open:titleSuffix",
+      "@type": "xsd:string"
+    },
+    "office": {
+      "@id": "open:office",
+      "@type": "xsd:string"
+    },
+    "ICEName": {
+      "@id": "open:ICEName",
+      "@type": "xsd:string"
+    },
+    "ICEPhoneNumber": {
+      "@id": "open:ICEPhoneNumber",
+      "@type": "xsd:string"
+    },
+    "ICERelation": {
+      "@id": "open:ICERelation"
+    },
+    "languageOfChoice": {
+      "@id": "open:languageOfChoice",
+      "@container": "@list"
+    },
+    "assignedNeeds": {
+      "@id": "open:assignedNeeds",
+      "@container": "@list"
+    },
+    "ProgrammeProperties": "open:ProgrammeProperties",
+    "programmeType": {
+      "@id": "open:programmeType",
+      "@type": "@id"
+    },
+    "studyLoad": {
+      "@id": "open:studyLoad",
+      "@container": "@list"
+    },
+    "qualificationAwarded": {
+      "@id": "open:qualificationAwarded"
+    },
+    "qualificationDesignations": {
+      "@id": "open:qualificationDesignations",
+      "@container": "@list"
+    },
+    "modeOfStudy": {
+      "@id": "open:modeOfStudy"
+    },
+    "firstStartDateTime": {
+      "@id": "open:firstStartDateTime",
+      "@type": "xsd:dateTime"
+    },
+    "levelOfQualification": {
+      "@id": "open:levelOfQualification"
+    },
+    "level": {
+      "@id": "open:level"
+    },
+    "admissionRequirements": {
+      "@id": "open:admissionRequirements",
+      "@container": "@list"
+    },
+    "qualificationRequirements": {
+      "@id": "open:qualificationRequirements",
+      "@container": "@list"
+    },
+    "formalDocument": {
+      "@id": "open:formalDocument"
+    },
+    "coordinatorIds": {
+      "@id": "open:coordinatorIds",
+      "@container": "@list"
+    },
+    "coordinators": {
+      "@id": "open:coordinators",
+      "@container": "@list"
+    },
+    "instructorIds": {
+      "@id": "open:instructorIds",
+      "@container": "@list"
+    },
+    "instructors": {
+      "@id": "open:instructors",
+      "@container": "@list"
+    },
+    "CourseProperties": "open:CourseProperties",
+    "firstStartDate": {
+      "@id": "open:firstStartDate",
+      "@type": "xsd:dateTime"
+    },
+    "programmeIds": {
+      "@id": "open:programmeIds",
+      "@container": "@list"
+    },
+    "programmes": {
+      "@id": "open:programmes",
+      "@container": "@list"
+    },
+    "ProgrammeOfferingId": "open:ProgrammeOfferingId",
+    "programmeOfferingId": {
+      "@id": "open:programmeOfferingId",
+      "@type": "xsd:string"
+    },
+    "LearningComponentOfferingId": "open:LearningComponentOfferingId",
+    "learningComponentOfferingId": {
+      "@id": "open:learningComponentOfferingId",
+      "@type": "xsd:string"
+    },
+    "TestComponentOfferingId": "open:TestComponentOfferingId",
+    "testComponentOfferingId": {
+      "@id": "open:testComponentOfferingId",
+      "@type": "xsd:string"
+    },
+    "AssociationId": "open:AssociationId",
+    "associationId": {
+      "@id": "open:associationId",
+      "@type": "xsd:string"
+    },
+    "AssociationProperties": "open:AssociationProperties",
+    "expectedEndDateTime": {
+      "@id": "open:expectedEndDateTime",
+      "@type": "xsd:dateTime"
+    },
+    "actualEndDateTime": {
+      "@id": "open:actualEndDateTime",
+      "@type": "xsd:dateTime"
+    },
+    "remoteState": {
+      "@id": "open:remoteState"
+    },
+    "Document": "open:Document",
+    "documentId": {
+      "@id": "open:documentId",
+      "@type": "xsd:string"
+    },
+    "documentType": {
+      "@id": "open:documentType",
+      "@type": "@id"
+    },
+    "documentName": {
+      "@id": "open:documentName",
+      "@type": "xsd:string"
+    },
+    "Result": "open:Result",
+    "pass": {
+      "@id": "open:pass"
+    },
+    "score": {
+      "@id": "open:score",
+      "@type": "xsd:string"
+    },
+    "rawScore": {
+      "@id": "open:rawScore",
+      "@type": "xsd:integer"
+    },
+    "maxRawScore": {
+      "@id": "open:maxRawScore",
+      "@type": "xsd:integer"
+    },
+    "final": {
+      "@id": "open:final",
+      "@type": "xsd:boolean"
+    },
+    "assessorId": {
+      "@id": "open:assessorId"
+    },
+    "assessor": {
+      "@id": "open:assessor"
+    },
+    "resultDateTime": {
+      "@id": "open:resultDateTime",
+      "@type": "xsd:dateTime"
+    },
+    "PostResponse": "open:PostResponse",
+    "message": {
+      "@id": "open:message",
+      "@container": "@list"
+    },
+    "redirect": {
+      "@id": "open:redirect",
+      "@type": "@id"
+    },
+    "GroupId": "open:GroupId",
+    "TimelineOverrideCourse": "open:TimelineOverrideCourse",
+    "TimelineOverrideProgramme": "open:TimelineOverrideProgramme",
+    "programme": {
+      "@id": "open:programme",
+      "@type": "@id"
+    },
+    "ICERelationType": "open:ICERelationType",
+    "associationRole": "open:associationRole",
+    "associationState": "open:associationState",
+    "resultState": "open:resultState",
+    "remoteAssociationState": "open:remoteAssociationState",
+    "passState": "open:passState",
+    "OfferingId": "open:OfferingId",
+    "offeringId": {
+      "@id": "open:offeringId",
+      "@type": "xsd:string"
+    },
+    "ProgramId": "open:ProgramId",
+    "programId": {
+      "@id": "open:programId",
+      "@type": "xsd:string"
+    },
+    "programType": "open:programType",
+    "sector": "open:sector",
+    "EducationSpecificationId": "open:EducationSpecificationId",
+    "educationSpecificationId": {
+      "@id": "open:educationSpecificationId",
+      "@type": "xsd:string"
+    },
+    "educationSpecificationType": "open:educationSpecificationType",
+    "organizationType": "open:organizationType",
+    "Organization": "open:Organization",
+    "organizationId": {
+      "@id": "open:organizationId",
+      "@type": "xsd:string"
+    },
+    "consumers": {
+      "@id": "open:consumers",
+      "@container": "@list"
+    },
+    "EducationSpecificationProperties": "open:EducationSpecificationProperties",
+    "organization": {
+      "@id": "open:organization"
+    },
+    "ProgramProperties": "open:ProgramProperties",
+    "teachingLanguage": {
+      "@id": "open:teachingLanguage",
+      "@type": "xsd:string"
+    },
+    "modeOfDelivery": {
+      "@id": "open:modeOfDelivery",
+      "@type": "@id"
+    },
+    "enrollment": {
+      "@id": "open:enrollment",
+      "@container": "@list"
+    },
+    "educationSpecification": {
+      "@id": "open:educationSpecification"
+    },
+    "Component": "open:Component",
+    "groupType": "open:groupType",
+    "Group": "open:Group",
+    "startDate": {
+      "@id": "open:startDate",
+      "@type": "xsd:date"
+    },
+    "endDate": {
+      "@id": "open:endDate",
+      "@type": "xsd:date"
+    },
+    "personCount": {
+      "@id": "open:personCount",
+      "@type": "xsd:decimal"
+    },
+    "TimelineOverrideProgram": "open:TimelineOverrideProgram",
+    "program": {
+      "@id": "open:program",
+      "@type": "@id"
+    },
+    "AssociationFull": "open:AssociationFull",
+    "person": {
+      "@id": "open:person"
+    },
+    "offering": {
+      "@id": "open:offering"
+    },
+    "AssociationWrite": "open:AssociationWrite",
+    "NewsFeed": "open:NewsFeed",
+    "newsFeedId": {
+      "@id": "open:newsFeedId",
+      "@type": "xsd:string"
+    },
+    "newsFeedType": {
+      "@id": "open:newsFeedType",
+      "@type": "xsd:string"
+    },
+    "newsItemType": "open:newsItemType",
+    "NewsItem": "open:NewsItem",
+    "newsItemId": {
+      "@id": "open:newsItemId",
+      "@type": "xsd:string"
+    },
+    "authors": {
+      "@id": "open:authors",
+      "@container": "@list"
+    },
+    "image": {
+      "@id": "open:image",
+      "@type": "@id"
+    },
+    "content": {
+      "@id": "open:content",
+      "@container": "@list"
+    },
+    "newsFeeds": {
+      "@id": "open:newsFeeds",
+      "@container": "@list"
+    },
+    "validUntil": {
+      "@id": "open:validUntil",
+      "@type": "xsd:dateTime"
+    },
+    "lastModified": {
+      "@id": "open:lastModified",
+      "@type": "xsd:dateTime"
+    },
+    "TimelineOverrideEducationSpecification": "open:TimelineOverrideEducationSpecification"
+  },
+  "@type": "schema:Dataset",
+  "schema:name": "Open Education API API JSON-LD context",
+  "schema:description": "A JSON-LD @context for the objects Open Education API's own API contract declares: one class per component schema, one property per declared field, typed from the contract. Derived by script (derive-json-ld.py, 2026-10-09) from openapi/open-education-api-openapi.yml, openapi/open-education-api-v5-openapi.yml.",
+  "dcterms:created": "2026-10-09",
+  "dcterms:source": [
+    "openapi/open-education-api-openapi.yml",
+    "openapi/open-education-api-v5-openapi.yml"
+  ]
+}

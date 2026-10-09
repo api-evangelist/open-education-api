@@ -1,0 +1,49 @@
+generated: '2026-10-09'
+method: searched
+source: https://github.com/open-education-api
+note: No OEAPI/OOAPI package found on npm (oeapi, ooapi, open-education-api, ooapi-sdk all 404) or PyPI (oeapi, ooapi,
+  open-education-api 404); the only NuGet hit for "ooapi" (Trifork.NemId.Ooapi) is an unrelated Danish NemID library.
+  The SDK repositories in the provider's GitHub org are source-only and were last pushed in 2016, before OOAPI v5 and
+  OEAPI v6 -- they predate the contracts this repo profiles.
+packages:
+- name: sdk-js
+  registry: github
+  url: https://github.com/open-education-api/sdk-js
+  language: JavaScript
+  official: true
+  version: null
+  published: null
+  note: Source repository only, no registry release found; last pushed 2016-11-11 (GitHub API pushed_at).
+- name: sdk-java
+  registry: github
+  url: https://github.com/open-education-api/sdk-java
+  language: Java
+  official: true
+  version: null
+  published: null
+  note: Source repository only, no registry release found; last pushed 2016-11-11.
+- name: sdk-ios
+  registry: github
+  url: https://github.com/open-education-api/sdk-ios
+  language: Objective-C
+  official: true
+  version: null
+  published: null
+  note: Source repository only, no registry release found; last pushed 2016-11-11.
+- name: ooapi-dotnet
+  registry: github
+  url: https://github.com/open-education-api/ooapi-dotnet
+  language: C#
+  official: true
+  version: null
+  published: null
+  note: '"dot.net-implementation of the ooapi-specification" (a v5 implementation, not a client SDK); no NuGet release
+    found; last pushed 2026-09-17.'
+- name: oeapi-endpoint-quickstart
+  registry: github
+  url: https://github.com/open-education-api/oeapi-endpoint-quickstart
+  language: Java
+  official: true
+  version: null
+  published: null
+  note: Endpoint quickstart repository (server side), no registry release; last pushed 2026-10-07.

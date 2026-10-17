@@ -4,7 +4,7 @@ info:
   x-refined-note:
   - x-logo differs across the merged source definitions and was not carried
   version: '1.0'
-  description: 'Operations tagged buildings across 3 of this provider''s published API definitions: oeapi-6.0-rc.3.yaml, ooapi-v5.yaml, open-education-api-v5-openapi.yml. Each path carries the servers of the definition it was published in.'
+  description: 'Operations tagged buildings across 2 of this provider''s published API definitions: oeapi-6.0-rc.3.yaml, ooapi-v5.yaml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://demo01.eduapi.nl/v6
   description: SURF demo implementation
@@ -176,192 +176,180 @@ paths:
     - url: https://demo01.eduapi.nl/v6
       description: SURF demo implementation
 components:
-  parameters:
-    consumer:
-      name: consumer
-      in: query
-      description: Request entities intended for a specific consumer. The `consumer` profile allows for adding additional data, or specific rules concerning the presentation of the data. A consumer can be selected based on the key of the consumer profile. An implementation of the OEAPI SHOULD always return the consumer information inside the consumer property of the object(s) that are requested. Further information regarding the use of consumers can be found in the [documentation](https://oeapi.eu/v6.0/#/technical/consumers-and-profiles/)
-      required: false
-      schema:
-        type: string
-    primaryCode:
-      name: primaryCode
-      in: query
-      description: The primaryCode of the requested item. This is often the source identifier as defined by the institution.
-      required: false
-      schema:
-        type: string
-    pageSize:
-      name: pageSize
-      in: query
-      description: The number of items per page
-      required: false
-      schema:
-        type: integer
-        format: int32
-        default: 10
-        enum:
-        - 10
-        - 20
-        - 50
-        - 100
-        - 250
-    search:
-      name: q
-      in: query
-      description: Filter by items having a name, abbreviation or description containing the given search term (exact partial match, case insensitive)
-      required: false
-      schema:
-        type: string
-    pageNumber:
-      name: pageNumber
-      in: query
-      description: The page number to get. Page numbers start at 1.
-      required: false
-      schema:
-        type: integer
-        format: int32
-        example: 1
-        minimum: 1
-    filterQuery:
-      name: filter_query
-      in: query
-      required: false
-      x-lint-ignore:
-      - camel-case-properties
-      style: deepObject
-      explode: true
-      description: "Filter object serialised as `filter_query[field][operation]=value`.\nMultiple top-level fields are combined with AND. CSV is accepted where noted.\n\nOR blocks. Provide an array of single-field filter objects, each combined with OR.\nSerialises as `filter_query[__or][][field][operation]=value`.\n\nInspired by Storyblok (https://www.storyblok.com/docs/api/content-delivery/v2/filter-queries)\n\nWildcards:\n- Prefer using only the asterisk `*` as a wildcard for partial matches (e.g., like and not_like).\n\nImplementation note:\n- The availability and behaviour of this query functionality are entirely determined by the organisation hosting\n  the API implementation. It is not mandatory for implementers to support this functionality, and it cannot be enforced \n  upon organisations that provide or consume OEAPI endpoints.\n- It is up to each implementer to decide whether to support this feature. It is **not** a requirement of the OEAPI \n  standard itself.\n- Consumers or working groups that wish to apply specific filtering mechanisms are encouraged to do so using \n  this approach for the sake of consistency across implementations.\n\nExamples:  \n- **Filter course offerings by programme, delivery, language and start date**  \n  `filter_query[programme.code][in]=B-IT-2025&filter_query[organisation.code][in]=RuG&filter_query[mode_of_delivery][in]=on_campus,hybrid&filter_query[language_of_instruction][in]=en-GB&filter_query[start_date][gt_date]=2025-09-01T00:00:00Z`  \n  \n- **Only offerings with email contact present**  \n  `filter_query[contacts.email][is]=not_empty`\n\n- **Provider is Org A or Org B, OR campus city contains “Utrecht”**  \n  `?filter_query[__or][][organisation.id][in]=org-uu,org-hku&filter_query[__or][][campus.city][like]=*Utrecht*`  \n    \n- **Start date after 1 Sept 2025 OR has evening/block_week tag**  \n  `?filter_query[__or][][start_date][gt_date]=2025-09-01T00:00:00Z&filter_query[__or][][tags][any_in_array]=evening,block_week`  \n"
-      schema:
-        type: object
-        properties:
-          __or:
-            type: array
-            items:
-              type: object
-              additionalProperties:
-                type: object
-                properties:
-                  in:
-                    type: string
-                    description: Exact match; multiple values allowed as CSV.
-                    example: org-uu,org-hku
-                  like:
-                    type: string
-                    description: 'Partial match using wildcards. Prefer `*` as the wildcard.
-
-                      # Quotes are required here because YAML interprets unquoted * as an alias reference.
-
-                      '
-                    example: '*Utrecht*'
-                  any_in_array:
-                    type: string
-                    description: Match if any of the CSV values occur.
-                    example: evening,block_week
-                  gt_date:
-                    type: string
-                    format: date-time
-                    description: ISO 8601 / RFC 3339 date-time.
-                    example: '2025-09-01T00:00:00Z'
-                  lt_date:
-                    type: string
-                    format: date-time
-                    description: ISO 8601 / RFC 3339 date-time.
-                    example: '2025-12-31T23:59:59Z'
-        additionalProperties:
-          type: object
-          properties:
-            is:
-              $ref: '#/components/schemas/filterPresence'
-            in:
-              type: string
-              description: Exact match; multiple values allowed as CSV.
-              example: RuG
-            not_in:
-              type: string
-              description: Negated inclusion; multiple values as CSV.
-              example: UvA,VU
-            like:
-              type: string
-              description: 'Partial match using wildcards. Prefer `*` as the wildcard.
-
-                '
-              example: '*Amsterdam*'
-            not_like:
-              type: string
-              description: 'Negated partial match using wildcards. Prefer `*` as the wildcard.
-
-                '
-              example: '*deprecated*'
-            any_in_array:
-              type: string
-              description: Match if any of the CSV values occur.
-              example: evening,block_week
-            all_in_array:
-              type: string
-              description: Match if all CSV values occur.
-              example: evening,block_week
-            gt_int:
-              type: integer
-              description: Greater than (integer).
-              example: 5
-            lt_int:
-              type: integer
-              description: Less than (integer).
-              example: 30
-            gt_float:
-              type: number
-              description: Greater than (float).
-              example: 5.5
-            lt_float:
-              type: number
-              description: Less than (float).
-              example: 12
-            gt_date:
-              type: string
-              format: date-time
-              description: ISO 8601 date-time.
-              example: '2025-09-01T00:00:00Z'
-            lt_date:
-              type: string
-              format: date-time
-              description: ISO 8601 date-time.
-              example: '2025-12-31T23:59:59Z'
-    fields:
-      name: fields
-      in: query
-      required: false
-      style: form
-      explode: false
-      description: "Allows clients to indicate which fields should be included in the response.  \nThis parameter supports the principle of data minimisation and helps to optimise \ndata usage and performance by reducing unnecessary data transmission.\n\nThe `fields` parameter uses *nested field selection syntax* with parentheses for subfields, \nfor example: `programme(code)` or `campus(city)`.  \nMultiple fields can be grouped within parentheses, for example:  \n`fields=(id,title,ectsCredits,programme(code),campus(city))`.\n\nWhen omitted, the server returns all fields the client has access to.  \nUnknown field names SHOULD be ignored.  \nThe server MUST always include *mandatory fields* (e.g., identifiers such as `id`) \nthat are required for a valid or minimal response, even if not explicitly requested.\n\n*Important:* This is a **request hint**, not a **security feature**.  \nThe server MAY disregard the request for a restricted set of fields, and the final response \nstructure MAY depend on server logic and the client’s access rights.\n\n\nIf a client requests unauthorised fields, these MUST be silently omitted or redacted.\n"
-      schema:
-        type: string
-        example: (id,title,ectsCredits,programme(code),campus(city))
-      examples:
-        minimal:
-          summary: Return a minimal fieldset for course offerings
-          value: (id,title,ectsCredits,languageOfInstruction)
-        nested:
-          summary: Include nested programme code and campus city
-          value: (id,title,programme(code),campus(city))
-        combined:
-          summary: Example using multiple nested fields
-          value: (id,title,ectsCredits,programme(code,name),campus(city,country))
-    consumer_2:
-      name: consumer
-      in: query
-      description: Request entities meant for a specific consumer. This query parameter is independent from the `consumers` attribute. See the [documentation on support for specific consumers](https://openonderwijsapi.nl/v5/#/technical/consumers-and-profiles/) for more information about this mechanism.
-      required: false
-      schema:
-        type: string
-    consumer_3:
-      name: consumer
-      in: query
-      description: Request entities meant for a specific consumer. This query parameter is independent from the `consumers` attribute. See the [documentation on support for specific consumers](https://openonderwijsapi.nl/v5/#/technical/consumers-and-profiles/) for more information about this mechanism.
-      required: false
-      schema:
-        type: string
   schemas:
+    Consumer:
+      type: object
+      description: The additional elements of a consumer that may be provided, see the [documentation on support for specific consumers](https://oeapi.eu/v6.0/#/technical/consumers-and-profiles/) for further information about this mechanism.
+      required:
+      - consumerKey
+      properties:
+        consumerKey:
+          description: The key of the consumer (destination) for which this information is intended. See the [consumer registry](https://oeapi.eu/v6.0/#/technical/consumers-and-profiles/). This key is used to select the additional data to be presented in the request.
+          type: string
+          example: test-consumer
+        exampleProperty:
+          description: An example of an additional property
+          type:
+          - string
+          - 'null'
+          example: value-of-example-property
+      additionalProperties: true
+    type:
+      type: string
+      format: uri
+      maxLength: 2048
+      description: "An absolute URI that identifies the problem type. When dereferenced, \nit should provide human-readable documentation.\n"
+      example: https://example.org/problems/bad-request
+    Address:
+      type: object
+      description: The full street address
+      required:
+      - addressType
+      properties:
+        addressType:
+          $ref: '#/components/schemas/addressType'
+        street:
+          type:
+          - string
+          - 'null'
+          description: The street name
+          example: Moreelsepark
+        streetNumber:
+          type:
+          - string
+          - 'null'
+          description: The street number
+          example: '48'
+        additional:
+          type:
+          - array
+          - 'null'
+          description: Further details like building name, suite, apartment number, etc.
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/LanguageTypedString'
+          example:
+          - language: en-GB
+            value: On the other side of the road
+        postCode:
+          type:
+          - string
+          - 'null'
+          description: Code to help sort and deliver mail also known as Postal code and ZIP code
+          example: 3511 EP
+        city:
+          type:
+          - string
+          - 'null'
+          description: name of the city / locality
+          example: Utrecht
+        countryCode:
+          oneOf:
+          - $ref: '#/components/schemas/Country'
+          - type: 'null'
+        geolocation:
+          type:
+          - object
+          - 'null'
+          description: Geolocation of the entrance of this address (WGS84 coordinate reference system)
+          required:
+          - latitude
+          - longitude
+          properties:
+            latitude:
+              type: number
+              format: double
+              example: 52.089123
+            longitude:
+              type: number
+              format: double
+              example: 5.113337
+        ext:
+          oneOf:
+          - $ref: '#/components/schemas/Ext'
+          - type: 'null'
+    Language:
+      description: 'The language used in the described entity. The value **must be a language tag that conforms to RFC 5646** (Tags for Identifying Languages, BCP 47):
+
+        https://www.rfc-editor.org/rfc/rfc5646.html
+
+
+        A tag consists of the following components, in this exact order:
+
+        1. **language** – two‑ to three‑letter codes (ISO 639‑1/‑2) **or** four‑letter codes (ISO 639‑5) **or** five‑ to eight‑letter registered language subtags.
+
+        2. **script** – optional, four letters in Title‑Case (e.g. `Latn`, `Hant`).
+
+        3. **region** – optional, either two uppercase letters (ISO 3166‑1) **or** three digits (UN M.49).
+
+        4. **variant** – zero or more subtags, each either five‑ to eight‑alphanumerics or a digit followed by three alphanumerics (e.g. `1901`, `oxendict`).
+
+        5. **extension** – zero or more extensions. Each extension starts with a *singleton* (a single alphanumeric character except `x`) followed by one or more subtags of two‑ to eight‑alphanumerics (e.g. `u‑co‑phonebk`).
+
+        6. **private‑use** – optional, the letter `x` followed by one or more subtags of one‑ to eight‑alphanumerics (e.g. `x‑private`).
+
+
+        The most common form is a two‑letter language code (ISO 639‑1) optionally followed by a hyphen and a two‑letter country code (ISO 3166‑1), for example `en` or `en‑GB`.
+
+
+        More specific tags are also valid, for instance `zh‑Hant‑TW` (Traditional Chinese as used in Taiwan).
+
+
+        For sign languages two conventions are recognised:
+
+        * `sgn` – e.g. `nl‑sgn‑NL` (Dutch Sign Language)
+
+        * `s`   – e.g. `nl‑s‑NL` (Dutch Sign Language)
+
+        '
+      type: string
+      minLength: 2
+      pattern: ^(?:(?:[A-Za-z]{2,3}(?:-[A-Za-z]{3}){0,2}|[A-Za-z]{4}|[A-Za-z]{5,8})(?:-[A-Za-z]{4})?(?:-(?:[A-Z]{2}|[0-9]{3}))?(?:-(?:[A-Za-z0-9]{5,8}|[0-9][A-Za-z0-9]{3}))*?(?:-(?:[A-WY-Za-wy-z0-9](?:-[A-Za-z0-9]{2,8})+))*?(?:-x(?:-[A-Za-z0-9]{1,8})+)?|x(?:-[A-Za-z0-9]{1,8})+)$
+      example: en-GB
+    roomType:
+      type: string
+      description: 'The type of this room.
+
+
+        - general_purpose: Multi-purpose space used for general activities or flexible functions.
+
+        - lecture_room: Room primarily used for lectures or large instructional sessions.
+
+        - computer_room: Space equipped with computers for teaching, training or research.
+
+        - laboratory: Room designed for practical experiments, testing or scientific work.
+
+        - office: Workspace for administrative or academic staff.
+
+        - workspace: Shared or individual area for working or studying.
+
+        - exam_location: Designated space for taking written or digital examinations.
+
+        - study_room: Quiet area intended for individual or group study.
+
+        - examination_room: Private space for medical or psychological assessments.
+
+        - conference_room: Room intended for meetings, discussions or presentations.
+
+
+        This is an *extensible enumeration*. Use the prefix `x-` for custom values.
+
+        '
+      x-ooapi-extensible-enum:
+      - general_purpose
+      - lecture_room
+      - computer_room
+      - laboratory
+      - office
+      - workspace
+      - exam_location
+      - study_room
+      - examination_room
+      - conference_room
+      example: exam_location
+    Ext:
+      type: object
+      description: Object for additional non-standard attributes
     ProblemVersionNotAcceptable:
       allOf:
       - $ref: '#/components/schemas/Problem'
@@ -401,74 +389,162 @@ components:
             example:
             - '4.2'
             - '4.1'
-    Language:
-      description: 'The language used in the described entity. The value **must be a language tag that conforms to RFC 5646** (Tags for Identifying Languages, BCP 47):
-
-        https://www.rfc-editor.org/rfc/rfc5646.html
-
-
-        A tag consists of the following components, in this exact order:
-
-        1. **language** – two‑ to three‑letter codes (ISO 639‑1/‑2) **or** four‑letter codes (ISO 639‑5) **or** five‑ to eight‑letter registered language subtags.
-
-        2. **script** – optional, four letters in Title‑Case (e.g. `Latn`, `Hant`).
-
-        3. **region** – optional, either two uppercase letters (ISO 3166‑1) **or** three digits (UN M.49).
-
-        4. **variant** – zero or more subtags, each either five‑ to eight‑alphanumerics or a digit followed by three alphanumerics (e.g. `1901`, `oxendict`).
-
-        5. **extension** – zero or more extensions. Each extension starts with a *singleton* (a single alphanumeric character except `x`) followed by one or more subtags of two‑ to eight‑alphanumerics (e.g. `u‑co‑phonebk`).
-
-        6. **private‑use** – optional, the letter `x` followed by one or more subtags of one‑ to eight‑alphanumerics (e.g. `x‑private`).
-
-
-        The most common form is a two‑letter language code (ISO 639‑1) optionally followed by a hyphen and a two‑letter country code (ISO 3166‑1), for example `en` or `en‑GB`.
-
-
-        More specific tags are also valid, for instance `zh‑Hant‑TW` (Traditional Chinese as used in Taiwan).
-
-
-        For sign languages two conventions are recognised:
-
-        * `sgn` – e.g. `nl‑sgn‑NL` (Dutch Sign Language)
-
-        * `s`   – e.g. `nl‑s‑NL` (Dutch Sign Language)
-
-        '
-      type: string
-      minLength: 2
-      pattern: ^(?:(?:[A-Za-z]{2,3}(?:-[A-Za-z]{3}){0,2}|[A-Za-z]{4}|[A-Za-z]{5,8})(?:-[A-Za-z]{4})?(?:-(?:[A-Z]{2}|[0-9]{3}))?(?:-(?:[A-Za-z0-9]{5,8}|[0-9][A-Za-z0-9]{3}))*?(?:-(?:[A-WY-Za-wy-z0-9](?:-[A-Za-z0-9]{2,8})+))*?(?:-x(?:-[A-Za-z0-9]{1,8})+)?|x(?:-[A-Za-z0-9]{1,8})+)$
-      example: en-GB
-    Consumer:
+    Building:
       type: object
-      description: The additional elements of a consumer that may be provided, see the [documentation on support for specific consumers](https://oeapi.eu/v6.0/#/technical/consumers-and-profiles/) for further information about this mechanism.
+      description: An object describing a building and the properties of a building.
       required:
-      - consumerKey
+      - buildingId
+      - name
+      - primaryCode
       properties:
-        consumerKey:
-          description: The key of the consumer (destination) for which this information is intended. See the [consumer registry](https://oeapi.eu/v6.0/#/technical/consumers-and-profiles/). This key is used to select the additional data to be presented in the request.
+        buildingId:
           type: string
-          example: test-consumer
-        exampleProperty:
-          description: An example of an additional property
+          description: Unique id of this building
+          format: uuid
+          example: 123e4567-e89b-12d3-a456-331214174000
+        primaryCode:
+          description: The primary human readable identifier for this building. This is often the source identifier as defined by the institution.
+          $ref: '#/components/schemas/IdentifierEntry'
+          example:
+            codeType: buildingId
+            code: '45'
+        abbreviation:
           type:
           - string
           - 'null'
-          example: value-of-example-property
-      additionalProperties: true
-    filterPresence:
+          description: The abbreviation of the name of this building
+          maxLength: 256
+          example: Bb
+        name:
+          type: array
+          description: The name of this building
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/LanguageTypedString'
+          example:
+          - language: en-GB
+            value: Beatrix building
+        description:
+          type:
+          - array
+          - 'null'
+          description: The description of this building.
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/LanguageTypedString'
+          example:
+          - language: en-GB
+            value: external rooms location for exams
+        address:
+          oneOf:
+          - $ref: '#/components/schemas/Address'
+          - type: 'null'
+        otherCodes:
+          type:
+          - array
+          - 'null'
+          description: An array of additional human readable codes/identifiers for the entity being described.
+          items:
+            $ref: '#/components/schemas/IdentifierEntry'
+          example:
+          - codeType: bagId
+            code: 0344100000139910
+        consumer:
+          oneOf:
+          - $ref: '#/components/schemas/Consumer'
+          - type: 'null'
+        ext:
+          oneOf:
+          - $ref: '#/components/schemas/Ext'
+          - type: 'null'
+    Pagination:
+      type: object
+      required:
+      - pageSize
+      - pageNumber
+      - hasPreviousPage
+      - hasNextPage
+      properties:
+        pageSize:
+          type: integer
+          format: int32
+          description: The number of items per page
+          example: 10
+        pageNumber:
+          type: integer
+          format: int32
+          description: The current page number
+          example: 1
+          minimum: 1
+        hasPreviousPage:
+          type: boolean
+          description: Whether there is a previous page
+          example: false
+        hasNextPage:
+          type: boolean
+          description: Whether there is a previous page
+          example: true
+        totalPages:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          description: Total number of pages
+          example: 8
+    Country:
+      type: object
+      description: 'An object indicating a country based on at least one iso-3166 code. In situations where more than one ISO-3166 code is provided, the codes must refer to the same country.
+
+        '
+      properties:
+        iso3166-1-alpha2:
+          type:
+          - string
+          - 'null'
+          minLength: 2
+          maxLength: 2
+          description: A country code based on https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
+          example: NL
+        iso3166-1-alpha3:
+          type:
+          - string
+          - 'null'
+          minLength: 3
+          maxLength: 3
+          description: A country code based on https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3
+          example: NLD
+        iso3166-2:
+          type:
+          - string
+          - 'null'
+          minLength: 5
+          maxLength: 6
+          description: A country subdivision code based on https://en.wikipedia.org/wiki/ISO_3166-2
+          example: BQ-BO
+        iso3166-3:
+          type:
+          - string
+          - 'null'
+          minLength: 4
+          maxLength: 4
+          description: 'A code for a country that no longer exists is listed on ISO 3166-3 (https://en.wikipedia.org/wiki/ISO_3166-3).
+
+            Implementations should refrain from using the original ISO 3166-1 code for such a country since country codes
+
+            can be reassigned to new countries once the original country code is officially declared obsolete.
+
+            '
+          example: ANHH
+    addressType:
       type: string
-      description: "Presence check or special value for filter operations.\n\nInspired by Storyblok (https://www.storyblok.com/docs/api/content-delivery/v2/filter-queries)\n\nImplementation note:\n- The availability and behaviour of this query functionality are entirely determined by the organisation hosting\n  the API implementation. It is not mandatory for implementers to support this functionality, and it cannot be enforced \n  upon organisations that provide or consume OEAPI endpoints.\n- It is up to each implementer to decide whether to support this feature. It is **not** a requirement of the OEAPI \n  standard itself.\n- Consumers or working groups that wish to apply specific filtering mechanisms are encouraged to do so using \n  this approach for the sake of consistency across implementations.\n"
-      enum:
-      - empty
-      - not_empty
-      - empty_array
-      - not_empty_array
-      - 'true'
-      - 'false'
-      - 'null'
-      - not_null
-      example: not_empty
+      description: "The type of address, indicating its intended use:\n  \n- postal: Used for receiving post\n- visit: Used for physical visits\n- deliveries: Used for deliveries\n- invoicing: Used for invoicing purposes\n- teaching: The location where educational activities take place\n\nThis is an *extensible enumeration*. Use the prefix `x-` for custom values.\n"
+      x-ooapi-extensible-enum:
+      - postal
+      - visit
+      - deliveries
+      - invoicing
+      - teaching
+      example: postal
     codeType:
       type: string
       description: 'The type of code or identifier.
@@ -610,12 +686,56 @@ components:
       - uuid
       - national_identity_number
       example: identifier
-    type:
+    IdentifierEntry:
+      type: object
+      properties:
+        codeType:
+          $ref: '#/components/schemas/codeType'
+        code:
+          description: Human readable value for the code/identifier
+          type: string
+          example: 1234qwe12
+      required:
+      - codeType
+      - code
+      additionalProperties: false
+      example:
+        codeType: identifier
+        code: 1234qwe12
+    LanguageTypedString:
+      type: object
+      description: A String with an associated language code. IF this object is used both fields are mandatory.
+      required:
+      - language
+      - value
+      properties:
+        language:
+          $ref: '#/components/schemas/Language'
+        value:
+          description: String to describe the entity.
+          type: string
+          example: programme that is a place holder for all courses that are made available for student mobility
+      example:
+        language: en-GB
+        value: programme that is a place holder for all courses that are made available for student mobility
+    Identifier:
       type: string
-      format: uri
-      maxLength: 2048
-      description: "An absolute URI that identifies the problem type. When dereferenced, \nit should provide human-readable documentation.\n"
-      example: https://example.org/problems/bad-request
+      description: An identifier of another resource.
+      format: uuid
+      example: 123e4567-e89b-12d3-a456-426614174000
+    filterPresence:
+      type: string
+      description: "Presence check or special value for filter operations.\n\nInspired by Storyblok (https://www.storyblok.com/docs/api/content-delivery/v2/filter-queries)\n\nImplementation note:\n- The availability and behaviour of this query functionality are entirely determined by the organisation hosting\n  the API implementation. It is not mandatory for implementers to support this functionality, and it cannot be enforced \n  upon organisations that provide or consume OEAPI endpoints.\n- It is up to each implementer to decide whether to support this feature. It is **not** a requirement of the OEAPI \n  standard itself.\n- Consumers or working groups that wish to apply specific filtering mechanisms are encouraged to do so using \n  this approach for the sake of consistency across implementations.\n"
+      enum:
+      - empty
+      - not_empty
+      - empty_array
+      - not_empty_array
+      - 'true'
+      - 'false'
+      - 'null'
+      - not_null
+      example: not_empty
     Problem:
       type: object
       description: 'A problem details object, conforming to RFC 7807 (Problem Details for HTTP
@@ -667,35 +787,10 @@ components:
 
             '
           example: https://api.example.org/courses/abc123
-    Ext:
-      type: object
-      description: Object for additional non-standard attributes
-    LanguageTypedString:
-      type: object
-      description: A String with an associated language code. IF this object is used both fields are mandatory.
-      required:
-      - language
-      - value
-      properties:
-        language:
-          $ref: '#/components/schemas/Language'
-        value:
-          description: String to describe the entity.
-          type: string
-          example: programme that is a place holder for all courses that are made available for student mobility
-      example:
-        language: en-GB
-        value: programme that is a place holder for all courses that are made available for student mobility
-    addressType:
+    title:
       type: string
-      description: "The type of address, indicating its intended use:\n  \n- postal: Used for receiving post\n- visit: Used for physical visits\n- deliveries: Used for deliveries\n- invoicing: Used for invoicing purposes\n- teaching: The location where educational activities take place\n\nThis is an *extensible enumeration*. Use the prefix `x-` for custom values.\n"
-      x-ooapi-extensible-enum:
-      - postal
-      - visit
-      - deliveries
-      - invoicing
-      - teaching
-      example: postal
+      description: A short, human-readable summary of the problem type
+      example: Resource not found
     Room:
       type: object
       description: An area within a building where education can take place
@@ -825,286 +920,6 @@ components:
           oneOf:
           - $ref: '#/components/schemas/Ext'
           - type: 'null'
-    Country:
-      type: object
-      description: 'An object indicating a country based on at least one iso-3166 code. In situations where more than one ISO-3166 code is provided, the codes must refer to the same country.
-
-        '
-      properties:
-        iso3166-1-alpha2:
-          type:
-          - string
-          - 'null'
-          minLength: 2
-          maxLength: 2
-          description: A country code based on https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
-          example: NL
-        iso3166-1-alpha3:
-          type:
-          - string
-          - 'null'
-          minLength: 3
-          maxLength: 3
-          description: A country code based on https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3
-          example: NLD
-        iso3166-2:
-          type:
-          - string
-          - 'null'
-          minLength: 5
-          maxLength: 6
-          description: A country subdivision code based on https://en.wikipedia.org/wiki/ISO_3166-2
-          example: BQ-BO
-        iso3166-3:
-          type:
-          - string
-          - 'null'
-          minLength: 4
-          maxLength: 4
-          description: 'A code for a country that no longer exists is listed on ISO 3166-3 (https://en.wikipedia.org/wiki/ISO_3166-3).
-
-            Implementations should refrain from using the original ISO 3166-1 code for such a country since country codes
-
-            can be reassigned to new countries once the original country code is officially declared obsolete.
-
-            '
-          example: ANHH
-    Address:
-      type: object
-      description: The full street address
-      required:
-      - addressType
-      properties:
-        addressType:
-          $ref: '#/components/schemas/addressType'
-        street:
-          type:
-          - string
-          - 'null'
-          description: The street name
-          example: Moreelsepark
-        streetNumber:
-          type:
-          - string
-          - 'null'
-          description: The street number
-          example: '48'
-        additional:
-          type:
-          - array
-          - 'null'
-          description: Further details like building name, suite, apartment number, etc.
-          minItems: 1
-          items:
-            $ref: '#/components/schemas/LanguageTypedString'
-          example:
-          - language: en-GB
-            value: On the other side of the road
-        postCode:
-          type:
-          - string
-          - 'null'
-          description: Code to help sort and deliver mail also known as Postal code and ZIP code
-          example: 3511 EP
-        city:
-          type:
-          - string
-          - 'null'
-          description: name of the city / locality
-          example: Utrecht
-        countryCode:
-          oneOf:
-          - $ref: '#/components/schemas/Country'
-          - type: 'null'
-        geolocation:
-          type:
-          - object
-          - 'null'
-          description: Geolocation of the entrance of this address (WGS84 coordinate reference system)
-          required:
-          - latitude
-          - longitude
-          properties:
-            latitude:
-              type: number
-              format: double
-              example: 52.089123
-            longitude:
-              type: number
-              format: double
-              example: 5.113337
-        ext:
-          oneOf:
-          - $ref: '#/components/schemas/Ext'
-          - type: 'null'
-    roomType:
-      type: string
-      description: 'The type of this room.
-
-
-        - general_purpose: Multi-purpose space used for general activities or flexible functions.
-
-        - lecture_room: Room primarily used for lectures or large instructional sessions.
-
-        - computer_room: Space equipped with computers for teaching, training or research.
-
-        - laboratory: Room designed for practical experiments, testing or scientific work.
-
-        - office: Workspace for administrative or academic staff.
-
-        - workspace: Shared or individual area for working or studying.
-
-        - exam_location: Designated space for taking written or digital examinations.
-
-        - study_room: Quiet area intended for individual or group study.
-
-        - examination_room: Private space for medical or psychological assessments.
-
-        - conference_room: Room intended for meetings, discussions or presentations.
-
-
-        This is an *extensible enumeration*. Use the prefix `x-` for custom values.
-
-        '
-      x-ooapi-extensible-enum:
-      - general_purpose
-      - lecture_room
-      - computer_room
-      - laboratory
-      - office
-      - workspace
-      - exam_location
-      - study_room
-      - examination_room
-      - conference_room
-      example: exam_location
-    Building:
-      type: object
-      description: An object describing a building and the properties of a building.
-      required:
-      - buildingId
-      - name
-      - primaryCode
-      properties:
-        buildingId:
-          type: string
-          description: Unique id of this building
-          format: uuid
-          example: 123e4567-e89b-12d3-a456-331214174000
-        primaryCode:
-          description: The primary human readable identifier for this building. This is often the source identifier as defined by the institution.
-          $ref: '#/components/schemas/IdentifierEntry'
-          example:
-            codeType: buildingId
-            code: '45'
-        abbreviation:
-          type:
-          - string
-          - 'null'
-          description: The abbreviation of the name of this building
-          maxLength: 256
-          example: Bb
-        name:
-          type: array
-          description: The name of this building
-          minItems: 1
-          items:
-            $ref: '#/components/schemas/LanguageTypedString'
-          example:
-          - language: en-GB
-            value: Beatrix building
-        description:
-          type:
-          - array
-          - 'null'
-          description: The description of this building.
-          minItems: 1
-          items:
-            $ref: '#/components/schemas/LanguageTypedString'
-          example:
-          - language: en-GB
-            value: external rooms location for exams
-        address:
-          oneOf:
-          - $ref: '#/components/schemas/Address'
-          - type: 'null'
-        otherCodes:
-          type:
-          - array
-          - 'null'
-          description: An array of additional human readable codes/identifiers for the entity being described.
-          items:
-            $ref: '#/components/schemas/IdentifierEntry'
-          example:
-          - codeType: bagId
-            code: 0344100000139910
-        consumer:
-          oneOf:
-          - $ref: '#/components/schemas/Consumer'
-          - type: 'null'
-        ext:
-          oneOf:
-          - $ref: '#/components/schemas/Ext'
-          - type: 'null'
-    IdentifierEntry:
-      type: object
-      properties:
-        codeType:
-          $ref: '#/components/schemas/codeType'
-        code:
-          description: Human readable value for the code/identifier
-          type: string
-          example: 1234qwe12
-      required:
-      - codeType
-      - code
-      additionalProperties: false
-      example:
-        codeType: identifier
-        code: 1234qwe12
-    title:
-      type: string
-      description: A short, human-readable summary of the problem type
-      example: Resource not found
-    Pagination:
-      type: object
-      required:
-      - pageSize
-      - pageNumber
-      - hasPreviousPage
-      - hasNextPage
-      properties:
-        pageSize:
-          type: integer
-          format: int32
-          description: The number of items per page
-          example: 10
-        pageNumber:
-          type: integer
-          format: int32
-          description: The current page number
-          example: 1
-          minimum: 1
-        hasPreviousPage:
-          type: boolean
-          description: Whether there is a previous page
-          example: false
-        hasNextPage:
-          type: boolean
-          description: Whether there is a previous page
-          example: true
-        totalPages:
-          type:
-          - integer
-          - 'null'
-          format: int32
-          description: Total number of pages
-          example: 8
-    Identifier:
-      type: string
-      description: An identifier of another resource.
-      format: uuid
-      example: 123e4567-e89b-12d3-a456-426614174000
     Consumer_2:
       type: object
       description: Object for communicating data to a specific consumer (destination). This object has no relationship with the `consumer` query parameter.
@@ -1115,194 +930,6 @@ components:
           description: The key of the consumer (destination) for which this information is intended. See the [consumer registry](https://openonderwijsapi.nl/v5/#/technical/consumers-and-profiles/) for more information.
           type: string
       additionalProperties: true
-    codeType_2:
-      type: string
-      description: "The code/identifier type. \n\nThis is an *extensible enumeration*. Use `x-` to prefix custom values\n\nThe predefined values are:\n  - `brin`: The registration number for a Dutch educational institution that is issued by the Dutch Ministry of Education, Culture and Science\n  - `crohoCreboCode`: programs with a CREBO and CROHO number are accredited by the Dutch Ministry of Education, Culture and Science (OCW)\n  - `programCode`: Identifier for the program (collection of courses)\n  - `componentCode`: The code for a component (part of a course)\n  - `offeringCode`: The code to identify a specific offering (program, course or component offering)\n  - `organizationId`: The identifier for the organization\n  - `buildingId`: The number or code to identify a building\n  - `bagId`: The identification of a building as it is known in the Dutch Building Administration (BAG)\n  - `roomCode`: The code for a room\n  - `systemId`: Identifier assigned to an entity in context of a specific system\n  - `productId`: Identifier assigned to a specific product\n  - `nationalIdentityNumber`: Identifier assigned by the governement of the person. e.g. a social security number in the USA\n  - `studentNumber`: Identifier for the student\n  - `studielinkNumber`: Identifier for the person as determined by Studielink\n  - `esi`: European Student Identifier\n  - `userName`: The name of a user\n  - `accountId`: Identifier assigned to a specific account\n  - `emailAdress`: An email address\n  - `groupCode`: The identifier for a group (of persons)\n  - `isbn`: International Standard Book Number that serve as product identifiers for Books\n  - `issn`: International Standard Book Number that serve as product identifiers for periodicals\n  - `orcId`: Open Researcher and Contributor ID\n  - `uuid`: A universally unique identifier\n  - `schacHome`: Home organization using the domain name of the organization\n  - `identifier`: Generic Identifier\n"
-      x-ooapi-extensible-enum:
-      - brin
-      - crohoCreboCode
-      - programCode
-      - componentCode
-      - offeringCode
-      - organizationId
-      - buildingId
-      - bagId
-      - roomCode
-      - systemId
-      - productId
-      - nationalIdentityNumber
-      - studentNumber
-      - studielinkNumber
-      - esi
-      - userName
-      - accountId
-      - emailAdress
-      - groupCode
-      - isbn
-      - issn
-      - orcId
-      - uuid
-      - schacHome
-      - identifier
-      example: identifier
-    Problem_2:
-      type: object
-      description: A system message including the error code and an explanation
-      required:
-      - status
-      - title
-      properties:
-        status:
-          type: string
-          description: The HTTP status code
-          example: '404'
-        title:
-          type: string
-          description: A short, human-readable summary of the problem type
-          example: Resource not found
-        detail:
-          type: string
-          description: A human-readable explanation specific to this occurrence of the problem
-    LanguageTypedString_2:
-      type: object
-      description: A String with an associated language code.
-      properties:
-        language:
-          description: The language used in the described entity. A string formatted according to RFC3066.
-          type: string
-          pattern: ^[a-z]{2,4}(-[A-Z][a-z]{3})?(-([A-Z]{2}|[0-9]{3}))?$
-        value:
-          description: String to describe the entity.
-          type: string
-      example:
-        language: en-GB
-        value: program that is a place holder for all courses that are made available for student mobility
-    addressType_2:
-      type: string
-      description: 'Address type
-
-        - postal: post
-
-        - visit: bezoek
-
-        - deliveries: bezorg
-
-        - billing: factuur
-
-        - teaching: the address where education takes place
-
-        '
-      enum:
-      - postal
-      - visit
-      - deliveries
-      - billing
-      - teaching
-    Room_2:
-      type: object
-      description: An area within a building where education can take place
-      required:
-      - roomId
-      - roomType
-      - name
-      - primaryCode
-      properties:
-        roomId:
-          type: string
-          description: Unique id for this room
-          format: uuid
-          example: 123e4567-e89b-12d3-a456-332114174000
-        primaryCode:
-          description: The primary human readable identifier for the room. This is often the source identifier as defined by the institution.
-          $ref: '#/components/schemas/IdentifierEntry_2'
-          example:
-            codeType: roomCode
-            code: Bb4.54
-        roomType:
-          $ref: '#/components/schemas/roomType_2'
-        abbreviation:
-          type: string
-          description: The abbreviation of the name of this room
-          maxLength: 256
-          example: Bb4.54
-        name:
-          type: array
-          description: The name of this room
-          minItems: 1
-          items:
-            $ref: '#/components/schemas/LanguageTypedString_2'
-          example:
-          - language: en-GB
-            value: Beatrix building room 4.54
-        description:
-          type: array
-          description: The description of this room. [The limited implementation of Git Hub Markdown syntax](#tag/formatting-and-displaying-results-from-API) MAY be used for rich text representation.
-          minItems: 1
-          items:
-            $ref: '#/components/schemas/LanguageTypedString_2'
-          example:
-          - language: en-GB
-            value: External education and exam room 4.54
-        totalSeats:
-          type: integer
-          format: int32
-          description: The total number of seats located in the room
-          example: 300
-        availableSeats:
-          type: integer
-          format: int32
-          description: The total number of available (=non-reserved) seats in the room
-          example: 200
-        floor:
-          type: string
-          description: The floor on which this room is located
-          example: '4'
-        wing:
-          type: string
-          description: The wing in which this room is located
-          example: None
-        geolocation:
-          type: object
-          description: Geolocation of the entrance of this room (WGS84 coordinate reference system)
-          required:
-          - latitude
-          - longitude
-          properties:
-            latitude:
-              type: number
-              format: double
-              example: 52.088255
-            longitude:
-              type: number
-              format: double
-              example: 5.106669
-        otherCodes:
-          type: array
-          description: An array of additional human readable codes/identifiers for the entity being described.
-          items:
-            $ref: '#/components/schemas/IdentifierEntry_2'
-        building:
-          description: 'The building in which the room is located. [`expandable`](#tag/building_model)
-
-            By default only the `buildingId` (a string) is returned. If the client requested an expansion of `building` the full building object should be returned.
-
-            '
-          oneOf:
-          - $ref: '#/components/schemas/Identifier_2'
-            title: buildingId
-          - $ref: '#/components/schemas/Building_2'
-            title: Building object
-        consumers:
-          description: The additional consumer elements that can be provided, see the [documentation on support for specific consumers](https://openonderwijsapi.nl/v5/#/technical/consumers-and-profiles/) for more information about this mechanism.
-          type: array
-          items:
-            $ref: '#/components/schemas/Consumer_2'
-          example:
-          - consumerKey: x-test-consumer
-            additional: custom
-            attributes: here
-        ext:
-          $ref: '#/components/schemas/Ext'
     Address_2:
       type: object
       description: The full street address
@@ -1458,6 +1085,57 @@ components:
             attributes: here
         ext:
           $ref: '#/components/schemas/Ext'
+    addressType_2:
+      type: string
+      description: 'Address type
+
+        - postal: post
+
+        - visit: bezoek
+
+        - deliveries: bezorg
+
+        - billing: factuur
+
+        - teaching: the address where education takes place
+
+        '
+      enum:
+      - postal
+      - visit
+      - deliveries
+      - billing
+      - teaching
+    codeType_2:
+      type: string
+      description: "The code/identifier type. \n\nThis is an *extensible enumeration*. Use `x-` to prefix custom values\n\nThe predefined values are:\n  - `brin`: The registration number for a Dutch educational institution that is issued by the Dutch Ministry of Education, Culture and Science\n  - `crohoCreboCode`: programs with a CREBO and CROHO number are accredited by the Dutch Ministry of Education, Culture and Science (OCW)\n  - `programCode`: Identifier for the program (collection of courses)\n  - `componentCode`: The code for a component (part of a course)\n  - `offeringCode`: The code to identify a specific offering (program, course or component offering)\n  - `organizationId`: The identifier for the organization\n  - `buildingId`: The number or code to identify a building\n  - `bagId`: The identification of a building as it is known in the Dutch Building Administration (BAG)\n  - `roomCode`: The code for a room\n  - `systemId`: Identifier assigned to an entity in context of a specific system\n  - `productId`: Identifier assigned to a specific product\n  - `nationalIdentityNumber`: Identifier assigned by the governement of the person. e.g. a social security number in the USA\n  - `studentNumber`: Identifier for the student\n  - `studielinkNumber`: Identifier for the person as determined by Studielink\n  - `esi`: European Student Identifier\n  - `userName`: The name of a user\n  - `accountId`: Identifier assigned to a specific account\n  - `emailAdress`: An email address\n  - `groupCode`: The identifier for a group (of persons)\n  - `isbn`: International Standard Book Number that serve as product identifiers for Books\n  - `issn`: International Standard Book Number that serve as product identifiers for periodicals\n  - `orcId`: Open Researcher and Contributor ID\n  - `uuid`: A universally unique identifier\n  - `schacHome`: Home organization using the domain name of the organization\n  - `identifier`: Generic Identifier\n"
+      x-ooapi-extensible-enum:
+      - brin
+      - crohoCreboCode
+      - programCode
+      - componentCode
+      - offeringCode
+      - organizationId
+      - buildingId
+      - bagId
+      - roomCode
+      - systemId
+      - productId
+      - nationalIdentityNumber
+      - studentNumber
+      - studielinkNumber
+      - esi
+      - userName
+      - accountId
+      - emailAdress
+      - groupCode
+      - isbn
+      - issn
+      - orcId
+      - uuid
+      - schacHome
+      - identifier
+      example: identifier
     IdentifierEntry_2:
       type: object
       properties:
@@ -1473,6 +1151,42 @@ components:
       example:
         codeType: identifier
         code: 1234qwe12
+    LanguageTypedString_2:
+      type: object
+      description: A String with an associated language code.
+      properties:
+        language:
+          description: The language used in the described entity. A string formatted according to RFC3066.
+          type: string
+          pattern: ^[a-z]{2,4}(-[A-Z][a-z]{3})?(-([A-Z]{2}|[0-9]{3}))?$
+        value:
+          description: String to describe the entity.
+          type: string
+      example:
+        language: en-GB
+        value: program that is a place holder for all courses that are made available for student mobility
+    Identifier_2:
+      type: string
+      description: An identifier of another resource.
+      format: uuid
+    Problem_2:
+      type: object
+      description: A system message including the error code and an explanation
+      required:
+      - status
+      - title
+      properties:
+        status:
+          type: string
+          description: The HTTP status code
+          example: '404'
+        title:
+          type: string
+          description: A short, human-readable summary of the problem type
+          example: Resource not found
+        detail:
+          type: string
+          description: A human-readable explanation specific to this occurrence of the problem
     Pagination_2:
       type: object
       required:
@@ -1506,104 +1220,7 @@ components:
           format: int32
           description: Total number of pages
           example: 8
-    Identifier_2:
-      type: string
-      description: An identifier of another resource.
-      format: uuid
-    Consumer_3:
-      type: object
-      description: Object for communicating data to a specific consumer (destination). This object has no relationship with the `consumer` query parameter.
-      required:
-      - consumerKey
-      properties:
-        consumerKey:
-          description: The key of the consumer (destination) for which this information is intended. See the [consumer registry](https://openonderwijsapi.nl/v5/#/technical/consumers-and-profiles/) for more information.
-          type: string
-      additionalProperties: true
-    codeType_3:
-      type: string
-      description: "The code/identifier type. \n\nThis is an *extensible enumeration*. Use `x-` to prefix custom values\n\nThe predefined values are:\n  - `brin`: The registration number for a Dutch educational institution that is issued by the Dutch Ministry of Education, Culture and Science\n  - `crohoCreboCode`: programs with a CREBO and CROHO number are accredited by the Dutch Ministry of Education, Culture and Science (OCW)\n  - `programCode`: Identifier for the program (collection of courses)\n  - `componentCode`: The code for a component (part of a course)\n  - `offeringCode`: The code to identify a specific offering (program, course or component offering)\n  - `organizationId`: The identifier for the organization\n  - `buildingId`: The number or code to identify a building\n  - `bagId`: The identification of a building as it is known in the Dutch Building Administration (BAG)\n  - `roomCode`: The code for a room\n  - `systemId`: Identifier assigned to an entity in context of a specific system\n  - `productId`: Identifier assigned to a specific product\n  - `nationalIdentityNumber`: Identifier assigned by the governement of the person. e.g. a social security number in the USA\n  - `studentNumber`: Identifier for the student\n  - `studielinkNumber`: Identifier for the person as determined by Studielink\n  - `esi`: European Student Identifier\n  - `userName`: The name of a user\n  - `accountId`: Identifier assigned to a specific account\n  - `emailAdress`: An email address\n  - `groupCode`: The identifier for a group (of persons)\n  - `isbn`: International Standard Book Number that serve as product identifiers for Books\n  - `issn`: International Standard Book Number that serve as product identifiers for periodicals\n  - `orcId`: Open Researcher and Contributor ID\n  - `uuid`: A universally unique identifier\n  - `schacHome`: Home organization using the domain name of the organization\n  - `identifier`: Generic Identifier\n"
-      x-ooapi-extensible-enum:
-      - brin
-      - crohoCreboCode
-      - programCode
-      - componentCode
-      - offeringCode
-      - organizationId
-      - buildingId
-      - bagId
-      - roomCode
-      - systemId
-      - productId
-      - nationalIdentityNumber
-      - studentNumber
-      - studielinkNumber
-      - esi
-      - userName
-      - accountId
-      - emailAdress
-      - groupCode
-      - isbn
-      - issn
-      - orcId
-      - uuid
-      - schacHome
-      - identifier
-      example: identifier
-    Problem_3:
-      type: object
-      description: A system message including the error code and an explanation
-      required:
-      - status
-      - title
-      properties:
-        status:
-          type: string
-          description: The HTTP status code
-          example: '404'
-        title:
-          type: string
-          description: A short, human-readable summary of the problem type
-          example: Resource not found
-        detail:
-          type: string
-          description: A human-readable explanation specific to this occurrence of the problem
-    LanguageTypedString_3:
-      type: object
-      description: A String with an associated language code.
-      properties:
-        language:
-          description: The language used in the described entity. A string formatted according to RFC3066.
-          type: string
-          pattern: ^[a-z]{2,4}(-[A-Z][a-z]{3})?(-([A-Z]{2}|[0-9]{3}))?$
-        value:
-          description: String to describe the entity.
-          type: string
-      example:
-        language: en-GB
-        value: program that is a place holder for all courses that are made available for student mobility
-    addressType_3:
-      type: string
-      description: 'Address type
-
-        - postal: post
-
-        - visit: bezoek
-
-        - deliveries: bezorg
-
-        - billing: factuur
-
-        - teaching: the address where education takes place
-
-        '
-      enum:
-      - postal
-      - visit
-      - deliveries
-      - billing
-      - teaching
-    Room_3:
+    Room_2:
       type: object
       description: An area within a building where education can take place
       required:
@@ -1619,12 +1236,12 @@ components:
           example: 123e4567-e89b-12d3-a456-332114174000
         primaryCode:
           description: The primary human readable identifier for the room. This is often the source identifier as defined by the institution.
-          $ref: '#/components/schemas/IdentifierEntry_3'
+          $ref: '#/components/schemas/IdentifierEntry_2'
           example:
             codeType: roomCode
             code: Bb4.54
         roomType:
-          $ref: '#/components/schemas/roomType_3'
+          $ref: '#/components/schemas/roomType_2'
         abbreviation:
           type: string
           description: The abbreviation of the name of this room
@@ -1635,7 +1252,7 @@ components:
           description: The name of this room
           minItems: 1
           items:
-            $ref: '#/components/schemas/LanguageTypedString_3'
+            $ref: '#/components/schemas/LanguageTypedString_2'
           example:
           - language: en-GB
             value: Beatrix building room 4.54
@@ -1644,7 +1261,7 @@ components:
           description: The description of this room. [The limited implementation of Git Hub Markdown syntax](#tag/formatting-and-displaying-results-from-API) MAY be used for rich text representation.
           minItems: 1
           items:
-            $ref: '#/components/schemas/LanguageTypedString_3'
+            $ref: '#/components/schemas/LanguageTypedString_2'
           example:
           - language: en-GB
             value: External education and exam room 4.54
@@ -1685,7 +1302,7 @@ components:
           type: array
           description: An array of additional human readable codes/identifiers for the entity being described.
           items:
-            $ref: '#/components/schemas/IdentifierEntry_3'
+            $ref: '#/components/schemas/IdentifierEntry_2'
         building:
           description: 'The building in which the room is located. [`expandable`](#tag/building_model)
 
@@ -1693,264 +1310,248 @@ components:
 
             '
           oneOf:
-          - $ref: '#/components/schemas/Identifier_3'
+          - $ref: '#/components/schemas/Identifier_2'
             title: buildingId
-          - $ref: '#/components/schemas/Building_3'
+          - $ref: '#/components/schemas/Building_2'
             title: Building object
         consumers:
           description: The additional consumer elements that can be provided, see the [documentation on support for specific consumers](https://openonderwijsapi.nl/v5/#/technical/consumers-and-profiles/) for more information about this mechanism.
           type: array
           items:
-            $ref: '#/components/schemas/Consumer_3'
+            $ref: '#/components/schemas/Consumer_2'
           example:
           - consumerKey: x-test-consumer
             additional: custom
             attributes: here
         ext:
           $ref: '#/components/schemas/Ext'
-    Address_3:
-      type: object
-      description: The full street address
-      required:
-      - addressType
-      properties:
-        addressType:
-          $ref: '#/components/schemas/addressType_3'
-        street:
-          type: string
-          description: The street name
-          example: Moreelsepark
-        streetNumber:
-          type: string
-          description: The street number
-          example: '48'
-        additional:
-          type: array
-          description: Further details like building name, suite, apartment number, etc.
-          minItems: 1
-          items:
-            $ref: '#/components/schemas/LanguageTypedString_3'
-          example:
-          - language: en-GB
-            value: On the other side of the road
-        postalCode:
-          type: string
-          description: Postal code
-          example: 3511 EP
-        city:
-          type: string
-          description: name of the city / locality
-          example: Utrecht
-        countryCode:
-          type: string
-          description: the country code according to [iso-3166-1-alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)
-          example: NL
-        geolocation:
+  parameters:
+    search:
+      name: q
+      in: query
+      description: Filter by items having a name, abbreviation or description containing the given search term (exact partial match, case insensitive)
+      required: false
+      schema:
+        type: string
+    consumer:
+      name: consumer
+      in: query
+      description: Request entities intended for a specific consumer. The `consumer` profile allows for adding additional data, or specific rules concerning the presentation of the data. A consumer can be selected based on the key of the consumer profile. An implementation of the OEAPI SHOULD always return the consumer information inside the consumer property of the object(s) that are requested. Further information regarding the use of consumers can be found in the [documentation](https://oeapi.eu/v6.0/#/technical/consumers-and-profiles/)
+      required: false
+      schema:
+        type: string
+    filterQuery:
+      name: filter_query
+      in: query
+      required: false
+      x-lint-ignore:
+      - camel-case-properties
+      style: deepObject
+      explode: true
+      description: "Filter object serialised as `filter_query[field][operation]=value`.\nMultiple top-level fields are combined with AND. CSV is accepted where noted.\n\nOR blocks. Provide an array of single-field filter objects, each combined with OR.\nSerialises as `filter_query[__or][][field][operation]=value`.\n\nInspired by Storyblok (https://www.storyblok.com/docs/api/content-delivery/v2/filter-queries)\n\nWildcards:\n- Prefer using only the asterisk `*` as a wildcard for partial matches (e.g., like and not_like).\n\nImplementation note:\n- The availability and behaviour of this query functionality are entirely determined by the organisation hosting\n  the API implementation. It is not mandatory for implementers to support this functionality, and it cannot be enforced \n  upon organisations that provide or consume OEAPI endpoints.\n- It is up to each implementer to decide whether to support this feature. It is **not** a requirement of the OEAPI \n  standard itself.\n- Consumers or working groups that wish to apply specific filtering mechanisms are encouraged to do so using \n  this approach for the sake of consistency across implementations.\n\nExamples:  \n- **Filter course offerings by programme, delivery, language and start date**  \n  `filter_query[programme.code][in]=B-IT-2025&filter_query[organisation.code][in]=RuG&filter_query[mode_of_delivery][in]=on_campus,hybrid&filter_query[language_of_instruction][in]=en-GB&filter_query[start_date][gt_date]=2025-09-01T00:00:00Z`  \n  \n- **Only offerings with email contact present**  \n  `filter_query[contacts.email][is]=not_empty`\n\n- **Provider is Org A or Org B, OR campus city contains “Utrecht”**  \n  `?filter_query[__or][][organisation.id][in]=org-uu,org-hku&filter_query[__or][][campus.city][like]=*Utrecht*`  \n    \n- **Start date after 1 Sept 2025 OR has evening/block_week tag**  \n  `?filter_query[__or][][start_date][gt_date]=2025-09-01T00:00:00Z&filter_query[__or][][tags][any_in_array]=evening,block_week`  \n"
+      schema:
+        type: object
+        properties:
+          __or:
+            type: array
+            items:
+              type: object
+              additionalProperties:
+                type: object
+                properties:
+                  in:
+                    type: string
+                    description: Exact match; multiple values allowed as CSV.
+                    example: org-uu,org-hku
+                  like:
+                    type: string
+                    description: 'Partial match using wildcards. Prefer `*` as the wildcard.
+
+                      # Quotes are required here because YAML interprets unquoted * as an alias reference.
+
+                      '
+                    example: '*Utrecht*'
+                  any_in_array:
+                    type: string
+                    description: Match if any of the CSV values occur.
+                    example: evening,block_week
+                  gt_date:
+                    type: string
+                    format: date-time
+                    description: ISO 8601 / RFC 3339 date-time.
+                    example: '2025-09-01T00:00:00Z'
+                  lt_date:
+                    type: string
+                    format: date-time
+                    description: ISO 8601 / RFC 3339 date-time.
+                    example: '2025-12-31T23:59:59Z'
+        additionalProperties:
           type: object
-          description: Geolocation of the entrance of this address (WGS84 coordinate reference system)
-          required:
-          - latitude
-          - longitude
           properties:
-            latitude:
+            is:
+              $ref: '#/components/schemas/filterPresence'
+            in:
+              type: string
+              description: Exact match; multiple values allowed as CSV.
+              example: RuG
+            not_in:
+              type: string
+              description: Negated inclusion; multiple values as CSV.
+              example: UvA,VU
+            like:
+              type: string
+              description: 'Partial match using wildcards. Prefer `*` as the wildcard.
+
+                '
+              example: '*Amsterdam*'
+            not_like:
+              type: string
+              description: 'Negated partial match using wildcards. Prefer `*` as the wildcard.
+
+                '
+              example: '*deprecated*'
+            any_in_array:
+              type: string
+              description: Match if any of the CSV values occur.
+              example: evening,block_week
+            all_in_array:
+              type: string
+              description: Match if all CSV values occur.
+              example: evening,block_week
+            gt_int:
+              type: integer
+              description: Greater than (integer).
+              example: 5
+            lt_int:
+              type: integer
+              description: Less than (integer).
+              example: 30
+            gt_float:
               type: number
-              format: double
-              example: 52.089123
-            longitude:
+              description: Greater than (float).
+              example: 5.5
+            lt_float:
               type: number
-              format: double
-              example: 5.113337
-        ext:
-          $ref: '#/components/schemas/Ext'
-    roomType_3:
-      type: string
-      description: 'The type of this room
-
-        - general purpose: algemeen
-
-        - lecture room: collegezaal
-
-        - computer room: computerruimte
-
-        - laboratory: laboratorium
-
-        - office: kantoor
-
-        - workspace: werkruimte
-
-        - exam location: tentamenruimte
-
-        - study room: studieruimte
-
-        - examination room: onderzoekskamer
-
-        - conference room: vergaderkamer
-
-        '
-      enum:
-      - general purpose
-      - lecture room
-      - computer room
-      - laboratory
-      - office
-      - workspace
-      - exam location
-      - study room
-      - examination room
-      - conference room
-      example: exam location
-    Building_3:
-      type: object
-      description: An object describing a building and the properties of a building.
-      required:
-      - buildingId
-      - name
-      - address
-      - primaryCode
-      properties:
-        buildingId:
-          type: string
-          description: Unique id of this building
-          format: uuid
-          example: 123e4567-e89b-12d3-a456-331214174000
-        primaryCode:
-          description: The primary human readable identifier for this building. This is often the source identifier as defined by the institution.
-          $ref: '#/components/schemas/IdentifierEntry_3'
-          example:
-            codeType: buildingId
-            code: '45'
-        abbreviation:
-          type: string
-          description: The abbreviation of the name of this building
-          maxLength: 256
-          example: Bb
-        name:
-          type: array
-          description: The name of this building
-          minItems: 1
-          items:
-            $ref: '#/components/schemas/LanguageTypedString_3'
-          example:
-          - language: en-GB
-            value: Beatrix building
-        description:
-          type: array
-          description: The description of this building.
-          minItems: 1
-          items:
-            $ref: '#/components/schemas/LanguageTypedString_3'
-          example:
-          - language: en-GB
-            value: external rooms location for exams
-        address:
-          $ref: '#/components/schemas/Address_3'
-        otherCodes:
-          type: array
-          description: An array of additional human readable codes/identifiers for the entity being described.
-          items:
-            $ref: '#/components/schemas/IdentifierEntry_3'
-          example:
-          - codeType: bagId
-            code: 0344100000139910
-        consumers:
-          description: The additional consumer elements that can be provided, see the [documentation on support for specific consumers](https://openonderwijsapi.nl/v5/#/technical/consumers-and-profiles/) for more information about this mechanism.
-          type: array
-          items:
-            $ref: '#/components/schemas/Consumer_3'
-          example:
-          - consumerKey: x-test-consumer
-            additional: custom
-            attributes: here
-        ext:
-          $ref: '#/components/schemas/Ext'
-    IdentifierEntry_3:
-      type: object
-      properties:
-        codeType:
-          $ref: '#/components/schemas/codeType_3'
-        code:
-          description: Human readable value for the code/identifier
-          type: string
-      required:
-      - codeType
-      - code
-      additionalProperties: false
-      example:
-        codeType: identifier
-        code: 1234qwe12
-    Pagination_3:
-      type: object
-      required:
-      - pageSize
-      - pageNumber
-      - hasPreviousPage
-      - hasNextPage
-      - items
-      properties:
-        pageSize:
-          type: integer
-          format: int32
-          description: The number of items per page
-          example: 10
-        pageNumber:
-          type: integer
-          format: int32
-          description: The current page number
-          example: 1
-          minimum: 1
-        hasPreviousPage:
-          type: boolean
-          description: Whether there is a previous page
-          example: false
-        hasNextPage:
-          type: boolean
-          description: Whether there is a previous page
-          example: true
-        totalPages:
-          type: integer
-          format: int32
-          description: Total number of pages
-          example: 8
-    Identifier_3:
-      type: string
-      description: An identifier of another resource.
-      format: uuid
+              description: Less than (float).
+              example: 12
+            gt_date:
+              type: string
+              format: date-time
+              description: ISO 8601 date-time.
+              example: '2025-09-01T00:00:00Z'
+            lt_date:
+              type: string
+              format: date-time
+              description: ISO 8601 date-time.
+              example: '2025-12-31T23:59:59Z'
+    fields:
+      name: fields
+      in: query
+      required: false
+      style: form
+      explode: false
+      description: "Allows clients to indicate which fields should be included in the response.  \nThis parameter supports the principle of data minimisation and helps to optimise \ndata usage and performance by reducing unnecessary data transmission.\n\nThe `fields` parameter uses *nested field selection syntax* with parentheses for subfields, \nfor example: `programme(code)` or `campus(city)`.  \nMultiple fields can be grouped within parentheses, for example:  \n`fields=(id,title,ectsCredits,programme(code),campus(city))`.\n\nWhen omitted, the server returns all fields the client has access to.  \nUnknown field names SHOULD be ignored.  \nThe server MUST always include *mandatory fields* (e.g., identifiers such as `id`) \nthat are required for a valid or minimal response, even if not explicitly requested.\n\n*Important:* This is a **request hint**, not a **security feature**.  \nThe server MAY disregard the request for a restricted set of fields, and the final response \nstructure MAY depend on server logic and the client’s access rights.\n\n\nIf a client requests unauthorised fields, these MUST be silently omitted or redacted.\n"
+      schema:
+        type: string
+        example: (id,title,ectsCredits,programme(code),campus(city))
+      examples:
+        minimal:
+          summary: Return a minimal fieldset for course offerings
+          value: (id,title,ectsCredits,languageOfInstruction)
+        nested:
+          summary: Include nested programme code and campus city
+          value: (id,title,programme(code),campus(city))
+        combined:
+          summary: Example using multiple nested fields
+          value: (id,title,ectsCredits,programme(code,name),campus(city,country))
+    pageSize:
+      name: pageSize
+      in: query
+      description: The number of items per page
+      required: false
+      schema:
+        type: integer
+        format: int32
+        default: 10
+        enum:
+        - 10
+        - 20
+        - 50
+        - 100
+        - 250
+    pageNumber:
+      name: pageNumber
+      in: query
+      description: The page number to get. Page numbers start at 1.
+      required: false
+      schema:
+        type: integer
+        format: int32
+        example: 1
+        minimum: 1
+    primaryCode:
+      name: primaryCode
+      in: query
+      description: The primaryCode of the requested item. This is often the source identifier as defined by the institution.
+      required: false
+      schema:
+        type: string
+    consumer_2:
+      name: consumer
+      in: query
+      description: Request entities meant for a specific consumer. This query parameter is independent from the `consumers` attribute. See the [documentation on support for specific consumers](https://openonderwijsapi.nl/v5/#/technical/consumers-and-profiles/) for more information about this mechanism.
+      required: false
+      schema:
+        type: string
   responses:
-    ErrorMethodNotAllowed:
-      description: Method not allowed
+    ErrorForbidden:
+      description: Forbidden
       content:
         application/problem+json:
           schema:
             $ref: '#/components/schemas/Problem'
           example:
-            type: https://api.example.org/problems/method-not-allowed
-            title: Method not allowed
-            status: 405
-            detail: The method POST is not supported for this endpoint.
-            instance: https://api.example.org/courses/abc123
-    ErrorNotFound:
-      description: "Not Found.  \n\nReturned only when a specific resource identified by its identifier\ncannot be located. This applies to instance endpoints where a single,\nuniquely-addressable object is expected.  \n\nCollection endpoints should not return a 404. If no items match the request,\nthey must return an empty array. A 404 may still occur if the collection\nendpoint itself does not exist or is not accessible.\n"
+            type: https://api.example.org/problems/forbidden
+            title: Forbidden
+            status: 403
+            detail: You do not have permission to access this resource.
+            instance: https://api.example.org/admin/enrolments
+    ErrorInternalServerError:
+      description: Internal Server Error
       content:
         application/problem+json:
           schema:
             $ref: '#/components/schemas/Problem'
-          examples:
-            instanceNotFound:
-              summary: 'Instance endpoint: resource not found'
-              value:
-                type: https://api.example.org/problems/not-found
-                title: Resource not found
-                status: 404
-                detail: The course with id 'abc123' could not be found.
-                instance: https://api.example.org/courses/abc123
-            collectionEndpointNotFound:
-              summary: Collection endpoint unavailable
-              value:
-                type: https://api.example.org/problems/not-found
-                title: Collection endpoint not found
-                status: 404
-                detail: The collection endpoint '/course-offerings' does not exist or is not accessible.
-                instance: https://api.example.org/course-offerings
+          example:
+            type: https://api.example.org/problems/internal-server-error
+            title: Internal server error
+            status: 500
+            detail: An unexpected error occurred while processing your request.
+            instance: https://api.example.org/enrolments/submit
+    ErrorUnauthorized:
+      description: Unauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          example:
+            type: https://api.example.org/problems/unauthorized
+            title: Unauthorized
+            status: 401
+            detail: Authentication credentials were missing or invalid.
+            instance: https://api.example.org/student/12345
+    ErrorTooManyRequests:
+      description: Too many requests
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          example:
+            type: https://api.example.org/problems/too-many-requests
+            title: Too many requests
+            status: 429
+            detail: You have exceeded the rate limit of 100 requests per minute.
+            instance: https://api.example.org/courses
     ErrorNotAcceptable:
       description: 'Not Acceptable.
 
@@ -2051,42 +1652,41 @@ components:
                 - '1.0'
                 - '0.94'
                 instance: https://api.example.org/enrolments
-    ErrorUnauthorized:
-      description: Unauthorized
+    ErrorNotFound:
+      description: "Not Found.  \n\nReturned only when a specific resource identified by its identifier\ncannot be located. This applies to instance endpoints where a single,\nuniquely-addressable object is expected.  \n\nCollection endpoints should not return a 404. If no items match the request,\nthey must return an empty array. A 404 may still occur if the collection\nendpoint itself does not exist or is not accessible.\n"
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            instanceNotFound:
+              summary: 'Instance endpoint: resource not found'
+              value:
+                type: https://api.example.org/problems/not-found
+                title: Resource not found
+                status: 404
+                detail: The course with id 'abc123' could not be found.
+                instance: https://api.example.org/courses/abc123
+            collectionEndpointNotFound:
+              summary: Collection endpoint unavailable
+              value:
+                type: https://api.example.org/problems/not-found
+                title: Collection endpoint not found
+                status: 404
+                detail: The collection endpoint '/course-offerings' does not exist or is not accessible.
+                instance: https://api.example.org/course-offerings
+    ErrorMethodNotAllowed:
+      description: Method not allowed
       content:
         application/problem+json:
           schema:
             $ref: '#/components/schemas/Problem'
           example:
-            type: https://api.example.org/problems/unauthorized
-            title: Unauthorized
-            status: 401
-            detail: Authentication credentials were missing or invalid.
-            instance: https://api.example.org/student/12345
-    ErrorTooManyRequests:
-      description: Too many requests
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          example:
-            type: https://api.example.org/problems/too-many-requests
-            title: Too many requests
-            status: 429
-            detail: You have exceeded the rate limit of 100 requests per minute.
-            instance: https://api.example.org/courses
-    ErrorForbidden:
-      description: Forbidden
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          example:
-            type: https://api.example.org/problems/forbidden
-            title: Forbidden
-            status: 403
-            detail: You do not have permission to access this resource.
-            instance: https://api.example.org/admin/enrolments
+            type: https://api.example.org/problems/method-not-allowed
+            title: Method not allowed
+            status: 405
+            detail: The method POST is not supported for this endpoint.
+            instance: https://api.example.org/courses/abc123
     ErrorBadRequest:
       description: Bad request
       content:
@@ -2099,26 +1699,14 @@ components:
             status: 400
             detail: 'The query parameter ''mode'' must be one of: full, basic.'
             instance: https://api.example.org/courses?mode=invalid
-    ErrorInternalServerError:
-      description: Internal Server Error
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          example:
-            type: https://api.example.org/problems/internal-server-error
-            title: Internal server error
-            status: 500
-            detail: An unexpected error occurred while processing your request.
-            instance: https://api.example.org/enrolments/submit
-    ErrorMethodNotAllowed_2:
-      description: Method not allowed
+    ErrorForbidden_2:
+      description: Forbidden
       content:
         application/problem+json:
           schema:
             $ref: '#/components/schemas/Problem_2'
-    ErrorNotFound_2:
-      description: Not Found
+    ErrorInternalServerError_2:
+      description: Internal Server Error
       content:
         application/problem+json:
           schema:
@@ -2135,8 +1723,14 @@ components:
         application/problem+json:
           schema:
             $ref: '#/components/schemas/Problem_2'
-    ErrorForbidden_2:
-      description: Forbidden
+    ErrorNotFound_2:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem_2'
+    ErrorMethodNotAllowed_2:
+      description: Method not allowed
       content:
         application/problem+json:
           schema:
@@ -2147,54 +1741,6 @@ components:
         application/problem+json:
           schema:
             $ref: '#/components/schemas/Problem_2'
-    ErrorInternalServerError_2:
-      description: Internal Server Error
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem_2'
-    ErrorMethodNotAllowed_3:
-      description: Method not allowed
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem_3'
-    ErrorNotFound_3:
-      description: Not Found
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem_3'
-    ErrorUnauthorized_3:
-      description: Unauthorized
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem_3'
-    ErrorTooManyRequests_3:
-      description: Too many requests
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem_3'
-    ErrorForbidden_3:
-      description: Forbidden
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem_3'
-    ErrorBadRequest_3:
-      description: Bad request
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem_3'
-    ErrorInternalServerError_3:
-      description: Internal Server Error
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem_3'
   securitySchemes:
     bearerAuth:
       type: http
@@ -2205,7 +1751,6 @@ components:
 x-refined-from:
 - oeapi-6.0-rc.3.yaml
 - ooapi-v5.yaml
-- open-education-api-v5-openapi.yml
 x-tagGroups:
 - name: Requests and responses
   tags:

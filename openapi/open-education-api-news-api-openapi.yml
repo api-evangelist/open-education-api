@@ -1,10 +1,10 @@
 openapi: 3.2.0
 info:
-  title: Open Education News API
   version: 5.0.0
+  title: Open Education News API
+  description: OpenAPI (fka Swagger) specification for the Open Education API.
   x-logo:
     url: ../logo.png
-  description: 'Operations tagged news across 2 of this provider''s published API definitions: ooapi-v5.yaml, open-education-api-v5-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: http://demo01.eduapi.nl/v5
   description: SURF demo implementation
@@ -88,9 +88,6 @@ paths:
           $ref: '#/components/responses/ErrorInternalServerError'
       operationId: getNewsFeeds
       x-operation-id-source: derived
-    servers:
-    - url: http://demo01.eduapi.nl/v5
-      description: SURF demo implementation
   /news-feeds/{newsFeedId}:
     get:
       summary: GET /news-feeds/{newsFeedId}
@@ -128,9 +125,6 @@ paths:
           $ref: '#/components/responses/ErrorInternalServerError'
       operationId: getNewsFeedsByNewsFeedId
       x-operation-id-source: derived
-    servers:
-    - url: http://demo01.eduapi.nl/v5
-      description: SURF demo implementation
   /news-feeds/{newsFeedId}/news-items:
     get:
       summary: GET /news-feeds/{newsFeedId}/news-items
@@ -214,9 +208,6 @@ paths:
           $ref: '#/components/responses/ErrorInternalServerError'
       operationId: getNewsFeedsByNewsFeedIdNewsItems
       x-operation-id-source: derived
-    servers:
-    - url: http://demo01.eduapi.nl/v5
-      description: SURF demo implementation
   /news-items/{newsItemId}:
     get:
       summary: GET /news-items/{newsItemId}
@@ -265,50 +256,7 @@ paths:
           $ref: '#/components/responses/ErrorInternalServerError'
       operationId: getNewsItemsByNewsItemId
       x-operation-id-source: derived
-    servers:
-    - url: http://demo01.eduapi.nl/v5
-      description: SURF demo implementation
 components:
-  parameters:
-    consumer:
-      name: consumer
-      in: query
-      description: Request entities meant for a specific consumer. This query parameter is independent from the `consumers` attribute. See the [documentation on support for specific consumers](https://openonderwijsapi.nl/v5/#/technical/consumers-and-profiles/) for more information about this mechanism.
-      required: false
-      schema:
-        type: string
-    pageSize:
-      name: pageSize
-      in: query
-      description: The number of items per page
-      required: false
-      schema:
-        type: integer
-        format: int32
-        default: 10
-        enum:
-        - 10
-        - 20
-        - 50
-        - 100
-        - 250
-    search:
-      name: q
-      in: query
-      description: Filter by items having a name, abbreviation or description containing the given search term (exact partial match, case insensitive)
-      required: false
-      schema:
-        type: string
-    pageNumber:
-      name: pageNumber
-      in: query
-      description: The page number to get. Page numbers start at 1.
-      required: false
-      schema:
-        type: integer
-        format: int32
-        example: 1
-        minimum: 1
   schemas:
     Consumer:
       type: object
@@ -320,6 +268,64 @@ components:
           description: The key of the consumer (destination) for which this information is intended. See the [consumer registry](https://openonderwijsapi.nl/v5/#/technical/consumers-and-profiles/) for more information.
           type: string
       additionalProperties: true
+    Ext:
+      type: object
+      description: Object for additional non-standard attributes
+    NewsFeed:
+      type: object
+      description: A placeholder or collection of news items
+      required:
+      - newsFeedId
+      - newsFeedType
+      - name
+      - description
+      properties:
+        newsFeedId:
+          type: string
+          description: Unique id for this news feed
+          format: uuid
+          example: 123e4567-e89b-12d3-a456-134564174222
+        newsFeedType:
+          type: string
+          description: The type of the object this news feed relates to
+          enum:
+          - organization
+          - program
+          - course
+          - component
+          - person
+          - building
+          - room
+          example: room
+        name:
+          type: array
+          description: The name for this news feed
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/LanguageTypedString'
+          example:
+          - language: en-GB
+            value: room Bb 4.35 news
+        description:
+          type: array
+          description: The description of this news feed.
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/LanguageTypedString'
+          example:
+          - language: en-GB
+            value: all information on what happens in room Bb 4.35
+        consumers:
+          description: The additional consumer elements that can be provided, see the [documentation on support for specific consumers](https://openonderwijsapi.nl/v5/#/technical/consumers-and-profiles/) for more information about this mechanism.
+          type: array
+          items:
+            $ref: '#/components/schemas/Consumer'
+          example:
+          - consumerKey: x-test-consumer
+            additional: custom
+            attributes: here
+        ext:
+          $ref: '#/components/schemas/Ext'
     NewsItem:
       type: object
       description: A newsitem contains the message and metadata of that message
@@ -407,114 +413,6 @@ components:
             attributes: here
         ext:
           $ref: '#/components/schemas/Ext'
-    Problem:
-      type: object
-      description: A system message including the error code and an explanation
-      required:
-      - status
-      - title
-      properties:
-        status:
-          type: string
-          description: The HTTP status code
-          example: '404'
-        title:
-          type: string
-          description: A short, human-readable summary of the problem type
-          example: Resource not found
-        detail:
-          type: string
-          description: A human-readable explanation specific to this occurrence of the problem
-    Ext:
-      type: object
-      description: Object for additional non-standard attributes
-    newsItemType:
-      type: string
-      description: 'The type of this news item
-
-        - calamity: calamiteit
-
-        - general: algemeen
-
-        - schedule-change: roosterwijziging
-
-        - announcement: aankondiging
-
-        '
-      enum:
-      - calamity
-      - general
-      - schedule-change
-      - announcement
-    LanguageTypedString:
-      type: object
-      description: A String with an associated language code.
-      properties:
-        language:
-          description: The language used in the described entity. A string formatted according to RFC3066.
-          type: string
-          pattern: ^[a-z]{2,4}(-[A-Z][a-z]{3})?(-([A-Z]{2}|[0-9]{3}))?$
-        value:
-          description: String to describe the entity.
-          type: string
-      example:
-        language: en-GB
-        value: program that is a place holder for all courses that are made available for student mobility
-    NewsFeed:
-      type: object
-      description: A placeholder or collection of news items
-      required:
-      - newsFeedId
-      - newsFeedType
-      - name
-      - description
-      properties:
-        newsFeedId:
-          type: string
-          description: Unique id for this news feed
-          format: uuid
-          example: 123e4567-e89b-12d3-a456-134564174222
-        newsFeedType:
-          type: string
-          description: The type of the object this news feed relates to
-          enum:
-          - organization
-          - program
-          - course
-          - component
-          - person
-          - building
-          - room
-          example: room
-        name:
-          type: array
-          description: The name for this news feed
-          minItems: 1
-          items:
-            $ref: '#/components/schemas/LanguageTypedString'
-          example:
-          - language: en-GB
-            value: room Bb 4.35 news
-        description:
-          type: array
-          description: The description of this news feed.
-          minItems: 1
-          items:
-            $ref: '#/components/schemas/LanguageTypedString'
-          example:
-          - language: en-GB
-            value: all information on what happens in room Bb 4.35
-        consumers:
-          description: The additional consumer elements that can be provided, see the [documentation on support for specific consumers](https://openonderwijsapi.nl/v5/#/technical/consumers-and-profiles/) for more information about this mechanism.
-          type: array
-          items:
-            $ref: '#/components/schemas/Consumer'
-          example:
-          - consumerKey: x-test-consumer
-            additional: custom
-            attributes: here
-        ext:
-          $ref: '#/components/schemas/Ext'
     Pagination:
       type: object
       required:
@@ -548,19 +446,109 @@ components:
           format: int32
           description: Total number of pages
           example: 8
+    LanguageTypedString:
+      type: object
+      description: A String with an associated language code.
+      properties:
+        language:
+          description: The language used in the described entity. A string formatted according to RFC3066.
+          type: string
+          pattern: ^[a-z]{2,4}(-[A-Z][a-z]{3})?(-([A-Z]{2}|[0-9]{3}))?$
+        value:
+          description: String to describe the entity.
+          type: string
+      example:
+        language: en-GB
+        value: program that is a place holder for all courses that are made available for student mobility
     Identifier:
       type: string
       description: An identifier of another resource.
       format: uuid
+    Problem:
+      type: object
+      description: A system message including the error code and an explanation
+      required:
+      - status
+      - title
+      properties:
+        status:
+          type: string
+          description: The HTTP status code
+          example: '404'
+        title:
+          type: string
+          description: A short, human-readable summary of the problem type
+          example: Resource not found
+        detail:
+          type: string
+          description: A human-readable explanation specific to this occurrence of the problem
+    newsItemType:
+      type: string
+      description: 'The type of this news item
+
+        - calamity: calamiteit
+
+        - general: algemeen
+
+        - schedule-change: roosterwijziging
+
+        - announcement: aankondiging
+
+        '
+      enum:
+      - calamity
+      - general
+      - schedule-change
+      - announcement
+  parameters:
+    search:
+      name: q
+      in: query
+      description: Filter by items having a name, abbreviation or description containing the given search term (exact partial match, case insensitive)
+      required: false
+      schema:
+        type: string
+    consumer:
+      name: consumer
+      in: query
+      description: Request entities meant for a specific consumer. This query parameter is independent from the `consumers` attribute. See the [documentation on support for specific consumers](https://openonderwijsapi.nl/v5/#/technical/consumers-and-profiles/) for more information about this mechanism.
+      required: false
+      schema:
+        type: string
+    pageSize:
+      name: pageSize
+      in: query
+      description: The number of items per page
+      required: false
+      schema:
+        type: integer
+        format: int32
+        default: 10
+        enum:
+        - 10
+        - 20
+        - 50
+        - 100
+        - 250
+    pageNumber:
+      name: pageNumber
+      in: query
+      description: The page number to get. Page numbers start at 1.
+      required: false
+      schema:
+        type: integer
+        format: int32
+        example: 1
+        minimum: 1
   responses:
-    ErrorMethodNotAllowed:
-      description: Method not allowed
+    ErrorForbidden:
+      description: Forbidden
       content:
         application/problem+json:
           schema:
             $ref: '#/components/schemas/Problem'
-    ErrorNotFound:
-      description: Not Found
+    ErrorInternalServerError:
+      description: Internal Server Error
       content:
         application/problem+json:
           schema:
@@ -577,20 +565,20 @@ components:
         application/problem+json:
           schema:
             $ref: '#/components/schemas/Problem'
-    ErrorForbidden:
-      description: Forbidden
+    ErrorNotFound:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    ErrorMethodNotAllowed:
+      description: Method not allowed
       content:
         application/problem+json:
           schema:
             $ref: '#/components/schemas/Problem'
     ErrorBadRequest:
       description: Bad request
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-    ErrorInternalServerError:
-      description: Internal Server Error
       content:
         application/problem+json:
           schema:
@@ -602,61 +590,39 @@ components:
     openId:
       type: openIdConnect
       openIdConnectUrl: https://example.nl/.well-known/openid-configuration
-x-refined-from:
-- ooapi-v5.yaml
-- open-education-api-v5-openapi.yml
 x-tagGroups:
-- name: Requests and responses
+- name: Requests and respones
   tags:
-  - security
   - service metadata
   - academic sessions
   - associations
   - buildings
   - courses
-  - course offerings
-  - course offering associations
   - components
-  - documents
+  - education specifications
   - groups
-  - learning components
-  - learning component offerings
-  - learning component offering associations
-  - learning outcomes
   - news
-  - organisations
+  - offerings
+  - organizations
   - persons
-  - programmes
-  - programme offerings
-  - programme offering associations
+  - programs
   - rooms
-  - test components
-  - test component offerings
-  - test component offering associations
-  - test component offering association attempts
 - name: Models
   tags:
-  - data_model
   - service_model
-  - learning_outcome_model
   - academic_session_model
+  - association_model
   - building_model
+  - component_model
+  - component_offering_model
   - course_model
   - course_offering_model
-  - course_offering_association_model
-  - document_model
-  - learning_component_model
-  - learning_component_offering_model
-  - learning_component_offering_association_model
-  - test_component_model
-  - test_component_offering_model
-  - test_component_offering_association_model
-  - test_component_offering_association_attempt_model
+  - education_specification_model
   - group_model
-  - membership_model
-  - organisation_model
+  - news_feed_model
+  - news_item_model
+  - organization_model
   - person_model
-  - programme_model
-  - programme_offering_model
-  - programme_offering_association_model
+  - program_model
+  - program_offering_model
   - room_model

@@ -2,8 +2,7 @@
   "provider": "open-education-api",
   "sources": [
     "_original/oeapi-6.0-rc.3.yaml",
-    "_original/ooapi-v5.yaml",
-    "open-education-api-v5-openapi.yml"
+    "_original/ooapi-v5.yaml"
   ],
   "outputs": [
     "open-education-api-academic-sessions-api-openapi.yml",
@@ -36,35 +35,53 @@
     "open-education-api-organizations-api-openapi.yml",
     "open-education-api-programs-api-openapi.yml"
   ],
-  "archived": [
-    "deleted 1 superseded output(s) from the previous generation",
-    "archived openapi/open-education-api-v5-openapi.yml"
-  ],
+  "archived": [],
   "errors": [],
   "warnings": [],
   "notes": [
+    "1 archived document(s) dropped as subsets of other archived documents",
     "sourced from openapi/_original/ (2 archived document(s)); previously refined output at the top level was skipped rather than re-split",
     "oeapi-6.0-rc.3.yaml: upgraded openapi 3.1.1 -> OpenAPI 3.2.0",
     "ooapi-v5.yaml: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
-    "open-education-api-v5-openapi.yml: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
-    "tag 'academic sessions' spans 3 source specs (oeapi-6.0-rc.3.yaml, ooapi-v5.yaml, open-education-api-v5-openapi.yml): per-path servers applied",
-    "tag 'buildings' spans 3 source specs (oeapi-6.0-rc.3.yaml, ooapi-v5.yaml, open-education-api-v5-openapi.yml): per-path servers applied",
-    "tag 'courses' spans 3 source specs (oeapi-6.0-rc.3.yaml, ooapi-v5.yaml, open-education-api-v5-openapi.yml): per-path servers applied",
-    "tag 'groups' spans 3 source specs (oeapi-6.0-rc.3.yaml, ooapi-v5.yaml, open-education-api-v5-openapi.yml): per-path servers applied",
-    "tag 'persons' spans 3 source specs (oeapi-6.0-rc.3.yaml, ooapi-v5.yaml, open-education-api-v5-openapi.yml): per-path servers applied",
-    "tag 'rooms' spans 3 source specs (oeapi-6.0-rc.3.yaml, ooapi-v5.yaml, open-education-api-v5-openapi.yml): per-path servers applied",
-    "tag 'service metadata' spans 3 source specs (oeapi-6.0-rc.3.yaml, ooapi-v5.yaml, open-education-api-v5-openapi.yml): per-path servers applied",
-    "tag 'associations' spans 2 source specs (ooapi-v5.yaml, open-education-api-v5-openapi.yml): per-path servers applied",
-    "tag 'components' spans 2 source specs (ooapi-v5.yaml, open-education-api-v5-openapi.yml): per-path servers applied",
-    "tag 'education specifications' spans 2 source specs (ooapi-v5.yaml, open-education-api-v5-openapi.yml): per-path servers applied",
-    "tag 'news' spans 2 source specs (ooapi-v5.yaml, open-education-api-v5-openapi.yml): per-path servers applied",
-    "tag 'offerings' spans 2 source specs (ooapi-v5.yaml, open-education-api-v5-openapi.yml): per-path servers applied",
-    "tag 'organizations' spans 2 source specs (ooapi-v5.yaml, open-education-api-v5-openapi.yml): per-path servers applied",
-    "tag 'programs' spans 2 source specs (ooapi-v5.yaml, open-education-api-v5-openapi.yml): per-path servers applied",
-    "superseded outputs removed: open-education-api-openapi.yml",
-    "apis.yml register: written (+29 apis, 29 total)"
+    "tag 'academic sessions' spans 2 source specs (oeapi-6.0-rc.3.yaml, ooapi-v5.yaml): per-path servers applied",
+    "tag 'buildings' spans 2 source specs (oeapi-6.0-rc.3.yaml, ooapi-v5.yaml): per-path servers applied",
+    "tag 'courses' spans 2 source specs (oeapi-6.0-rc.3.yaml, ooapi-v5.yaml): per-path servers applied",
+    "tag 'groups' spans 2 source specs (oeapi-6.0-rc.3.yaml, ooapi-v5.yaml): per-path servers applied",
+    "tag 'persons' spans 2 source specs (oeapi-6.0-rc.3.yaml, ooapi-v5.yaml): per-path servers applied",
+    "tag 'rooms' spans 2 source specs (oeapi-6.0-rc.3.yaml, ooapi-v5.yaml): per-path servers applied",
+    "tag 'service metadata' spans 2 source specs (oeapi-6.0-rc.3.yaml, ooapi-v5.yaml): per-path servers applied",
+    "apis.yml register: already-registered"
   ],
   "skipped": [
-    "open-education-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+    "_original/open-education-api-v5-openapi.yml: archived document superseded by a larger archived document",
+    "open-education-api-academic-sessions-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "open-education-api-associations-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "open-education-api-buildings-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "open-education-api-components-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "open-education-api-course-offering-associations-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "open-education-api-course-offerings-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "open-education-api-courses-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "open-education-api-documents-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "open-education-api-education-specifications-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "open-education-api-groups-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "open-education-api-learning-component-offering-associations-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "open-education-api-learning-component-offerings-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "open-education-api-learning-components-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "open-education-api-learning-outcomes-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "open-education-api-news-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "open-education-api-offerings-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "open-education-api-organisations-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "open-education-api-organizations-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "open-education-api-persons-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "open-education-api-programme-offering-associations-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "open-education-api-programme-offerings-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "open-education-api-programmes-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "open-education-api-programs-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "open-education-api-rooms-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "open-education-api-service-metadata-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "open-education-api-test-component-offering-association-attempts-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "open-education-api-test-component-offering-associations-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "open-education-api-test-component-offerings-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "open-education-api-test-components-api-openapi.yml: previously refined output, superseded by openapi/_original/"
   ]
 }

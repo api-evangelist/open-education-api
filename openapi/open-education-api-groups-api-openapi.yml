@@ -4,7 +4,7 @@ info:
   x-refined-note:
   - x-logo differs across the merged source definitions and was not carried
   version: '1.0'
-  description: 'Operations tagged groups across 3 of this provider''s published API definitions: oeapi-6.0-rc.3.yaml, ooapi-v5.yaml, open-education-api-v5-openapi.yml. Each path carries the servers of the definition it was published in.'
+  description: 'Operations tagged groups across 2 of this provider''s published API definitions: oeapi-6.0-rc.3.yaml, ooapi-v5.yaml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://demo01.eduapi.nl/v6
   description: SURF demo implementation
@@ -747,157 +747,11 @@ paths:
       description: SURF demo implementation
 components:
   schemas:
-    learningComponentOfferingId:
+    courseOfferingId:
       type: string
-      description: The unique ID of the learning component offering, this should be unique across all programme, course, learning, and test component offerings.
+      description: The unique ID of the course offering, this should be unique across all programme, course, learning, and test component offerings.
       format: uuid
       example: 123e4567-e89b-12d3-a456-134564174000
-    membershipRole:
-      type: string
-      description: 'The role of this person in the context of this membership:
-
-
-        - student: Enrolled participant in the offering
-
-        - lecturer: Delivers lectures or leads teaching
-
-        - teaching_assistant: Supports the lecturer in teaching activities
-
-        - coordinator: Responsible for organisational or administrative aspects
-
-        - invigilator: Supervises examinations or assessments
-
-        - assessor: Evaluates student performance or work
-
-        - guest: External participant with an atypical role
-
-
-        This is an *extensible enumeration*. Use the prefix `x-` for custom values.
-
-        '
-      x-ooapi-extensible-enum:
-      - student
-      - lecturer
-      - teaching_assistant
-      - coordinator
-      - invigilator
-      - assessor
-      - guest
-      example: student
-    membershipState:
-      type: string
-      description: 'The state of this membership:
-
-
-        - cancelled: The membership has been formally terminated and is no longer valid
-
-        - active: The membership is currently valid and in effect
-
-
-        This is an *extensible enumeration*. Use the prefix `x-` for custom values.
-
-        '
-      x-ooapi-extensible-enum:
-      - cancelled
-      - active
-      example: active
-    groupType:
-      type: string
-      description: 'The type of this group:
-
-
-        - class: A group of students jointly scheduled for, assigned to, or engaged in educational activities
-
-        - team: A group composed of members of a team, which may consist of students, staff, or a mix of both
-
-        - group: A group of students jointly scheduled for, assigned to, or engaged in educational activities in a context not covered by a class
-
-
-        This is an *extensible enumeration*. Use the prefix `x-` for custom values.
-
-        '
-      x-ooapi-extensible-enum:
-      - class
-      - team
-      - group
-      example: class
-    ProblemVersionNotAcceptable:
-      allOf:
-      - $ref: '#/components/schemas/Problem'
-      - type: object
-        required:
-        - requestedVersion
-        - supportedVersions
-        properties:
-          type:
-            $ref: '#/components/schemas/type'
-          title:
-            $ref: '#/components/schemas/title'
-          consumer:
-            description: 'Indicates which party caused the version mismatch. When null, the 406 was
-
-              triggered by an unsupported OEAPI version. If populated with a Consumer
-
-              object, the 406 was caused by a consumer-specific version that did not match
-
-              any supported version. This field MAY contain a full Consumer object or be
-
-              null.
-
-              '
-            oneOf:
-            - $ref: '#/components/schemas/Consumer'
-            - type: 'null'
-          requestedVersion:
-            type: string
-            description: The version requested by the client.
-            example: '5.0'
-          supportedVersions:
-            type: array
-            description: Versions the server can serve, typically in descending order.
-            items:
-              type: string
-            example:
-            - '4.2'
-            - '4.1'
-    Language:
-      description: 'The language used in the described entity. The value **must be a language tag that conforms to RFC 5646** (Tags for Identifying Languages, BCP 47):
-
-        https://www.rfc-editor.org/rfc/rfc5646.html
-
-
-        A tag consists of the following components, in this exact order:
-
-        1. **language** – two‑ to three‑letter codes (ISO 639‑1/‑2) **or** four‑letter codes (ISO 639‑5) **or** five‑ to eight‑letter registered language subtags.
-
-        2. **script** – optional, four letters in Title‑Case (e.g. `Latn`, `Hant`).
-
-        3. **region** – optional, either two uppercase letters (ISO 3166‑1) **or** three digits (UN M.49).
-
-        4. **variant** – zero or more subtags, each either five‑ to eight‑alphanumerics or a digit followed by three alphanumerics (e.g. `1901`, `oxendict`).
-
-        5. **extension** – zero or more extensions. Each extension starts with a *singleton* (a single alphanumeric character except `x`) followed by one or more subtags of two‑ to eight‑alphanumerics (e.g. `u‑co‑phonebk`).
-
-        6. **private‑use** – optional, the letter `x` followed by one or more subtags of one‑ to eight‑alphanumerics (e.g. `x‑private`).
-
-
-        The most common form is a two‑letter language code (ISO 639‑1) optionally followed by a hyphen and a two‑letter country code (ISO 3166‑1), for example `en` or `en‑GB`.
-
-
-        More specific tags are also valid, for instance `zh‑Hant‑TW` (Traditional Chinese as used in Taiwan).
-
-
-        For sign languages two conventions are recognised:
-
-        * `sgn` – e.g. `nl‑sgn‑NL` (Dutch Sign Language)
-
-        * `s`   – e.g. `nl‑s‑NL` (Dutch Sign Language)
-
-        '
-      type: string
-      minLength: 2
-      pattern: ^(?:(?:[A-Za-z]{2,3}(?:-[A-Za-z]{3}){0,2}|[A-Za-z]{4}|[A-Za-z]{5,8})(?:-[A-Za-z]{4})?(?:-(?:[A-Z]{2}|[0-9]{3}))?(?:-(?:[A-Za-z0-9]{5,8}|[0-9][A-Za-z0-9]{3}))*?(?:-(?:[A-WY-Za-wy-z0-9](?:-[A-Za-z0-9]{2,8})+))*?(?:-x(?:-[A-Za-z0-9]{1,8})+)?|x(?:-[A-Za-z0-9]{1,8})+)$
-      example: en-GB
     Consumer:
       type: object
       description: The additional elements of a consumer that may be provided, see the [documentation on support for specific consumers](https://oeapi.eu/v6.0/#/technical/consumers-and-profiles/) for further information about this mechanism.
@@ -915,522 +769,17 @@ components:
           - 'null'
           example: value-of-example-property
       additionalProperties: true
-    filterPresence:
+    testComponentOfferingId:
       type: string
-      description: "Presence check or special value for filter operations.\n\nInspired by Storyblok (https://www.storyblok.com/docs/api/content-delivery/v2/filter-queries)\n\nImplementation note:\n- The availability and behaviour of this query functionality are entirely determined by the organisation hosting\n  the API implementation. It is not mandatory for implementers to support this functionality, and it cannot be enforced \n  upon organisations that provide or consume OEAPI endpoints.\n- It is up to each implementer to decide whether to support this feature. It is **not** a requirement of the OEAPI \n  standard itself.\n- Consumers or working groups that wish to apply specific filtering mechanisms are encouraged to do so using \n  this approach for the sake of consistency across implementations.\n"
-      enum:
-      - empty
-      - not_empty
-      - empty_array
-      - not_empty_array
-      - 'true'
-      - 'false'
-      - 'null'
-      - not_null
-      example: not_empty
-    codeType:
-      type: string
-      description: 'The type of code or identifier.
-
-
-        The predefined values are:
-
-
-        | Code                      | Description                                                       |
-
-        |---------------------------|-------------------------------------------------------------------|
-
-        | `account_id`              | Identifier for an account.                                        |
-
-        | `bag_id`                  | Identifier for a building in the Dutch Building and Address       |
-
-        |                           | Registry (BAG).                                                   |
-
-        | `building_id`             | Identifier for a building.                                        |
-
-        | `component_code`          | Identifier for a component (part of a course).                    |
-
-        | `eckid`                   | Identifier assigned within the Dutch *Educatieve ContentKeten iD* |
-
-        |                           | framework. It enables persistent identification and exchange of   |
-
-        |                           | digital learning resources within the Dutch educational sector for|
-
-        |                           | EQF levels 1, 2, 3 and 4. Comparable international approaches     |
-
-        |                           | include LRMI, DOI and Handle                                      |
-
-        |                           | identifiers for learning resources.                               |
-
-        | `email_address`           | An email address.                                                 |
-
-        | `esi`                     | European Student Identifier.                                      |
-
-        | `group_code`              | Identifier for a group of people.                                 |
-
-        | `group_type_code`         | Identifier for the type of group.                                 |
-
-        | `identifier`              | Generic identifier.                                               |
-
-        | `institution_code`        | Registration number of an educational institution. In the         |
-
-        |                           | Netherlands, the former BRIN code has been replaced by the        |
-
-        |                           | institution code, issued by the Ministry of Education, Culture    |
-
-        |                           | and Science (OCW).                                                |
-
-        | `isbn`                    | International Standard Book Number (for books).                   |
-
-        | `issn`                    | International Standard Serial Number (for periodicals).           |
-
-        | `kvk_organisation_id`     | Identifier for a KvK (Dutch Chamber of Commerce) registered       |
-
-        |                           | organisation.                                                     |
-
-        | `kvk_establishment_id`    | Identifier for a specific establishment of a KvK                  |
-
-        |                           | (Dutch Chamber of Commerce) registered organisation.              |
-
-        | `leerbedrijf_id`          | Dutch registration/accreditation id for organisations offering    |
-
-        |                           | internships for vocational education students.                    |
-
-        | `national_identity_number`| Government-assigned personal identifier (e.g. NI number in the UK,|
-
-        |                           | or *personnummer* in Sweden).                                     |
-
-        | `offering_code`           | Identifier for a specific offering (programme, course or          |
-
-        |                           | component).                                                       |
-
-        | `organisation_id`         | Identifier for an organisation.                                   |
-
-        | `orcid`                   | Open Researcher and Contributor ID.                               |
-
-        | `product_id`              | Identifier for a product.                                         |
-
-        | `programme_code`          | Identifier of a programme (a recognised collection of courses).   |
-
-        |                           | In the Netherlands, the former CREBO and CROHO codes have been    |
-
-        |                           | replaced by the programme code as registered in RIO, under the    |
-
-        |                           | authority of OCW.                                                 |
-
-        | `room_code`               | Identifier for a room.                                            |
-
-        | `schac_home`              | Home organisation represented by its domain name.                 |
-
-        | `student_number`          | Identifier for a student.                                         |
-
-        | `studielink_number`       | Identifier assigned to a student by Studielink (Dutch central     |
-
-        |                           | enrolment system).                                                |
-
-        | `system_id`               | Identifier used within a specific system.                         |
-
-        | `username`                | User login name.                                                  |
-
-        | `uuid`                    | Universally unique identifier.                                    |
-
-
-        This is an *extensible enumeration*. Use the prefix `x-` for custom values.
-
-        '
-      x-ooapi-extensible-enum:
-      - account_id
-      - bag_id
-      - building_id
-      - component_code
-      - eckid
-      - email_address
-      - esi
-      - group_code
-      - group_type_code
-      - identifier
-      - institution_code
-      - isbn
-      - issn
-      - kvk_organisation_id
-      - kvk_establishment_id
-      - leerbedrijf_id
-      - offering_code
-      - organisation_id
-      - orcid
-      - product_id
-      - programme_code
-      - room_code
-      - schac_home
-      - student_number
-      - studielink_number
-      - system_id
-      - username
-      - uuid
-      - national_identity_number
-      example: identifier
+      description: The unique ID of the test component offering, this should be unique across all programme, course, learning, and test component offerings.
+      format: uuid
+      example: 123e4567-e89b-12d3-a456-134564174000
     type:
       type: string
       format: uri
       maxLength: 2048
       description: "An absolute URI that identifies the problem type. When dereferenced, \nit should provide human-readable documentation.\n"
       example: https://example.org/problems/bad-request
-    Problem:
-      type: object
-      description: 'A problem details object, conforming to RFC 7807 (Problem Details for HTTP
-
-        APIs). See https://datatracker.ietf.org/doc/html/rfc7807. It provides a
-
-        machine-readable format for error conditions, including a type URI, title,
-
-        status code, and optional detail and instance fields. This ensures
-
-        consistent handling of error responses across the API.
-
-        '
-      required:
-      - type
-      - status
-      - title
-      properties:
-        type:
-          type: string
-          format: uri
-          maxLength: 2048
-          description: "An absolute URI that identifies the problem type. When dereferenced, \nit should provide human-readable documentation.\n"
-          example: https://example.org/problems/bad-request
-        title:
-          type: string
-          description: A short, human-readable summary of the problem type
-          example: Resource not found
-        status:
-          type: integer
-          format: int32
-          description: "The HTTP status code generated by the origin server for this occurrence \nof the problem.\n"
-          example: 404
-        detail:
-          type:
-          - string
-          - 'null'
-          description: 'A human-readable explanation specific to this occurrence of the problem
-
-            '
-          example: The course with id 'abc123' could not be found in the catalogue.
-        instance:
-          type:
-          - string
-          - 'null'
-          format: uri
-          maxLength: 2048
-          description: 'An absolute URI that identifies the specific occurrence of the problem.
-
-            '
-          example: https://api.example.org/courses/abc123
-    AcademicSession:
-      type: object
-      description: 'A named period of time that can be used to communicate the various schedules and time periods an institution recognizes and uses to organise their education. AcademicSessions can be nested.
-
-        Offerings MAY be linked to a specific AcademicSession to indicate that the specified Offering takes place during the AcademicSession, however this is not mandatory.
-
-        '
-      required:
-      - academicSessionId
-      - academicSessionType
-      - primaryCode
-      - name
-      - startDateTime
-      - endDateTime
-      properties:
-        academicSessionId:
-          type: string
-          description: Unique id for this academic session
-          format: uuid
-          example: 123e4567-e89b-12d3-a456-426614174000
-        academicSessionType:
-          $ref: '#/components/schemas/academicSessionType'
-        primaryCode:
-          description: The primary human readable identifier for this academic session. This is often the source identifier as defined by the institution.
-          $ref: '#/components/schemas/IdentifierEntry'
-          example:
-            codeType: identifier
-            code: 2012-Q1
-        name:
-          type: array
-          description: The name of this academic session
-          minItems: 1
-          items:
-            $ref: '#/components/schemas/LanguageTypedString'
-          example:
-          - language: en-GB
-            value: Autumn term 2020
-        abbreviation:
-          type:
-          - string
-          - 'null'
-          description: The abbreviation or internal code used to identify this AcademicSession
-          maxLength: 256
-          example: SPRING-2026
-        startDateTime:
-          type: string
-          description: The moment on which this academic session starts, RFC3339 (full-date)
-          format: date-time
-          example: '2025-09-28T08:30:00+01:00'
-        endDateTime:
-          type: string
-          description: The moment on which this academic session ends, RFC3339 (full-date)
-          format: date-time
-          example: '2025-09-28T08:30:00+01:00'
-        parentId:
-          description: 'The identifier of the parent academicSession for this session (e.g. Autumn
-
-            term 20xx where the current session is week 40).
-
-            When the client does not request expansion of `parent`, only this
-
-            identifier is returned.
-
-            This field is [`expandable`](https://oeapi.eu/v6.0/#/technical/expanding-responses).
-
-            '
-          oneOf:
-          - $ref: '#/components/schemas/Identifier'
-          - type: 'null'
-        parent:
-          description: 'The expanded parent academicSession object of this session (e.g. Autumn
-
-            term 20xx where the current session is week 40).
-
-            When the client requests expansion of `parent`, the full expanded
-
-            academicSession object MUST be returned here instead of only the identifier.
-
-            If no parent is defined, this value is `null`.
-
-            '
-          oneOf:
-          - $ref: '#/components/schemas/AcademicSession'
-          - type: 'null'
-        childIds:
-          description: "The list of identifiers of child academicSessions of this session (e.g. all\nacademic sessions in Autumn term 20xx).\nWhen the client does not request expansion of `children`, only these\nidentifiers are returned.\nThis field is [`expandable`](https://oeapi.eu/v6.0/#/technical/expanding-responses).\n\nAlthough `childIds` and `children` (for example `organisationIds` versus `organisations`) may \nseem unusual, this naming is intentional and follows the singular–plural convention defined \nby the specification.\n"
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Identifier'
-        children:
-          description: 'The expanded child academicSession objects of this session (e.g. all
-
-            academic sessions in Autumn term 20xx).
-
-            When the client requests expansion of `children`, the full expanded
-
-            academicSession objects MUST be returned here instead of only the identifiers.
-
-            If no child sessions are defined, this value is `null`.
-
-            '
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/AcademicSession'
-        yearId:
-          description: 'The identifier of the top-level academicSession year for this session
-
-            (e.g. 20xx where the current session is week 40 of a semester).
-
-            When the client does not request expansion of `year`, only this identifier
-
-            is returned.
-
-            This field is [`expandable`](https://oeapi.eu/v6.0/#/technical/expanding-responses).
-
-            '
-          oneOf:
-          - $ref: '#/components/schemas/Identifier'
-          - type: 'null'
-        year:
-          description: 'The expanded top-level academicSession year object for this session
-
-            (e.g. 20xx where the current session is week 40 of a semester).
-
-            When the client requests expansion of `year`, the full expanded
-
-            academicSession object MUST be returned here instead of only the identifier.
-
-            If no top-level year is defined, this value is `null`.
-
-            '
-          oneOf:
-          - $ref: '#/components/schemas/AcademicSession'
-          - type: 'null'
-        otherCodes:
-          type:
-          - array
-          - 'null'
-          description: An array of additional human readable codes/identifiers for the entity being described.
-          items:
-            $ref: '#/components/schemas/IdentifierEntry'
-        consumer:
-          oneOf:
-          - $ref: '#/components/schemas/Consumer'
-          - type: 'null'
-        ext:
-          oneOf:
-          - $ref: '#/components/schemas/Ext'
-          - type: 'null'
-    Ext:
-      type: object
-      description: Object for additional non-standard attributes
-    LanguageTypedString:
-      type: object
-      description: A String with an associated language code. IF this object is used both fields are mandatory.
-      required:
-      - language
-      - value
-      properties:
-        language:
-          $ref: '#/components/schemas/Language'
-        value:
-          description: String to describe the entity.
-          type: string
-          example: programme that is a place holder for all courses that are made available for student mobility
-      example:
-        language: en-GB
-        value: programme that is a place holder for all courses that are made available for student mobility
-    Membership:
-      type: object
-      description: A membership contains the information on a membership of a person for a specific group
-      required:
-      - personId
-      - groupId
-      - role
-      - state
-      properties:
-        personId:
-          type: string
-          description: Unique id for this membership (this is the personID since there is a 1-1 relationship between membership of a group and a person) item
-          format: uuid
-          example: 123e4567-e89b-12d3-a456-122564174000
-        groupId:
-          type: string
-          description: Id for the group where the person has a membership
-          format: uuid
-          example: 123e4567-e89b-12d3-a456-122564174000
-        startDateTime:
-          type:
-          - string
-          - 'null'
-          description: The moment from which the person participates in this membership, RFC3339 (date-time)
-          format: date-time
-          example: '2020-09-28T08:30:00+01:00'
-        endDateTime:
-          type:
-          - string
-          - 'null'
-          description: The moment until which this person participates in this membership (when the membership stops), RFC3339 (date-time)
-          format: date-time
-          example: '2020-09-30T20:00:00+01:00'
-        state:
-          $ref: '#/components/schemas/membershipState'
-        role:
-          $ref: '#/components/schemas/membershipRole'
-        consumer:
-          oneOf:
-          - $ref: '#/components/schemas/Consumer'
-          - type: 'null'
-        ext:
-          oneOf:
-          - $ref: '#/components/schemas/Ext'
-          - type: 'null'
-    addressType:
-      type: string
-      description: "The type of address, indicating its intended use:\n  \n- postal: Used for receiving post\n- visit: Used for physical visits\n- deliveries: Used for deliveries\n- invoicing: Used for invoicing purposes\n- teaching: The location where educational activities take place\n\nThis is an *extensible enumeration*. Use the prefix `x-` for custom values.\n"
-      x-ooapi-extensible-enum:
-      - postal
-      - visit
-      - deliveries
-      - invoicing
-      - teaching
-      example: postal
-    courseOfferingId:
-      type: string
-      description: The unique ID of the course offering, this should be unique across all programme, course, learning, and test component offerings.
-      format: uuid
-      example: 123e4567-e89b-12d3-a456-134564174000
-    Country:
-      type: object
-      description: 'An object indicating a country based on at least one iso-3166 code. In situations where more than one ISO-3166 code is provided, the codes must refer to the same country.
-
-        '
-      properties:
-        iso3166-1-alpha2:
-          type:
-          - string
-          - 'null'
-          minLength: 2
-          maxLength: 2
-          description: A country code based on https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
-          example: NL
-        iso3166-1-alpha3:
-          type:
-          - string
-          - 'null'
-          minLength: 3
-          maxLength: 3
-          description: A country code based on https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3
-          example: NLD
-        iso3166-2:
-          type:
-          - string
-          - 'null'
-          minLength: 5
-          maxLength: 6
-          description: A country subdivision code based on https://en.wikipedia.org/wiki/ISO_3166-2
-          example: BQ-BO
-        iso3166-3:
-          type:
-          - string
-          - 'null'
-          minLength: 4
-          maxLength: 4
-          description: 'A code for a country that no longer exists is listed on ISO 3166-3 (https://en.wikipedia.org/wiki/ISO_3166-3).
-
-            Implementations should refrain from using the original ISO 3166-1 code for such a country since country codes
-
-            can be reassigned to new countries once the original country code is officially declared obsolete.
-
-            '
-          example: ANHH
-    academicSessionType:
-      type: string
-      description: 'The type of this academic session. This is an *extensible enumeration*.
-
-
-        - academic_year: Academic year
-
-        - semester: Semester, typically comprising two terms per academic year
-
-        - trimester: Trimester, typically comprising three terms per academic year
-
-        - quarter: Quarter, typically comprising four terms per academic year
-
-        - testing_period: A period during which tests take place
-
-        - period: Any other period within an academic year
-
-
-        Implementations may add further values beyond those listed above, provided they do not overlap in definition with existing values.
-
-        '
-      x-ooapi-extensible-enum:
-      - academic_year
-      - semester
-      - trimester
-      - quarter
-      - testing_period
-      - period
-      example: semester
     Address:
       type: object
       description: The full street address
@@ -1499,237 +848,94 @@ components:
           oneOf:
           - $ref: '#/components/schemas/Ext'
           - type: 'null'
-    Group:
-      allOf:
-      - $ref: '#/components/schemas/GroupId'
-      - type: object
-        description: 'A group is simply a collection of persons. Groups can be used to accommodate various use cases.
-
-          Groups MAY optionally have a relation to an offering, however the meaning of such relations is left unspecified and is left up to the implementer.
-
-          '
-        required:
-        - groupType
-        - name
-        - primaryCode
-        properties:
-          primaryCode:
-            description: The primary human readable identifier for this group. This is often the source identifier as defined by the institution.
-            $ref: '#/components/schemas/IdentifierEntry'
-            example:
-              codeType: groupCode
-              code: group-abc987
-          groupType:
-            $ref: '#/components/schemas/groupType'
-          name:
-            type: array
-            description: The name of this group
-            minItems: 1
-            items:
-              $ref: '#/components/schemas/LanguageTypedString'
-            example:
-            - language: en-GB
-              value: statistics students
-          description:
-            type:
-            - array
-            - 'null'
-            description: The description of this group
-            minItems: 1
-            items:
-              $ref: '#/components/schemas/LanguageTypedString'
-            example:
-            - language: en-GB
-              value: The group of students that follow statistics classes
-          startDateTime:
-            type:
-            - string
-            - 'null'
-            description: "The moment on which this group starts being active, RFC3339 (date-time).\nGroups can be ordered in time through the academicSession. The start and \nend date and time fields SHOULD always contain the most accurate dates.\n"
-            format: date-time
-            example: '2025-05-30T20:00:00+01:00'
-          endDateTime:
-            type:
-            - string
-            - 'null'
-            description: "The moment on which this group ends being active, RFC3339 (date-time)\nGroups can be ordered in time through the academicSession. The start and \nend date and time fields SHOULD always contain the most accurate dates.\n"
-            format: date-time
-            example: '2025-06-30T20:00:00+01:00'
-          personCount:
-            type:
-            - number
-            - 'null'
-            description: The number of persons that are member of this group
-            format: int32
-            minimum: 0
-            example: 183
-          otherCodes:
-            type:
-            - array
-            - 'null'
-            description: An array of additional human readable codes/identifiers for the entity being described.
-            items:
-              $ref: '#/components/schemas/IdentifierEntry'
-          consumer:
-            oneOf:
-            - $ref: '#/components/schemas/Consumer'
-            - type: 'null'
-          organisationId:
-            description: 'The identifier of the organisation that manages this group.
-
-              When the client does not request expansion of `organisation`, only this
-
-              identifier is returned.
-
-              This field is [`expandable`](https://oeapi.eu/v6.0/#/technical/expanding-responses).
-
-              '
-            oneOf:
-            - $ref: '#/components/schemas/Identifier'
-            - type: 'null'
-          organisation:
-            description: 'The expanded organisation object that manages this group.
-
-              When the client requests expansion of `organisation`, the full expanded
-
-              organisation object MUST be returned here instead of only the identifier.
-
-              If no organisation is defined, this value is `null`.
-
-              '
-            oneOf:
-            - $ref: '#/components/schemas/Organisation'
-            - type: 'null'
-          academicSessionId:
-            description: 'The identifier of the academicSession for which this group is intended.
-
-              When the client does not request expansion of `academicSession`, only this
-
-              identifier is returned.
-
-              This field is [`expandable`](https://oeapi.eu/v6.0/#/technical/expanding-responses).
-
-              '
-            oneOf:
-            - $ref: '#/components/schemas/Identifier'
-            - type: 'null'
-          academicSession:
-            description: 'The expanded academicSession object for which this group is intended.
-
-              When the client requests expansion of `academicSession`, the full expanded
-
-              academicSession object MUST be returned here instead of only the identifier.
-
-              If no academicSession is defined, this value is `null`.
-
-              '
-            oneOf:
-            - $ref: '#/components/schemas/AcademicSession'
-            - type: 'null'
-          offeringIds:
-            description: 'The offering identifiers (0..N) associated with this group.
-
-              '
-            oneOf:
-            - type: array
-              items:
-                type: object
-                minProperties: 1
-                maxProperties: 1
-                additionalProperties: false
-                properties:
-                  courseOfferingId:
-                    $ref: '#/components/schemas/courseOfferingId'
-                  programmeOfferingId:
-                    $ref: '#/components/schemas/programmeOfferingId'
-                  learningComponentOfferingId:
-                    $ref: '#/components/schemas/learningComponentOfferingId'
-                  testComponentOfferingId:
-                    $ref: '#/components/schemas/testComponentOfferingId'
-            - type: 'null'
-          ext:
-            oneOf:
-            - $ref: '#/components/schemas/Ext'
-            - type: 'null'
-    testComponentOfferingId:
-      type: string
-      description: The unique ID of the test component offering, this should be unique across all programme, course, learning, and test component offerings.
-      format: uuid
-      example: 123e4567-e89b-12d3-a456-134564174000
-    programmeOfferingId:
-      type: string
-      description: The unique ID of the programme offering, this should be unique across all programme, course, learning, and test component offerings.
-      format: uuid
-      example: 123e4567-e89b-12d3-a456-134564174000
-    GroupId:
+    Membership:
       type: object
+      description: A membership contains the information on a membership of a person for a specific group
       required:
+      - personId
       - groupId
+      - role
+      - state
       properties:
+        personId:
+          type: string
+          description: Unique id for this membership (this is the personID since there is a 1-1 relationship between membership of a group and a person) item
+          format: uuid
+          example: 123e4567-e89b-12d3-a456-122564174000
         groupId:
           type: string
-          description: The unique ID of the group.
+          description: Id for the group where the person has a membership
           format: uuid
-          example: 123e4567-e89b-12d3-a456-134564174000
-    IdentifierEntry:
-      type: object
-      properties:
-        codeType:
-          $ref: '#/components/schemas/codeType'
-        code:
-          description: Human readable value for the code/identifier
-          type: string
-          example: 1234qwe12
-      required:
-      - codeType
-      - code
-      additionalProperties: false
-      example:
-        codeType: identifier
-        code: 1234qwe12
-    title:
-      type: string
-      description: A short, human-readable summary of the problem type
-      example: Resource not found
-    Pagination:
-      type: object
-      required:
-      - pageSize
-      - pageNumber
-      - hasPreviousPage
-      - hasNextPage
-      properties:
-        pageSize:
-          type: integer
-          format: int32
-          description: The number of items per page
-          example: 10
-        pageNumber:
-          type: integer
-          format: int32
-          description: The current page number
-          example: 1
-          minimum: 1
-        hasPreviousPage:
-          type: boolean
-          description: Whether there is a previous page
-          example: false
-        hasNextPage:
-          type: boolean
-          description: Whether there is a previous page
-          example: true
-        totalPages:
+          example: 123e4567-e89b-12d3-a456-122564174000
+        startDateTime:
           type:
-          - integer
+          - string
           - 'null'
-          format: int32
-          description: Total number of pages
-          example: 8
-    Identifier:
+          description: The moment from which the person participates in this membership, RFC3339 (date-time)
+          format: date-time
+          example: '2020-09-28T08:30:00+01:00'
+        endDateTime:
+          type:
+          - string
+          - 'null'
+          description: The moment until which this person participates in this membership (when the membership stops), RFC3339 (date-time)
+          format: date-time
+          example: '2020-09-30T20:00:00+01:00'
+        state:
+          $ref: '#/components/schemas/membershipState'
+        role:
+          $ref: '#/components/schemas/membershipRole'
+        consumer:
+          oneOf:
+          - $ref: '#/components/schemas/Consumer'
+          - type: 'null'
+        ext:
+          oneOf:
+          - $ref: '#/components/schemas/Ext'
+          - type: 'null'
+    Language:
+      description: 'The language used in the described entity. The value **must be a language tag that conforms to RFC 5646** (Tags for Identifying Languages, BCP 47):
+
+        https://www.rfc-editor.org/rfc/rfc5646.html
+
+
+        A tag consists of the following components, in this exact order:
+
+        1. **language** – two‑ to three‑letter codes (ISO 639‑1/‑2) **or** four‑letter codes (ISO 639‑5) **or** five‑ to eight‑letter registered language subtags.
+
+        2. **script** – optional, four letters in Title‑Case (e.g. `Latn`, `Hant`).
+
+        3. **region** – optional, either two uppercase letters (ISO 3166‑1) **or** three digits (UN M.49).
+
+        4. **variant** – zero or more subtags, each either five‑ to eight‑alphanumerics or a digit followed by three alphanumerics (e.g. `1901`, `oxendict`).
+
+        5. **extension** – zero or more extensions. Each extension starts with a *singleton* (a single alphanumeric character except `x`) followed by one or more subtags of two‑ to eight‑alphanumerics (e.g. `u‑co‑phonebk`).
+
+        6. **private‑use** – optional, the letter `x` followed by one or more subtags of one‑ to eight‑alphanumerics (e.g. `x‑private`).
+
+
+        The most common form is a two‑letter language code (ISO 639‑1) optionally followed by a hyphen and a two‑letter country code (ISO 3166‑1), for example `en` or `en‑GB`.
+
+
+        More specific tags are also valid, for instance `zh‑Hant‑TW` (Traditional Chinese as used in Taiwan).
+
+
+        For sign languages two conventions are recognised:
+
+        * `sgn` – e.g. `nl‑sgn‑NL` (Dutch Sign Language)
+
+        * `s`   – e.g. `nl‑s‑NL` (Dutch Sign Language)
+
+        '
       type: string
-      description: An identifier of another resource.
+      minLength: 2
+      pattern: ^(?:(?:[A-Za-z]{2,3}(?:-[A-Za-z]{3}){0,2}|[A-Za-z]{4}|[A-Za-z]{5,8})(?:-[A-Za-z]{4})?(?:-(?:[A-Z]{2}|[0-9]{3}))?(?:-(?:[A-Za-z0-9]{5,8}|[0-9][A-Za-z0-9]{3}))*?(?:-(?:[A-WY-Za-wy-z0-9](?:-[A-Za-z0-9]{2,8})+))*?(?:-x(?:-[A-Za-z0-9]{1,8})+)?|x(?:-[A-Za-z0-9]{1,8})+)$
+      example: en-GB
+    learningComponentOfferingId:
+      type: string
+      description: The unique ID of the learning component offering, this should be unique across all programme, course, learning, and test component offerings.
       format: uuid
-      example: 123e4567-e89b-12d3-a456-426614174000
+      example: 123e4567-e89b-12d3-a456-134564174000
     Organisation:
       type: object
       description: A description of a group of people working together to achieve a goal
@@ -1888,6 +1094,188 @@ components:
           oneOf:
           - $ref: '#/components/schemas/Ext'
           - type: 'null'
+    AcademicSession:
+      type: object
+      description: 'A named period of time that can be used to communicate the various schedules and time periods an institution recognizes and uses to organise their education. AcademicSessions can be nested.
+
+        Offerings MAY be linked to a specific AcademicSession to indicate that the specified Offering takes place during the AcademicSession, however this is not mandatory.
+
+        '
+      required:
+      - academicSessionId
+      - academicSessionType
+      - primaryCode
+      - name
+      - startDateTime
+      - endDateTime
+      properties:
+        academicSessionId:
+          type: string
+          description: Unique id for this academic session
+          format: uuid
+          example: 123e4567-e89b-12d3-a456-426614174000
+        academicSessionType:
+          $ref: '#/components/schemas/academicSessionType'
+        primaryCode:
+          description: The primary human readable identifier for this academic session. This is often the source identifier as defined by the institution.
+          $ref: '#/components/schemas/IdentifierEntry'
+          example:
+            codeType: identifier
+            code: 2012-Q1
+        name:
+          type: array
+          description: The name of this academic session
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/LanguageTypedString'
+          example:
+          - language: en-GB
+            value: Autumn term 2020
+        abbreviation:
+          type:
+          - string
+          - 'null'
+          description: The abbreviation or internal code used to identify this AcademicSession
+          maxLength: 256
+          example: SPRING-2026
+        startDateTime:
+          type: string
+          description: The moment on which this academic session starts, RFC3339 (full-date)
+          format: date-time
+          example: '2025-09-28T08:30:00+01:00'
+        endDateTime:
+          type: string
+          description: The moment on which this academic session ends, RFC3339 (full-date)
+          format: date-time
+          example: '2025-09-28T08:30:00+01:00'
+        parentId:
+          description: 'The identifier of the parent academicSession for this session (e.g. Autumn
+
+            term 20xx where the current session is week 40).
+
+            When the client does not request expansion of `parent`, only this
+
+            identifier is returned.
+
+            This field is [`expandable`](https://oeapi.eu/v6.0/#/technical/expanding-responses).
+
+            '
+          oneOf:
+          - $ref: '#/components/schemas/Identifier'
+          - type: 'null'
+        parent:
+          description: 'The expanded parent academicSession object of this session (e.g. Autumn
+
+            term 20xx where the current session is week 40).
+
+            When the client requests expansion of `parent`, the full expanded
+
+            academicSession object MUST be returned here instead of only the identifier.
+
+            If no parent is defined, this value is `null`.
+
+            '
+          oneOf:
+          - $ref: '#/components/schemas/AcademicSession'
+          - type: 'null'
+        childIds:
+          description: "The list of identifiers of child academicSessions of this session (e.g. all\nacademic sessions in Autumn term 20xx).\nWhen the client does not request expansion of `children`, only these\nidentifiers are returned.\nThis field is [`expandable`](https://oeapi.eu/v6.0/#/technical/expanding-responses).\n\nAlthough `childIds` and `children` (for example `organisationIds` versus `organisations`) may \nseem unusual, this naming is intentional and follows the singular–plural convention defined \nby the specification.\n"
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Identifier'
+        children:
+          description: 'The expanded child academicSession objects of this session (e.g. all
+
+            academic sessions in Autumn term 20xx).
+
+            When the client requests expansion of `children`, the full expanded
+
+            academicSession objects MUST be returned here instead of only the identifiers.
+
+            If no child sessions are defined, this value is `null`.
+
+            '
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/AcademicSession'
+        yearId:
+          description: 'The identifier of the top-level academicSession year for this session
+
+            (e.g. 20xx where the current session is week 40 of a semester).
+
+            When the client does not request expansion of `year`, only this identifier
+
+            is returned.
+
+            This field is [`expandable`](https://oeapi.eu/v6.0/#/technical/expanding-responses).
+
+            '
+          oneOf:
+          - $ref: '#/components/schemas/Identifier'
+          - type: 'null'
+        year:
+          description: 'The expanded top-level academicSession year object for this session
+
+            (e.g. 20xx where the current session is week 40 of a semester).
+
+            When the client requests expansion of `year`, the full expanded
+
+            academicSession object MUST be returned here instead of only the identifier.
+
+            If no top-level year is defined, this value is `null`.
+
+            '
+          oneOf:
+          - $ref: '#/components/schemas/AcademicSession'
+          - type: 'null'
+        otherCodes:
+          type:
+          - array
+          - 'null'
+          description: An array of additional human readable codes/identifiers for the entity being described.
+          items:
+            $ref: '#/components/schemas/IdentifierEntry'
+        consumer:
+          oneOf:
+          - $ref: '#/components/schemas/Consumer'
+          - type: 'null'
+        ext:
+          oneOf:
+          - $ref: '#/components/schemas/Ext'
+          - type: 'null'
+    academicSessionType:
+      type: string
+      description: 'The type of this academic session. This is an *extensible enumeration*.
+
+
+        - academic_year: Academic year
+
+        - semester: Semester, typically comprising two terms per academic year
+
+        - trimester: Trimester, typically comprising three terms per academic year
+
+        - quarter: Quarter, typically comprising four terms per academic year
+
+        - testing_period: A period during which tests take place
+
+        - period: Any other period within an academic year
+
+
+        Implementations may add further values beyond those listed above, provided they do not overlap in definition with existing values.
+
+        '
+      x-ooapi-extensible-enum:
+      - academic_year
+      - semester
+      - trimester
+      - quarter
+      - testing_period
+      - period
+      example: semester
     organisationType:
       type: string
       description: 'The type of this organisation. When using non-root organisation types, make sure that there is always a parent organisation of type root available.
@@ -1920,22 +1308,618 @@ components:
       - academy
       - school
       example: root
-    groupType_2:
+    Ext:
+      type: object
+      description: Object for additional non-standard attributes
+    ProblemVersionNotAcceptable:
+      allOf:
+      - $ref: '#/components/schemas/Problem'
+      - type: object
+        required:
+        - requestedVersion
+        - supportedVersions
+        properties:
+          type:
+            $ref: '#/components/schemas/type'
+          title:
+            $ref: '#/components/schemas/title'
+          consumer:
+            description: 'Indicates which party caused the version mismatch. When null, the 406 was
+
+              triggered by an unsupported OEAPI version. If populated with a Consumer
+
+              object, the 406 was caused by a consumer-specific version that did not match
+
+              any supported version. This field MAY contain a full Consumer object or be
+
+              null.
+
+              '
+            oneOf:
+            - $ref: '#/components/schemas/Consumer'
+            - type: 'null'
+          requestedVersion:
+            type: string
+            description: The version requested by the client.
+            example: '5.0'
+          supportedVersions:
+            type: array
+            description: Versions the server can serve, typically in descending order.
+            items:
+              type: string
+            example:
+            - '4.2'
+            - '4.1'
+    programmeOfferingId:
       type: string
-      description: 'The type of this group
-
-        - learning group: A collection of participants carrying out common learning activities
-
-        - class: A collection of participants carrying out jointly scheduled educational activities
-
-        - team: A collection of members of a team, either students, employees or mixed.
+      description: The unique ID of the programme offering, this should be unique across all programme, course, learning, and test component offerings.
+      format: uuid
+      example: 123e4567-e89b-12d3-a456-134564174000
+    GroupId:
+      type: object
+      required:
+      - groupId
+      properties:
+        groupId:
+          type: string
+          description: The unique ID of the group.
+          format: uuid
+          example: 123e4567-e89b-12d3-a456-134564174000
+    Pagination:
+      type: object
+      required:
+      - pageSize
+      - pageNumber
+      - hasPreviousPage
+      - hasNextPage
+      properties:
+        pageSize:
+          type: integer
+          format: int32
+          description: The number of items per page
+          example: 10
+        pageNumber:
+          type: integer
+          format: int32
+          description: The current page number
+          example: 1
+          minimum: 1
+        hasPreviousPage:
+          type: boolean
+          description: Whether there is a previous page
+          example: false
+        hasNextPage:
+          type: boolean
+          description: Whether there is a previous page
+          example: true
+        totalPages:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          description: Total number of pages
+          example: 8
+    Country:
+      type: object
+      description: 'An object indicating a country based on at least one iso-3166 code. In situations where more than one ISO-3166 code is provided, the codes must refer to the same country.
 
         '
+      properties:
+        iso3166-1-alpha2:
+          type:
+          - string
+          - 'null'
+          minLength: 2
+          maxLength: 2
+          description: A country code based on https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
+          example: NL
+        iso3166-1-alpha3:
+          type:
+          - string
+          - 'null'
+          minLength: 3
+          maxLength: 3
+          description: A country code based on https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3
+          example: NLD
+        iso3166-2:
+          type:
+          - string
+          - 'null'
+          minLength: 5
+          maxLength: 6
+          description: A country subdivision code based on https://en.wikipedia.org/wiki/ISO_3166-2
+          example: BQ-BO
+        iso3166-3:
+          type:
+          - string
+          - 'null'
+          minLength: 4
+          maxLength: 4
+          description: 'A code for a country that no longer exists is listed on ISO 3166-3 (https://en.wikipedia.org/wiki/ISO_3166-3).
+
+            Implementations should refrain from using the original ISO 3166-1 code for such a country since country codes
+
+            can be reassigned to new countries once the original country code is officially declared obsolete.
+
+            '
+          example: ANHH
+    addressType:
+      type: string
+      description: "The type of address, indicating its intended use:\n  \n- postal: Used for receiving post\n- visit: Used for physical visits\n- deliveries: Used for deliveries\n- invoicing: Used for invoicing purposes\n- teaching: The location where educational activities take place\n\nThis is an *extensible enumeration*. Use the prefix `x-` for custom values.\n"
+      x-ooapi-extensible-enum:
+      - postal
+      - visit
+      - deliveries
+      - invoicing
+      - teaching
+      example: postal
+    Group:
+      allOf:
+      - $ref: '#/components/schemas/GroupId'
+      - type: object
+        description: 'A group is simply a collection of persons. Groups can be used to accommodate various use cases.
+
+          Groups MAY optionally have a relation to an offering, however the meaning of such relations is left unspecified and is left up to the implementer.
+
+          '
+        required:
+        - groupType
+        - name
+        - primaryCode
+        properties:
+          primaryCode:
+            description: The primary human readable identifier for this group. This is often the source identifier as defined by the institution.
+            $ref: '#/components/schemas/IdentifierEntry'
+            example:
+              codeType: groupCode
+              code: group-abc987
+          groupType:
+            $ref: '#/components/schemas/groupType'
+          name:
+            type: array
+            description: The name of this group
+            minItems: 1
+            items:
+              $ref: '#/components/schemas/LanguageTypedString'
+            example:
+            - language: en-GB
+              value: statistics students
+          description:
+            type:
+            - array
+            - 'null'
+            description: The description of this group
+            minItems: 1
+            items:
+              $ref: '#/components/schemas/LanguageTypedString'
+            example:
+            - language: en-GB
+              value: The group of students that follow statistics classes
+          startDateTime:
+            type:
+            - string
+            - 'null'
+            description: "The moment on which this group starts being active, RFC3339 (date-time).\nGroups can be ordered in time through the academicSession. The start and \nend date and time fields SHOULD always contain the most accurate dates.\n"
+            format: date-time
+            example: '2025-05-30T20:00:00+01:00'
+          endDateTime:
+            type:
+            - string
+            - 'null'
+            description: "The moment on which this group ends being active, RFC3339 (date-time)\nGroups can be ordered in time through the academicSession. The start and \nend date and time fields SHOULD always contain the most accurate dates.\n"
+            format: date-time
+            example: '2025-06-30T20:00:00+01:00'
+          personCount:
+            type:
+            - number
+            - 'null'
+            description: The number of persons that are member of this group
+            format: int32
+            minimum: 0
+            example: 183
+          otherCodes:
+            type:
+            - array
+            - 'null'
+            description: An array of additional human readable codes/identifiers for the entity being described.
+            items:
+              $ref: '#/components/schemas/IdentifierEntry'
+          consumer:
+            oneOf:
+            - $ref: '#/components/schemas/Consumer'
+            - type: 'null'
+          organisationId:
+            description: 'The identifier of the organisation that manages this group.
+
+              When the client does not request expansion of `organisation`, only this
+
+              identifier is returned.
+
+              This field is [`expandable`](https://oeapi.eu/v6.0/#/technical/expanding-responses).
+
+              '
+            oneOf:
+            - $ref: '#/components/schemas/Identifier'
+            - type: 'null'
+          organisation:
+            description: 'The expanded organisation object that manages this group.
+
+              When the client requests expansion of `organisation`, the full expanded
+
+              organisation object MUST be returned here instead of only the identifier.
+
+              If no organisation is defined, this value is `null`.
+
+              '
+            oneOf:
+            - $ref: '#/components/schemas/Organisation'
+            - type: 'null'
+          academicSessionId:
+            description: 'The identifier of the academicSession for which this group is intended.
+
+              When the client does not request expansion of `academicSession`, only this
+
+              identifier is returned.
+
+              This field is [`expandable`](https://oeapi.eu/v6.0/#/technical/expanding-responses).
+
+              '
+            oneOf:
+            - $ref: '#/components/schemas/Identifier'
+            - type: 'null'
+          academicSession:
+            description: 'The expanded academicSession object for which this group is intended.
+
+              When the client requests expansion of `academicSession`, the full expanded
+
+              academicSession object MUST be returned here instead of only the identifier.
+
+              If no academicSession is defined, this value is `null`.
+
+              '
+            oneOf:
+            - $ref: '#/components/schemas/AcademicSession'
+            - type: 'null'
+          offeringIds:
+            description: 'The offering identifiers (0..N) associated with this group.
+
+              '
+            oneOf:
+            - type: array
+              items:
+                type: object
+                minProperties: 1
+                maxProperties: 1
+                additionalProperties: false
+                properties:
+                  courseOfferingId:
+                    $ref: '#/components/schemas/courseOfferingId'
+                  programmeOfferingId:
+                    $ref: '#/components/schemas/programmeOfferingId'
+                  learningComponentOfferingId:
+                    $ref: '#/components/schemas/learningComponentOfferingId'
+                  testComponentOfferingId:
+                    $ref: '#/components/schemas/testComponentOfferingId'
+            - type: 'null'
+          ext:
+            oneOf:
+            - $ref: '#/components/schemas/Ext'
+            - type: 'null'
+    codeType:
+      type: string
+      description: 'The type of code or identifier.
+
+
+        The predefined values are:
+
+
+        | Code                      | Description                                                       |
+
+        |---------------------------|-------------------------------------------------------------------|
+
+        | `account_id`              | Identifier for an account.                                        |
+
+        | `bag_id`                  | Identifier for a building in the Dutch Building and Address       |
+
+        |                           | Registry (BAG).                                                   |
+
+        | `building_id`             | Identifier for a building.                                        |
+
+        | `component_code`          | Identifier for a component (part of a course).                    |
+
+        | `eckid`                   | Identifier assigned within the Dutch *Educatieve ContentKeten iD* |
+
+        |                           | framework. It enables persistent identification and exchange of   |
+
+        |                           | digital learning resources within the Dutch educational sector for|
+
+        |                           | EQF levels 1, 2, 3 and 4. Comparable international approaches     |
+
+        |                           | include LRMI, DOI and Handle                                      |
+
+        |                           | identifiers for learning resources.                               |
+
+        | `email_address`           | An email address.                                                 |
+
+        | `esi`                     | European Student Identifier.                                      |
+
+        | `group_code`              | Identifier for a group of people.                                 |
+
+        | `group_type_code`         | Identifier for the type of group.                                 |
+
+        | `identifier`              | Generic identifier.                                               |
+
+        | `institution_code`        | Registration number of an educational institution. In the         |
+
+        |                           | Netherlands, the former BRIN code has been replaced by the        |
+
+        |                           | institution code, issued by the Ministry of Education, Culture    |
+
+        |                           | and Science (OCW).                                                |
+
+        | `isbn`                    | International Standard Book Number (for books).                   |
+
+        | `issn`                    | International Standard Serial Number (for periodicals).           |
+
+        | `kvk_organisation_id`     | Identifier for a KvK (Dutch Chamber of Commerce) registered       |
+
+        |                           | organisation.                                                     |
+
+        | `kvk_establishment_id`    | Identifier for a specific establishment of a KvK                  |
+
+        |                           | (Dutch Chamber of Commerce) registered organisation.              |
+
+        | `leerbedrijf_id`          | Dutch registration/accreditation id for organisations offering    |
+
+        |                           | internships for vocational education students.                    |
+
+        | `national_identity_number`| Government-assigned personal identifier (e.g. NI number in the UK,|
+
+        |                           | or *personnummer* in Sweden).                                     |
+
+        | `offering_code`           | Identifier for a specific offering (programme, course or          |
+
+        |                           | component).                                                       |
+
+        | `organisation_id`         | Identifier for an organisation.                                   |
+
+        | `orcid`                   | Open Researcher and Contributor ID.                               |
+
+        | `product_id`              | Identifier for a product.                                         |
+
+        | `programme_code`          | Identifier of a programme (a recognised collection of courses).   |
+
+        |                           | In the Netherlands, the former CREBO and CROHO codes have been    |
+
+        |                           | replaced by the programme code as registered in RIO, under the    |
+
+        |                           | authority of OCW.                                                 |
+
+        | `room_code`               | Identifier for a room.                                            |
+
+        | `schac_home`              | Home organisation represented by its domain name.                 |
+
+        | `student_number`          | Identifier for a student.                                         |
+
+        | `studielink_number`       | Identifier assigned to a student by Studielink (Dutch central     |
+
+        |                           | enrolment system).                                                |
+
+        | `system_id`               | Identifier used within a specific system.                         |
+
+        | `username`                | User login name.                                                  |
+
+        | `uuid`                    | Universally unique identifier.                                    |
+
+
+        This is an *extensible enumeration*. Use the prefix `x-` for custom values.
+
+        '
+      x-ooapi-extensible-enum:
+      - account_id
+      - bag_id
+      - building_id
+      - component_code
+      - eckid
+      - email_address
+      - esi
+      - group_code
+      - group_type_code
+      - identifier
+      - institution_code
+      - isbn
+      - issn
+      - kvk_organisation_id
+      - kvk_establishment_id
+      - leerbedrijf_id
+      - offering_code
+      - organisation_id
+      - orcid
+      - product_id
+      - programme_code
+      - room_code
+      - schac_home
+      - student_number
+      - studielink_number
+      - system_id
+      - username
+      - uuid
+      - national_identity_number
+      example: identifier
+    IdentifierEntry:
+      type: object
+      properties:
+        codeType:
+          $ref: '#/components/schemas/codeType'
+        code:
+          description: Human readable value for the code/identifier
+          type: string
+          example: 1234qwe12
+      required:
+      - codeType
+      - code
+      additionalProperties: false
+      example:
+        codeType: identifier
+        code: 1234qwe12
+    LanguageTypedString:
+      type: object
+      description: A String with an associated language code. IF this object is used both fields are mandatory.
+      required:
+      - language
+      - value
+      properties:
+        language:
+          $ref: '#/components/schemas/Language'
+        value:
+          description: String to describe the entity.
+          type: string
+          example: programme that is a place holder for all courses that are made available for student mobility
+      example:
+        language: en-GB
+        value: programme that is a place holder for all courses that are made available for student mobility
+    Identifier:
+      type: string
+      description: An identifier of another resource.
+      format: uuid
+      example: 123e4567-e89b-12d3-a456-426614174000
+    membershipState:
+      type: string
+      description: 'The state of this membership:
+
+
+        - cancelled: The membership has been formally terminated and is no longer valid
+
+        - active: The membership is currently valid and in effect
+
+
+        This is an *extensible enumeration*. Use the prefix `x-` for custom values.
+
+        '
+      x-ooapi-extensible-enum:
+      - cancelled
+      - active
+      example: active
+    filterPresence:
+      type: string
+      description: "Presence check or special value for filter operations.\n\nInspired by Storyblok (https://www.storyblok.com/docs/api/content-delivery/v2/filter-queries)\n\nImplementation note:\n- The availability and behaviour of this query functionality are entirely determined by the organisation hosting\n  the API implementation. It is not mandatory for implementers to support this functionality, and it cannot be enforced \n  upon organisations that provide or consume OEAPI endpoints.\n- It is up to each implementer to decide whether to support this feature. It is **not** a requirement of the OEAPI \n  standard itself.\n- Consumers or working groups that wish to apply specific filtering mechanisms are encouraged to do so using \n  this approach for the sake of consistency across implementations.\n"
       enum:
-      - learning group
+      - empty
+      - not_empty
+      - empty_array
+      - not_empty_array
+      - 'true'
+      - 'false'
+      - 'null'
+      - not_null
+      example: not_empty
+    Problem:
+      type: object
+      description: 'A problem details object, conforming to RFC 7807 (Problem Details for HTTP
+
+        APIs). See https://datatracker.ietf.org/doc/html/rfc7807. It provides a
+
+        machine-readable format for error conditions, including a type URI, title,
+
+        status code, and optional detail and instance fields. This ensures
+
+        consistent handling of error responses across the API.
+
+        '
+      required:
+      - type
+      - status
+      - title
+      properties:
+        type:
+          type: string
+          format: uri
+          maxLength: 2048
+          description: "An absolute URI that identifies the problem type. When dereferenced, \nit should provide human-readable documentation.\n"
+          example: https://example.org/problems/bad-request
+        title:
+          type: string
+          description: A short, human-readable summary of the problem type
+          example: Resource not found
+        status:
+          type: integer
+          format: int32
+          description: "The HTTP status code generated by the origin server for this occurrence \nof the problem.\n"
+          example: 404
+        detail:
+          type:
+          - string
+          - 'null'
+          description: 'A human-readable explanation specific to this occurrence of the problem
+
+            '
+          example: The course with id 'abc123' could not be found in the catalogue.
+        instance:
+          type:
+          - string
+          - 'null'
+          format: uri
+          maxLength: 2048
+          description: 'An absolute URI that identifies the specific occurrence of the problem.
+
+            '
+          example: https://api.example.org/courses/abc123
+    title:
+      type: string
+      description: A short, human-readable summary of the problem type
+      example: Resource not found
+    membershipRole:
+      type: string
+      description: 'The role of this person in the context of this membership:
+
+
+        - student: Enrolled participant in the offering
+
+        - lecturer: Delivers lectures or leads teaching
+
+        - teaching_assistant: Supports the lecturer in teaching activities
+
+        - coordinator: Responsible for organisational or administrative aspects
+
+        - invigilator: Supervises examinations or assessments
+
+        - assessor: Evaluates student performance or work
+
+        - guest: External participant with an atypical role
+
+
+        This is an *extensible enumeration*. Use the prefix `x-` for custom values.
+
+        '
+      x-ooapi-extensible-enum:
+      - student
+      - lecturer
+      - teaching_assistant
+      - coordinator
+      - invigilator
+      - assessor
+      - guest
+      example: student
+    groupType:
+      type: string
+      description: 'The type of this group:
+
+
+        - class: A group of students jointly scheduled for, assigned to, or engaged in educational activities
+
+        - team: A group composed of members of a team, which may consist of students, staff, or a mix of both
+
+        - group: A group of students jointly scheduled for, assigned to, or engaged in educational activities in a context not covered by a class
+
+
+        This is an *extensible enumeration*. Use the prefix `x-` for custom values.
+
+        '
+      x-ooapi-extensible-enum:
       - class
       - team
-      example: learning group
+      - group
+      example: class
     Consumer_2:
       type: object
       description: Object for communicating data to a specific consumer (destination). This object has no relationship with the `consumer` query parameter.
@@ -1946,6 +1930,194 @@ components:
           description: The key of the consumer (destination) for which this information is intended. See the [consumer registry](https://openonderwijsapi.nl/v5/#/technical/consumers-and-profiles/) for more information.
           type: string
       additionalProperties: true
+    PersonId:
+      type: object
+      properties:
+        personId:
+          type: string
+          description: Unique id of this person
+          format: uuid
+          example: 123e4567-e89b-12d3-a456-426614174000
+      required:
+      - personId
+    Address_2:
+      type: object
+      description: The full street address
+      required:
+      - addressType
+      properties:
+        addressType:
+          $ref: '#/components/schemas/addressType_2'
+        street:
+          type: string
+          description: The street name
+          example: Moreelsepark
+        streetNumber:
+          type: string
+          description: The street number
+          example: '48'
+        additional:
+          type: array
+          description: Further details like building name, suite, apartment number, etc.
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/LanguageTypedString_2'
+          example:
+          - language: en-GB
+            value: On the other side of the road
+        postalCode:
+          type: string
+          description: Postal code
+          example: 3511 EP
+        city:
+          type: string
+          description: name of the city / locality
+          example: Utrecht
+        countryCode:
+          type: string
+          description: the country code according to [iso-3166-1-alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)
+          example: NL
+        geolocation:
+          type: object
+          description: Geolocation of the entrance of this address (WGS84 coordinate reference system)
+          required:
+          - latitude
+          - longitude
+          properties:
+            latitude:
+              type: number
+              format: double
+              example: 52.089123
+            longitude:
+              type: number
+              format: double
+              example: 5.113337
+        ext:
+          $ref: '#/components/schemas/Ext'
+    Person:
+      allOf:
+      - $ref: '#/components/schemas/PersonId'
+      - $ref: '#/components/schemas/PersonProperties'
+    gender:
+      type: string
+      description: The gender of this person
+      enum:
+      - M
+      - F
+      - U
+      - X
+      example: F
+    Organization:
+      type: object
+      description: A description of a group of people working together to achieve a goal
+      required:
+      - organizationId
+      - organizationType
+      - name
+      - shortName
+      - primaryCode
+      properties:
+        organizationId:
+          type: string
+          description: Unique id of this organization
+          format: uuid
+          example: 123e4567-e89b-12d3-a456-123514174000
+          readOnly: true
+        primaryCode:
+          description: The primary human readable identifier for the organization. This is often the source identifier as defined by the institution.
+          $ref: '#/components/schemas/IdentifierEntry_2'
+          example:
+            codeType: orgId
+            code: Org01-Root
+          readOnly: true
+        organizationType:
+          $ref: '#/components/schemas/organizationType'
+        name:
+          type: array
+          description: The name of the organization
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/LanguageTypedString_2'
+          example:
+          - language: nl-NL
+            value: Coöperatie SURF U.A.
+        shortName:
+          type: string
+          description: Short name of the organization
+          maxLength: 256
+          example: SURF
+        description:
+          type: array
+          description: Any general description of the organization should clearly mention the type of higher education organization, especially in the case of a binary system. In Dutch; universiteit (university) or hogeschool (university of applied sciences).
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/LanguageTypedString_2'
+          example:
+          - language: nl-NL
+            value: SURF is een coöperatieve vereniging van Nederlandse onderwijs- en onderzoeksinstellingen waarin de leden hun krachten bundelen. De leden zijn eigenaar van SURF.
+        addresses:
+          type: array
+          description: Addresses of this organization
+          items:
+            $ref: '#/components/schemas/Address_2'
+        link:
+          type: string
+          description: URL of the organization's website
+          format: uri
+          maxLength: 2048
+          example: https://surf.nl
+        logo:
+          type: string
+          description: Logo of this organization
+          format: uri
+          maxLength: 2048
+          example: https://www.surf.nl/themes/surf/logo.svg
+        otherCodes:
+          type: array
+          description: An array of additional human readable codes/identifiers for the entity being described.
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/IdentifierEntry_2'
+          example:
+          - codeType: brin
+            code: 00AA
+          - codeType: kvk
+            code: '12345678'
+        parent:
+          description: 'The organizational unit which is the parent of this organization. [`expandable`](#tag/organization_model)
+
+            By default only the `organizationId` (a string) is returned. If the client requested an expansion of `organization` the full organization object should be returned.
+
+            '
+          oneOf:
+          - $ref: '#/components/schemas/Identifier_2'
+            title: organizationId
+          - $ref: '#/components/schemas/Organization'
+            title: Organization object
+        children:
+          type: array
+          description: 'All the organizational units for which this organization is the parent. [`expandable`](#tag/organization_model)
+
+            By default only the `organizationId` (a string) is returned. If the client requested an expansion of `organization` the full organization object should be returned.
+
+            '
+          items:
+            oneOf:
+            - $ref: '#/components/schemas/Identifier_2'
+              title: organizationId
+            - $ref: '#/components/schemas/Organization'
+              title: Organization object
+        consumers:
+          description: The additional consumer elements that can be provided, see the [documentation on support for specific consumers](https://openonderwijsapi.nl/v5/#/technical/consumers-and-profiles/) for more information about this mechanism.
+          type: array
+          items:
+            $ref: '#/components/schemas/Consumer_2'
+          example:
+          - consumerKey: x-test-consumer
+            additional: custom
+            attributes: here
+        ext:
+          $ref: '#/components/schemas/Ext'
     personAffiliations:
       type: array
       description: 'The affiliations of this person, the relations a person has with the organization providing this endpoint
@@ -1964,54 +2136,6 @@ components:
         - employee
         - guest
         example: student
-    codeType_2:
-      type: string
-      description: "The code/identifier type. \n\nThis is an *extensible enumeration*. Use `x-` to prefix custom values\n\nThe predefined values are:\n  - `brin`: The registration number for a Dutch educational institution that is issued by the Dutch Ministry of Education, Culture and Science\n  - `crohoCreboCode`: programs with a CREBO and CROHO number are accredited by the Dutch Ministry of Education, Culture and Science (OCW)\n  - `programCode`: Identifier for the program (collection of courses)\n  - `componentCode`: The code for a component (part of a course)\n  - `offeringCode`: The code to identify a specific offering (program, course or component offering)\n  - `organizationId`: The identifier for the organization\n  - `buildingId`: The number or code to identify a building\n  - `bagId`: The identification of a building as it is known in the Dutch Building Administration (BAG)\n  - `roomCode`: The code for a room\n  - `systemId`: Identifier assigned to an entity in context of a specific system\n  - `productId`: Identifier assigned to a specific product\n  - `nationalIdentityNumber`: Identifier assigned by the governement of the person. e.g. a social security number in the USA\n  - `studentNumber`: Identifier for the student\n  - `studielinkNumber`: Identifier for the person as determined by Studielink\n  - `esi`: European Student Identifier\n  - `userName`: The name of a user\n  - `accountId`: Identifier assigned to a specific account\n  - `emailAdress`: An email address\n  - `groupCode`: The identifier for a group (of persons)\n  - `isbn`: International Standard Book Number that serve as product identifiers for Books\n  - `issn`: International Standard Book Number that serve as product identifiers for periodicals\n  - `orcId`: Open Researcher and Contributor ID\n  - `uuid`: A universally unique identifier\n  - `schacHome`: Home organization using the domain name of the organization\n  - `identifier`: Generic Identifier\n"
-      x-ooapi-extensible-enum:
-      - brin
-      - crohoCreboCode
-      - programCode
-      - componentCode
-      - offeringCode
-      - organizationId
-      - buildingId
-      - bagId
-      - roomCode
-      - systemId
-      - productId
-      - nationalIdentityNumber
-      - studentNumber
-      - studielinkNumber
-      - esi
-      - userName
-      - accountId
-      - emailAdress
-      - groupCode
-      - isbn
-      - issn
-      - orcId
-      - uuid
-      - schacHome
-      - identifier
-      example: identifier
-    Problem_2:
-      type: object
-      description: A system message including the error code and an explanation
-      required:
-      - status
-      - title
-      properties:
-        status:
-          type: string
-          description: The HTTP status code
-          example: '404'
-        title:
-          type: string
-          description: A short, human-readable summary of the problem type
-          example: Resource not found
-        detail:
-          type: string
-          description: A human-readable explanation specific to this occurrence of the problem
     PersonProperties:
       type: object
       description: A person that has a relationship with this institution
@@ -2168,20 +2292,6 @@ components:
             attributes: here
         ext:
           $ref: '#/components/schemas/Ext'
-    LanguageTypedString_2:
-      type: object
-      description: A String with an associated language code.
-      properties:
-        language:
-          description: The language used in the described entity. A string formatted according to RFC3066.
-          type: string
-          pattern: ^[a-z]{2,4}(-[A-Z][a-z]{3})?(-([A-Z]{2}|[0-9]{3}))?$
-        value:
-          description: String to describe the entity.
-          type: string
-      example:
-        language: en-GB
-        value: program that is a place holder for all courses that are made available for student mobility
     organizationType:
       type: string
       description: 'The type of this organization. Each OOAPI endpoint should have a single organization with type `root`, describing the root organization.
@@ -2210,14 +2320,6 @@ components:
       - academy
       - school
       example: root
-    ICERelationType:
-      type: string
-      description: Type of relation between person and In Case of Emergency contact
-      enum:
-      - partner
-      - parent
-      - other
-      example: partner
     addressType_2:
       type: string
       description: 'Address type
@@ -2239,79 +2341,6 @@ components:
       - deliveries
       - billing
       - teaching
-    PersonId:
-      type: object
-      properties:
-        personId:
-          type: string
-          description: Unique id of this person
-          format: uuid
-          example: 123e4567-e89b-12d3-a456-426614174000
-      required:
-      - personId
-    gender:
-      type: string
-      description: The gender of this person
-      enum:
-      - M
-      - F
-      - U
-      - X
-      example: F
-    Address_2:
-      type: object
-      description: The full street address
-      required:
-      - addressType
-      properties:
-        addressType:
-          $ref: '#/components/schemas/addressType_2'
-        street:
-          type: string
-          description: The street name
-          example: Moreelsepark
-        streetNumber:
-          type: string
-          description: The street number
-          example: '48'
-        additional:
-          type: array
-          description: Further details like building name, suite, apartment number, etc.
-          minItems: 1
-          items:
-            $ref: '#/components/schemas/LanguageTypedString_2'
-          example:
-          - language: en-GB
-            value: On the other side of the road
-        postalCode:
-          type: string
-          description: Postal code
-          example: 3511 EP
-        city:
-          type: string
-          description: name of the city / locality
-          example: Utrecht
-        countryCode:
-          type: string
-          description: the country code according to [iso-3166-1-alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)
-          example: NL
-        geolocation:
-          type: object
-          description: Geolocation of the entrance of this address (WGS84 coordinate reference system)
-          required:
-          - latitude
-          - longitude
-          properties:
-            latitude:
-              type: number
-              format: double
-              example: 52.089123
-            longitude:
-              type: number
-              format: double
-              example: 5.113337
-        ext:
-          $ref: '#/components/schemas/Ext'
     Group_2:
       type: object
       description: 'A group is simply a collection of persons. Groups can be used to accommodate various usecases.
@@ -2400,167 +2429,7 @@ components:
             title: Expanded organization
         ext:
           $ref: '#/components/schemas/Ext'
-    IdentifierEntry_2:
-      type: object
-      properties:
-        codeType:
-          $ref: '#/components/schemas/codeType_2'
-        code:
-          description: Human readable value for the code/identifier
-          type: string
-      required:
-      - codeType
-      - code
-      additionalProperties: false
-      example:
-        codeType: identifier
-        code: 1234qwe12
-    Organization:
-      type: object
-      description: A description of a group of people working together to achieve a goal
-      required:
-      - organizationId
-      - organizationType
-      - name
-      - shortName
-      - primaryCode
-      properties:
-        organizationId:
-          type: string
-          description: Unique id of this organization
-          format: uuid
-          example: 123e4567-e89b-12d3-a456-123514174000
-          readOnly: true
-        primaryCode:
-          description: The primary human readable identifier for the organization. This is often the source identifier as defined by the institution.
-          $ref: '#/components/schemas/IdentifierEntry_2'
-          example:
-            codeType: orgId
-            code: Org01-Root
-          readOnly: true
-        organizationType:
-          $ref: '#/components/schemas/organizationType'
-        name:
-          type: array
-          description: The name of the organization
-          minItems: 1
-          items:
-            $ref: '#/components/schemas/LanguageTypedString_2'
-          example:
-          - language: nl-NL
-            value: Coöperatie SURF U.A.
-        shortName:
-          type: string
-          description: Short name of the organization
-          maxLength: 256
-          example: SURF
-        description:
-          type: array
-          description: Any general description of the organization should clearly mention the type of higher education organization, especially in the case of a binary system. In Dutch; universiteit (university) or hogeschool (university of applied sciences).
-          minItems: 1
-          items:
-            $ref: '#/components/schemas/LanguageTypedString_2'
-          example:
-          - language: nl-NL
-            value: SURF is een coöperatieve vereniging van Nederlandse onderwijs- en onderzoeksinstellingen waarin de leden hun krachten bundelen. De leden zijn eigenaar van SURF.
-        addresses:
-          type: array
-          description: Addresses of this organization
-          items:
-            $ref: '#/components/schemas/Address_2'
-        link:
-          type: string
-          description: URL of the organization's website
-          format: uri
-          maxLength: 2048
-          example: https://surf.nl
-        logo:
-          type: string
-          description: Logo of this organization
-          format: uri
-          maxLength: 2048
-          example: https://www.surf.nl/themes/surf/logo.svg
-        otherCodes:
-          type: array
-          description: An array of additional human readable codes/identifiers for the entity being described.
-          minItems: 1
-          items:
-            $ref: '#/components/schemas/IdentifierEntry_2'
-          example:
-          - codeType: brin
-            code: 00AA
-          - codeType: kvk
-            code: '12345678'
-        parent:
-          description: 'The organizational unit which is the parent of this organization. [`expandable`](#tag/organization_model)
-
-            By default only the `organizationId` (a string) is returned. If the client requested an expansion of `organization` the full organization object should be returned.
-
-            '
-          oneOf:
-          - $ref: '#/components/schemas/Identifier_2'
-            title: organizationId
-          - $ref: '#/components/schemas/Organization'
-            title: Organization object
-        children:
-          type: array
-          description: 'All the organizational units for which this organization is the parent. [`expandable`](#tag/organization_model)
-
-            By default only the `organizationId` (a string) is returned. If the client requested an expansion of `organization` the full organization object should be returned.
-
-            '
-          items:
-            oneOf:
-            - $ref: '#/components/schemas/Identifier_2'
-              title: organizationId
-            - $ref: '#/components/schemas/Organization'
-              title: Organization object
-        consumers:
-          description: The additional consumer elements that can be provided, see the [documentation on support for specific consumers](https://openonderwijsapi.nl/v5/#/technical/consumers-and-profiles/) for more information about this mechanism.
-          type: array
-          items:
-            $ref: '#/components/schemas/Consumer_2'
-          example:
-          - consumerKey: x-test-consumer
-            additional: custom
-            attributes: here
-        ext:
-          $ref: '#/components/schemas/Ext'
-    Person:
-      allOf:
-      - $ref: '#/components/schemas/PersonId'
-      - $ref: '#/components/schemas/PersonProperties'
-    Identifier_2:
-      type: string
-      description: An identifier of another resource.
-      format: uuid
-    groupType_3:
-      type: string
-      description: 'The type of this group
-
-        - learning group: A collection of participants carrying out common learning activities
-
-        - class: A collection of participants carrying out jointly scheduled educational activities
-
-        - team: A collection of members of a team, either students, employees or mixed.
-
-        '
-      enum:
-      - learning group
-      - class
-      - team
-      example: learning group
-    Consumer_3:
-      type: object
-      description: Object for communicating data to a specific consumer (destination). This object has no relationship with the `consumer` query parameter.
-      required:
-      - consumerKey
-      properties:
-        consumerKey:
-          description: The key of the consumer (destination) for which this information is intended. See the [consumer registry](https://openonderwijsapi.nl/v5/#/technical/consumers-and-profiles/) for more information.
-          type: string
-      additionalProperties: true
-    codeType_3:
+    codeType_2:
       type: string
       description: "The code/identifier type. \n\nThis is an *extensible enumeration*. Use `x-` to prefix custom values\n\nThe predefined values are:\n  - `brin`: The registration number for a Dutch educational institution that is issued by the Dutch Ministry of Education, Culture and Science\n  - `crohoCreboCode`: programs with a CREBO and CROHO number are accredited by the Dutch Ministry of Education, Culture and Science (OCW)\n  - `programCode`: Identifier for the program (collection of courses)\n  - `componentCode`: The code for a component (part of a course)\n  - `offeringCode`: The code to identify a specific offering (program, course or component offering)\n  - `organizationId`: The identifier for the organization\n  - `buildingId`: The number or code to identify a building\n  - `bagId`: The identification of a building as it is known in the Dutch Building Administration (BAG)\n  - `roomCode`: The code for a room\n  - `systemId`: Identifier assigned to an entity in context of a specific system\n  - `productId`: Identifier assigned to a specific product\n  - `nationalIdentityNumber`: Identifier assigned by the governement of the person. e.g. a social security number in the USA\n  - `studentNumber`: Identifier for the student\n  - `studielinkNumber`: Identifier for the person as determined by Studielink\n  - `esi`: European Student Identifier\n  - `userName`: The name of a user\n  - `accountId`: Identifier assigned to a specific account\n  - `emailAdress`: An email address\n  - `groupCode`: The identifier for a group (of persons)\n  - `isbn`: International Standard Book Number that serve as product identifiers for Books\n  - `issn`: International Standard Book Number that serve as product identifiers for periodicals\n  - `orcId`: Open Researcher and Contributor ID\n  - `uuid`: A universally unique identifier\n  - `schacHome`: Home organization using the domain name of the organization\n  - `identifier`: Generic Identifier\n"
       x-ooapi-extensible-enum:
@@ -2590,7 +2459,48 @@ components:
       - schacHome
       - identifier
       example: identifier
-    Problem_3:
+    IdentifierEntry_2:
+      type: object
+      properties:
+        codeType:
+          $ref: '#/components/schemas/codeType_2'
+        code:
+          description: Human readable value for the code/identifier
+          type: string
+      required:
+      - codeType
+      - code
+      additionalProperties: false
+      example:
+        codeType: identifier
+        code: 1234qwe12
+    LanguageTypedString_2:
+      type: object
+      description: A String with an associated language code.
+      properties:
+        language:
+          description: The language used in the described entity. A string formatted according to RFC3066.
+          type: string
+          pattern: ^[a-z]{2,4}(-[A-Z][a-z]{3})?(-([A-Z]{2}|[0-9]{3}))?$
+        value:
+          description: String to describe the entity.
+          type: string
+      example:
+        language: en-GB
+        value: program that is a place holder for all courses that are made available for student mobility
+    Identifier_2:
+      type: string
+      description: An identifier of another resource.
+      format: uuid
+    ICERelationType:
+      type: string
+      description: Type of relation between person and In Case of Emergency contact
+      enum:
+      - partner
+      - parent
+      - other
+      example: partner
+    Problem_2:
       type: object
       description: A system message including the error code and an explanation
       required:
@@ -2608,499 +2518,23 @@ components:
         detail:
           type: string
           description: A human-readable explanation specific to this occurrence of the problem
-    PersonProperties_2:
-      type: object
-      description: A person that has a relationship with this institution
-      required:
-      - givenName
-      - surname
-      - displayName
-      - affiliations
-      - mail
-      - primaryCode
-      - activeEnrollment
-      properties:
-        primaryCode:
-          description: The primary human readable identifier for the person. This is often the source identifier as defined by the institution.
-          $ref: '#/components/schemas/IdentifierEntry_3'
-          example:
-            codeType: studentNumber
-            code: 0
-          readOnly: true
-        givenName:
-          type: string
-          description: The first name of this person
-          maxLength: 256
-          example: Maartje
-        surnamePrefix:
-          type: string
-          description: The prefix of the family name of this person
-          example: van
-        surname:
-          type: string
-          description: The family name of this person
-          maxLength: 256
-          example: Damme
-        displayName:
-          type: string
-          description: The name of this person which will be displayed
-          maxLength: 256
-          example: Maartje van Damme
-        initials:
-          type: string
-          description: The initials of this person
-          example: MCW
-        activeEnrollment:
-          type: boolean
-          description: Whether this person has an active enrollment.
-          example: false
-        dateOfBirth:
-          type: string
-          description: The date of birth of this person, RFC3339 (full-date)
-          format: date
-          example: '2003-09-30'
-        cityOfBirth:
-          type: string
-          description: The city of birth of this person
-          example: Utrecht
-        countryOfBirth:
-          type: string
-          description: The country of birth of this person the country code according to [iso-3166-1-alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)
-          example: NL
-        nationality:
-          type: string
-          description: The nationality of this person the nationality according to https://gist.github.com/zspine/2365808
-          example: Dutch
-        dateOfNationality:
-          type: string
-          description: The date of nationality of this person, RFC3339 (full-date)
-          format: date
-          example: '2003-09-30'
-        affiliations:
-          $ref: '#/components/schemas/personAffiliations'
-        mail:
-          type: string
-          description: The primary e-mailaddress of this person
-          format: email
-          maxLength: 256
-          example: vandamme.mcw@universiteitvanharderwijk.nl
-        secondaryMail:
-          type: string
-          description: The secondary e-mailaddress of this person
-          format: email
-          maxLength: 256
-          example: poekie@xyz.nl
-        telephoneNumber:
-          type: string
-          description: The telephone number of this person
-          maxLength: 256
-          example: +31 123 456 789
-        mobileNumber:
-          type: string
-          description: The mobile number of this person
-          maxLength: 256
-          example: +31 612 345 678
-        photoSocial:
-          type: string
-          description: The url of the informal picture of this person
-          format: uri
-          maxLength: 2048
-          example: https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Placeholder_female_superhero_c.png/203px-Placeholder_female_superhero_c.png
-        photoOfficial:
-          type: string
-          description: The url of the official picture of this person
-          format: uri
-          maxLength: 2048
-          example: https://upload.wikimedia.org/wikipedia/commons/6/66/Johannes_Vermeer_%281632-1675%29_-_The_Girl_With_The_Pearl_Earring_%281665%29.jpg
-        gender:
-          $ref: '#/components/schemas/gender'
-        titlePrefix:
-          type: string
-          description: A title prefix to be used for this person
-          example: drs
-        titleSuffix:
-          type: string
-          description: A title suffix to be used for this person
-          example: BSc
-        office:
-          type: string
-          description: The name of the office where this person is located
-        address:
-          $ref: '#/components/schemas/Address_3'
-        ICEName:
-          type: string
-          description: Full name of In Case of Emergency contact
-          maxLength: 256
-          example: Janne
-        ICEPhoneNumber:
-          type: string
-          description: Phone number of In Case of Emergency contact
-          maxLength: 256
-          example: +31 623 456 789
-        ICERelation:
-          $ref: '#/components/schemas/ICERelationType'
-        languageOfChoice:
-          type: array
-          description: The language(s) of choice for this person, RFC3066
-          items:
-            type: string
-            example: nl-NL
-        otherCodes:
-          type: array
-          description: An array of additional human readable codes/identifiers for the entity being described.
-          items:
-            $ref: '#/components/schemas/IdentifierEntry_3'
-          example:
-          - codeType: nationalIdentityNumber
-            code: '00000'
-        consumers:
-          description: The additional consumer elements that can be provided, see the [documentation on support for specific consumers](https://openonderwijsapi.nl/v5/#/technical/consumers-and-profiles/) for more information about this mechanism.
-          type: array
-          items:
-            $ref: '#/components/schemas/Consumer_3'
-          example:
-          - consumerKey: x-test-consumer
-            additional: custom
-            attributes: here
-        ext:
-          $ref: '#/components/schemas/Ext'
-    LanguageTypedString_3:
-      type: object
-      description: A String with an associated language code.
-      properties:
-        language:
-          description: The language used in the described entity. A string formatted according to RFC3066.
-          type: string
-          pattern: ^[a-z]{2,4}(-[A-Z][a-z]{3})?(-([A-Z]{2}|[0-9]{3}))?$
-        value:
-          description: String to describe the entity.
-          type: string
-      example:
-        language: en-GB
-        value: program that is a place holder for all courses that are made available for student mobility
-    addressType_3:
+    groupType_2:
       type: string
-      description: 'Address type
+      description: 'The type of this group
 
-        - postal: post
+        - learning group: A collection of participants carrying out common learning activities
 
-        - visit: bezoek
+        - class: A collection of participants carrying out jointly scheduled educational activities
 
-        - deliveries: bezorg
-
-        - billing: factuur
-
-        - teaching: the address where education takes place
+        - team: A collection of members of a team, either students, employees or mixed.
 
         '
       enum:
-      - postal
-      - visit
-      - deliveries
-      - billing
-      - teaching
-    Address_3:
-      type: object
-      description: The full street address
-      required:
-      - addressType
-      properties:
-        addressType:
-          $ref: '#/components/schemas/addressType_3'
-        street:
-          type: string
-          description: The street name
-          example: Moreelsepark
-        streetNumber:
-          type: string
-          description: The street number
-          example: '48'
-        additional:
-          type: array
-          description: Further details like building name, suite, apartment number, etc.
-          minItems: 1
-          items:
-            $ref: '#/components/schemas/LanguageTypedString_3'
-          example:
-          - language: en-GB
-            value: On the other side of the road
-        postalCode:
-          type: string
-          description: Postal code
-          example: 3511 EP
-        city:
-          type: string
-          description: name of the city / locality
-          example: Utrecht
-        countryCode:
-          type: string
-          description: the country code according to [iso-3166-1-alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)
-          example: NL
-        geolocation:
-          type: object
-          description: Geolocation of the entrance of this address (WGS84 coordinate reference system)
-          required:
-          - latitude
-          - longitude
-          properties:
-            latitude:
-              type: number
-              format: double
-              example: 52.089123
-            longitude:
-              type: number
-              format: double
-              example: 5.113337
-        ext:
-          $ref: '#/components/schemas/Ext'
-    Group_3:
-      type: object
-      description: 'A group is simply a collection of persons. Groups can be used to accommodate various usecases.
-
-
-        Groups MAY optionally have a relation to an Offering, however the meaning of such relations is left unspecified and is left up to the implementer.
-
-        '
-      required:
-      - groupId
-      - groupType
-      - name
-      - primaryCode
-      properties:
-        groupId:
-          type: string
-          description: Unique id for this group
-          format: uuid
-          example: 123e4567-e89b-12d3-a456-426614174000
-        primaryCode:
-          description: The primary human readable identifier for this group. This is often the source identifier as defined by the institution.
-          $ref: '#/components/schemas/IdentifierEntry_3'
-          example:
-            codeType: groupCode
-            code: group-abc987
-        groupType:
-          $ref: '#/components/schemas/groupType_3'
-        name:
-          type: array
-          description: The name of this group
-          minItems: 1
-          items:
-            $ref: '#/components/schemas/LanguageTypedString_3'
-          example:
-          - language: en-GB
-            value: statistics students
-        description:
-          type: array
-          description: The description of this group
-          minItems: 1
-          items:
-            $ref: '#/components/schemas/LanguageTypedString_3'
-          example:
-          - language: en-GB
-            value: The group of students that follow statistics classes
-        startDate:
-          type: string
-          description: The day on which this group starts being active, RFC3339 (full-date)
-          format: date
-          example: '2020-08-17'
-        endDate:
-          type: string
-          description: The day on which this group ends being active, RFC3339 (full-date)
-          format: date
-          example: '2020-12-18'
-        personCount:
-          type: number
-          description: The number of persons that are member of this group
-          format: int32
-          minimum: 0
-          example: 183
-        otherCodes:
-          type: array
-          description: An array of additional human readable codes/identifiers for the entity being described.
-          items:
-            $ref: '#/components/schemas/IdentifierEntry_3'
-        consumers:
-          description: The additional consumer elements that can be provided, see the [documentation on support for specific consumers](https://openonderwijsapi.nl/v5/#/technical/consumers-and-profiles/) for more information about this mechanism.
-          type: array
-          items:
-            $ref: '#/components/schemas/Consumer_3'
-          example:
-          - consumerKey: x-test-consumer
-            additional: custom
-            attributes: here
-        organization:
-          description: 'The organization that manages this group. [`expandable`](.#tag/organization_model)
-
-            By default only the `organizationId` (a string) is returned. If the client requested an expansion of `organization` the full organization object should be returned.
-
-            '
-          oneOf:
-          - $ref: '#/components/schemas/Identifier_3'
-            title: organizationId
-          - $ref: '#/components/schemas/Organization_2'
-            title: Expanded organization
-        ext:
-          $ref: '#/components/schemas/Ext'
-    IdentifierEntry_3:
-      type: object
-      properties:
-        codeType:
-          $ref: '#/components/schemas/codeType_3'
-        code:
-          description: Human readable value for the code/identifier
-          type: string
-      required:
-      - codeType
-      - code
-      additionalProperties: false
-      example:
-        codeType: identifier
-        code: 1234qwe12
-    Organization_2:
-      type: object
-      description: A description of a group of people working together to achieve a goal
-      required:
-      - organizationId
-      - organizationType
-      - name
-      - shortName
-      - primaryCode
-      properties:
-        organizationId:
-          type: string
-          description: Unique id of this organization
-          format: uuid
-          example: 123e4567-e89b-12d3-a456-123514174000
-          readOnly: true
-        primaryCode:
-          description: The primary human readable identifier for the organization. This is often the source identifier as defined by the institution.
-          $ref: '#/components/schemas/IdentifierEntry_3'
-          example:
-            codeType: orgId
-            code: Org01-Root
-          readOnly: true
-        organizationType:
-          $ref: '#/components/schemas/organizationType'
-        name:
-          type: array
-          description: The name of the organization
-          minItems: 1
-          items:
-            $ref: '#/components/schemas/LanguageTypedString_3'
-          example:
-          - language: nl-NL
-            value: Coöperatie SURF U.A.
-        shortName:
-          type: string
-          description: Short name of the organization
-          maxLength: 256
-          example: SURF
-        description:
-          type: array
-          description: Any general description of the organization should clearly mention the type of higher education organization, especially in the case of a binary system. In Dutch; universiteit (university) or hogeschool (university of applied sciences).
-          minItems: 1
-          items:
-            $ref: '#/components/schemas/LanguageTypedString_3'
-          example:
-          - language: nl-NL
-            value: SURF is een coöperatieve vereniging van Nederlandse onderwijs- en onderzoeksinstellingen waarin de leden hun krachten bundelen. De leden zijn eigenaar van SURF.
-        addresses:
-          type: array
-          description: Addresses of this organization
-          items:
-            $ref: '#/components/schemas/Address_3'
-        link:
-          type: string
-          description: URL of the organization's website
-          format: uri
-          maxLength: 2048
-          example: https://surf.nl
-        logo:
-          type: string
-          description: Logo of this organization
-          format: uri
-          maxLength: 2048
-          example: https://www.surf.nl/themes/surf/logo.svg
-        otherCodes:
-          type: array
-          description: An array of additional human readable codes/identifiers for the entity being described.
-          minItems: 1
-          items:
-            $ref: '#/components/schemas/IdentifierEntry_3'
-          example:
-          - codeType: brin
-            code: 00AA
-          - codeType: kvk
-            code: '12345678'
-        parent:
-          description: 'The organizational unit which is the parent of this organization. [`expandable`](#tag/organization_model)
-
-            By default only the `organizationId` (a string) is returned. If the client requested an expansion of `organization` the full organization object should be returned.
-
-            '
-          oneOf:
-          - $ref: '#/components/schemas/Identifier_3'
-            title: organizationId
-          - $ref: '#/components/schemas/Organization_2'
-            title: Organization object
-        children:
-          type: array
-          description: 'All the organizational units for which this organization is the parent. [`expandable`](#tag/organization_model)
-
-            By default only the `organizationId` (a string) is returned. If the client requested an expansion of `organization` the full organization object should be returned.
-
-            '
-          items:
-            oneOf:
-            - $ref: '#/components/schemas/Identifier_3'
-              title: organizationId
-            - $ref: '#/components/schemas/Organization_2'
-              title: Organization object
-        consumers:
-          description: The additional consumer elements that can be provided, see the [documentation on support for specific consumers](https://openonderwijsapi.nl/v5/#/technical/consumers-and-profiles/) for more information about this mechanism.
-          type: array
-          items:
-            $ref: '#/components/schemas/Consumer_3'
-          example:
-          - consumerKey: x-test-consumer
-            additional: custom
-            attributes: here
-        ext:
-          $ref: '#/components/schemas/Ext'
-    Identifier_3:
-      type: string
-      description: An identifier of another resource.
-      format: uuid
+      - learning group
+      - class
+      - team
+      example: learning group
   parameters:
-    consumer:
-      name: consumer
-      in: query
-      description: Request entities intended for a specific consumer. The `consumer` profile allows for adding additional data, or specific rules concerning the presentation of the data. A consumer can be selected based on the key of the consumer profile. An implementation of the OEAPI SHOULD always return the consumer information inside the consumer property of the object(s) that are requested. Further information regarding the use of consumers can be found in the [documentation](https://oeapi.eu/v6.0/#/technical/consumers-and-profiles/)
-      required: false
-      schema:
-        type: string
-    primaryCode:
-      name: primaryCode
-      in: query
-      description: The primaryCode of the requested item. This is often the source identifier as defined by the institution.
-      required: false
-      schema:
-        type: string
-    pageSize:
-      name: pageSize
-      in: query
-      description: The number of items per page
-      required: false
-      schema:
-        type: integer
-        format: int32
-        default: 10
-        enum:
-        - 10
-        - 20
-        - 50
-        - 100
-        - 250
     search:
       name: q
       in: query
@@ -3108,16 +2542,13 @@ components:
       required: false
       schema:
         type: string
-    pageNumber:
-      name: pageNumber
+    consumer:
+      name: consumer
       in: query
-      description: The page number to get. Page numbers start at 1.
+      description: Request entities intended for a specific consumer. The `consumer` profile allows for adding additional data, or specific rules concerning the presentation of the data. A consumer can be selected based on the key of the consumer profile. An implementation of the OEAPI SHOULD always return the consumer information inside the consumer property of the object(s) that are requested. Further information regarding the use of consumers can be found in the [documentation](https://oeapi.eu/v6.0/#/technical/consumers-and-profiles/)
       required: false
       schema:
-        type: integer
-        format: int32
-        example: 1
-        minimum: 1
+        type: string
     filterQuery:
       name: filter_query
       in: query
@@ -3242,6 +2673,38 @@ components:
         combined:
           summary: Example using multiple nested fields
           value: (id,title,ectsCredits,programme(code,name),campus(city,country))
+    pageSize:
+      name: pageSize
+      in: query
+      description: The number of items per page
+      required: false
+      schema:
+        type: integer
+        format: int32
+        default: 10
+        enum:
+        - 10
+        - 20
+        - 50
+        - 100
+        - 250
+    pageNumber:
+      name: pageNumber
+      in: query
+      description: The page number to get. Page numbers start at 1.
+      required: false
+      schema:
+        type: integer
+        format: int32
+        example: 1
+        minimum: 1
+    primaryCode:
+      name: primaryCode
+      in: query
+      description: The primaryCode of the requested item. This is often the source identifier as defined by the institution.
+      required: false
+      schema:
+        type: string
     consumer_2:
       name: consumer
       in: query
@@ -3256,49 +2719,55 @@ components:
       required: false
       schema:
         type: string
-    consumer_3:
-      name: consumer
-      in: query
-      description: Request entities meant for a specific consumer. This query parameter is independent from the `consumers` attribute. See the [documentation on support for specific consumers](https://openonderwijsapi.nl/v5/#/technical/consumers-and-profiles/) for more information about this mechanism.
-      required: false
-      schema:
-        type: string
   responses:
-    ErrorMethodNotAllowed:
-      description: Method not allowed
+    ErrorForbidden:
+      description: Forbidden
       content:
         application/problem+json:
           schema:
             $ref: '#/components/schemas/Problem'
           example:
-            type: https://api.example.org/problems/method-not-allowed
-            title: Method not allowed
-            status: 405
-            detail: The method POST is not supported for this endpoint.
-            instance: https://api.example.org/courses/abc123
-    ErrorNotFound:
-      description: "Not Found.  \n\nReturned only when a specific resource identified by its identifier\ncannot be located. This applies to instance endpoints where a single,\nuniquely-addressable object is expected.  \n\nCollection endpoints should not return a 404. If no items match the request,\nthey must return an empty array. A 404 may still occur if the collection\nendpoint itself does not exist or is not accessible.\n"
+            type: https://api.example.org/problems/forbidden
+            title: Forbidden
+            status: 403
+            detail: You do not have permission to access this resource.
+            instance: https://api.example.org/admin/enrolments
+    ErrorInternalServerError:
+      description: Internal Server Error
       content:
         application/problem+json:
           schema:
             $ref: '#/components/schemas/Problem'
-          examples:
-            instanceNotFound:
-              summary: 'Instance endpoint: resource not found'
-              value:
-                type: https://api.example.org/problems/not-found
-                title: Resource not found
-                status: 404
-                detail: The course with id 'abc123' could not be found.
-                instance: https://api.example.org/courses/abc123
-            collectionEndpointNotFound:
-              summary: Collection endpoint unavailable
-              value:
-                type: https://api.example.org/problems/not-found
-                title: Collection endpoint not found
-                status: 404
-                detail: The collection endpoint '/course-offerings' does not exist or is not accessible.
-                instance: https://api.example.org/course-offerings
+          example:
+            type: https://api.example.org/problems/internal-server-error
+            title: Internal server error
+            status: 500
+            detail: An unexpected error occurred while processing your request.
+            instance: https://api.example.org/enrolments/submit
+    ErrorUnauthorized:
+      description: Unauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          example:
+            type: https://api.example.org/problems/unauthorized
+            title: Unauthorized
+            status: 401
+            detail: Authentication credentials were missing or invalid.
+            instance: https://api.example.org/student/12345
+    ErrorTooManyRequests:
+      description: Too many requests
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          example:
+            type: https://api.example.org/problems/too-many-requests
+            title: Too many requests
+            status: 429
+            detail: You have exceeded the rate limit of 100 requests per minute.
+            instance: https://api.example.org/courses
     ErrorNotAcceptable:
       description: 'Not Acceptable.
 
@@ -3399,18 +2868,41 @@ components:
                 - '1.0'
                 - '0.94'
                 instance: https://api.example.org/enrolments
-    ErrorUnauthorized:
-      description: Unauthorized
+    ErrorNotFound:
+      description: "Not Found.  \n\nReturned only when a specific resource identified by its identifier\ncannot be located. This applies to instance endpoints where a single,\nuniquely-addressable object is expected.  \n\nCollection endpoints should not return a 404. If no items match the request,\nthey must return an empty array. A 404 may still occur if the collection\nendpoint itself does not exist or is not accessible.\n"
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            instanceNotFound:
+              summary: 'Instance endpoint: resource not found'
+              value:
+                type: https://api.example.org/problems/not-found
+                title: Resource not found
+                status: 404
+                detail: The course with id 'abc123' could not be found.
+                instance: https://api.example.org/courses/abc123
+            collectionEndpointNotFound:
+              summary: Collection endpoint unavailable
+              value:
+                type: https://api.example.org/problems/not-found
+                title: Collection endpoint not found
+                status: 404
+                detail: The collection endpoint '/course-offerings' does not exist or is not accessible.
+                instance: https://api.example.org/course-offerings
+    ErrorMethodNotAllowed:
+      description: Method not allowed
       content:
         application/problem+json:
           schema:
             $ref: '#/components/schemas/Problem'
           example:
-            type: https://api.example.org/problems/unauthorized
-            title: Unauthorized
-            status: 401
-            detail: Authentication credentials were missing or invalid.
-            instance: https://api.example.org/student/12345
+            type: https://api.example.org/problems/method-not-allowed
+            title: Method not allowed
+            status: 405
+            detail: The method POST is not supported for this endpoint.
+            instance: https://api.example.org/courses/abc123
     ErrorConflict:
       description: Conflict
       content:
@@ -3423,30 +2915,6 @@ components:
             status: 409
             detail: The request could not be completed due to a conflict with the current state of the resource.
             instance: https://api.example.org/courses
-    ErrorTooManyRequests:
-      description: Too many requests
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          example:
-            type: https://api.example.org/problems/too-many-requests
-            title: Too many requests
-            status: 429
-            detail: You have exceeded the rate limit of 100 requests per minute.
-            instance: https://api.example.org/courses
-    ErrorForbidden:
-      description: Forbidden
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          example:
-            type: https://api.example.org/problems/forbidden
-            title: Forbidden
-            status: 403
-            detail: You do not have permission to access this resource.
-            instance: https://api.example.org/admin/enrolments
     ErrorBadRequest:
       description: Bad request
       content:
@@ -3459,26 +2927,14 @@ components:
             status: 400
             detail: 'The query parameter ''mode'' must be one of: full, basic.'
             instance: https://api.example.org/courses?mode=invalid
-    ErrorInternalServerError:
-      description: Internal Server Error
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          example:
-            type: https://api.example.org/problems/internal-server-error
-            title: Internal server error
-            status: 500
-            detail: An unexpected error occurred while processing your request.
-            instance: https://api.example.org/enrolments/submit
-    ErrorMethodNotAllowed_2:
-      description: Method not allowed
+    ErrorForbidden_2:
+      description: Forbidden
       content:
         application/problem+json:
           schema:
             $ref: '#/components/schemas/Problem_2'
-    ErrorNotFound_2:
-      description: Not Found
+    ErrorInternalServerError_2:
+      description: Internal Server Error
       content:
         application/problem+json:
           schema:
@@ -3495,14 +2951,14 @@ components:
         application/problem+json:
           schema:
             $ref: '#/components/schemas/Problem_2'
-    ErrorForbidden_2:
-      description: Forbidden
+    ErrorNotFound_2:
+      description: Not Found
       content:
         application/problem+json:
           schema:
             $ref: '#/components/schemas/Problem_2'
-    ErrorInternalServerError_2:
-      description: Internal Server Error
+    ErrorMethodNotAllowed_2:
+      description: Method not allowed
       content:
         application/problem+json:
           schema:
@@ -3513,48 +2969,6 @@ components:
         application/problem+json:
           schema:
             $ref: '#/components/schemas/Problem_2'
-    ErrorMethodNotAllowed_3:
-      description: Method not allowed
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem_3'
-    ErrorNotFound_3:
-      description: Not Found
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem_3'
-    ErrorUnauthorized_3:
-      description: Unauthorized
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem_3'
-    ErrorTooManyRequests_3:
-      description: Too many requests
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem_3'
-    ErrorForbidden_3:
-      description: Forbidden
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem_3'
-    ErrorInternalServerError_3:
-      description: Internal Server Error
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem_3'
-    ErrorBadRequest_3:
-      description: Bad request
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem_3'
   securitySchemes:
     bearerAuth:
       type: http
@@ -3565,7 +2979,6 @@ components:
 x-refined-from:
 - oeapi-6.0-rc.3.yaml
 - ooapi-v5.yaml
-- open-education-api-v5-openapi.yml
 x-tagGroups:
 - name: Requests and responses
   tags:
